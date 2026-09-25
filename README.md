@@ -13,6 +13,10 @@ Ask Copilot in plain language, for example:
 
 Copilot prints a table and a short summary, and saves a CSV file and a PNG chart.
 
+![Example chart: unemployment rate, euro area vs United States](docs/example-chart.png)
+
+*"Euro area unemployment vs the US since 2010": the shaded years are IMF projections.*
+
 ## Install
 
 **In a repository (shared with everyone who uses Copilot there):** copy `.github/skills/country-data/`
@@ -33,7 +37,11 @@ python .github/skills/country-data/scripts/country_data.py show --what "gdp grow
 python .github/skills/country-data/scripts/country_data.py --help
 ```
 
-## Credits
+## License and credits
 
-Inspired by [johnsonice/RA-Skills](https://github.com/johnsonice/RA-Skills) (MIT). The WEO country-group
-file `country_group.csv` comes from that repository.
+Released under the [MIT License](LICENSE).
+
+Inspired by [johnsonice/RA-Skills](https://github.com/johnsonice/RA-Skills). The WEO country-group
+file `country_group.csv` comes from that repository and is used under its MIT license, see
+[`LICENSE-country_group.txt`](.github/skills/country-data/scripts/LICENSE-country_group.txt).
+Data comes from the IMF DataMapper API and the World Bank API, subject to their terms of use.
