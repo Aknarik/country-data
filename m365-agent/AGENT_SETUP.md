@@ -79,7 +79,7 @@ def chart(rows, start=2000, end=2031, kind='line', year=None):
         y = str(year or P - 1)
         s = rows.set_index('Economy')[y].dropna().sort_values()
         ax.barh(s.index, s.values, color='#2a6fb0'); ax.set_xlabel(r0['Unit'])
-        ax.set_title(f"{r0['Indicator']}, {y}" + (' (IMF projection)' if int(y) >= P else ''), loc='left', weight='bold')
+        ax.set_title(f"{r0['Indicator']}, {y}" + (' (IMF projection)' if int(y) >= P else ''), loc='left', weight='bold', color='#4B82AD')
     else:
         ys = [str(y) for y in range(start, end + 1) if str(y) in rows.columns]
         V = rows[ys].apply(pd.to_numeric, errors='coerce')
@@ -91,7 +91,7 @@ def chart(rows, start=2000, end=2031, kind='line', year=None):
             ax.axvspan(P - 0.5, int(ys[-1]) + 0.5, color='grey', alpha=0.15, zorder=0)
             ax.text(P, 0.98, ' IMF projections', transform=ax.get_xaxis_transform(), va='top', fontsize=9, color='dimgray')
         ax.set_ylabel(r0['Unit']); ax.legend(frameon=False)
-        ax.set_title(r0['Indicator'], loc='left', weight='bold')
+        ax.set_title(r0['Indicator'], loc='left', weight='bold', color='#4B82AD')
     ax.grid(alpha=0.3); ax.spines[['top', 'right']].set_visible(False)
     fig.text(0.01, 0.01, src, fontsize=8, color='dimgray'); fig.tight_layout(rect=(0, 0.04, 1, 1)); plt.show()
 
