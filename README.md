@@ -32,7 +32,7 @@ python -m pip install -r .github/skills/country-data/scripts/requirements.txt
 
 ## Microsoft 365 Copilot agent (no code)
 
-The [`m365-agent/`](m365-agent/) folder has a ready-made data file (`country_data_IMF.xlsx`: 23 IMF
+The [`m365-agent/`](m365-agent/) folder has a ready-made data file (`IMF_World_Economic_Outlook_data.xlsx`: 23 IMF
 indicators for about 200 countries and IMF aggregates, 1980–2031) and step-by-step instructions to build
 a Microsoft 365 Copilot agent that charts it with Code interpreter. See
 [`m365-agent/AGENT_SETUP.md`](m365-agent/AGENT_SETUP.md).

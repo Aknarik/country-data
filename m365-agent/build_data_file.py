@@ -27,7 +27,8 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / ".github" / "skills" / "country-data" / "scripts"))
 import country_data as cd  # noqa: E402
 
-OUT = HERE / "country_data_IMF.xlsx"
+# Named after the source: Microsoft 365 Copilot shows the file name in its reference list.
+OUT = HERE / "IMF_World_Economic_Outlook_data.xlsx"
 SOURCES = ("World Economic Outlook", "Fiscal Monitor")
 # Groups exposed as Yes/blank columns (short name -> WEO group column in country_group.csv)
 MAIN_GROUPS = {
@@ -53,12 +54,14 @@ def main():
             if any(s in v["source"] for s in SOURCES)}
     countries = {k: v for k, v in cd.country_names().items()}
     aggregates = cd.imf_aggregates()
+    first_proj = cd.THIS_YEAR
     print(f"{len(meta)} indicators", file=sys.stderr)
 
     rows = []
     for code, m in meta.items():
         values = cd._get_json(f"{cd.IMF_BASE}/{code}").get("values", {}).get(code, {})
         seen_agg = set()
+        tag = "FM" if "Fiscal Monitor" in m["source"] else "WEO"
         for econ, series in values.items():
             if econ in aggregates:
                 name, kind = aggregates[econ], "Aggregate"
@@ -67,10 +70,13 @@ def main():
                 seen_agg.add(name)
             else:
                 name, kind = countries.get(econ, econ), "Country"
+            link = f"https://www.imf.org/external/datamapper/{code}@{tag}/{econ}"
             econ = "KOS" if econ == "UVK" else econ  # match the Groups sheet code
             rows.append({"Economy code": econ, "Economy": clean(name), "Type": kind,
                          "Indicator code": code, "Indicator": clean(m["label"]),
                          "Unit": clean(m["unit"]), "Source": clean(m["source"]),
+                         "Citation": f"International Monetary Fund, {clean(m['source'])}",
+                         "Source link": link, "First projection year": first_proj,
                          **{int(y): v for y, v in series.items()}})
         print(f"  {code:<22} {len(values):>4} economies", file=sys.stderr)
         time.sleep(0.3)
@@ -95,7 +101,6 @@ def main():
                                 "Unit": clean(v["unit"]), "Source": clean(v["source"]),
                                 "Definition": clean(v["description"])} for k, v in meta.items()])
 
-    first_proj = cd.THIS_YEAR
     readme = pd.DataFrame({"About this file": [
         "Country Data - IMF World Economic Outlook and Fiscal Monitor",
         f"Built on {time.strftime('%Y-%m-%d')} from the public IMF DataMapper API (www.imf.org/external/datamapper).",
@@ -103,6 +108,8 @@ def main():
         f"Years {years[0]}-{years[-1]}. Values from {first_proj} onward are IMF PROJECTIONS, not actual data "
         "(for some countries the latest actual year is earlier).",
         "Sheet 'Data': one row per economy and indicator; one column per year. Blank = no data.",
+        "Cite the 'Citation' and 'Source link' columns of the rows used (the original IMF source), "
+        "not this workbook. 'First projection year' = first year that is an IMF projection.",
         "Type 'Country' = single economy; Type 'Aggregate' = IMF group total (World, Euro area, "
         "Advanced economies, Major advanced economies (G7), ...).",
         "Sheet 'Groups': which countries belong to G7, G20, euro area, advanced economies, emerging markets, etc. "
