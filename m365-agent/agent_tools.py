@@ -116,11 +116,8 @@ def user_gap(credit=None, gdp=None, ratio=None, economy='User data', lamb=None, 
 
 
 # --------------------------------------------------------------------------- FSI heat map
-FSI_ORDER = ['FSI688_CFSI_PT', 'FSI626_CFSI_PT', 'FSI15_CFSI_PT', 'T1KTA_CFSI_PT', 'AQ12_CFSI_PT', 'FSI17_CFSI_PT',
-             'AQ14_CFSI_PT', 'AQ1_CFSI_PT', 'FSI524_CFSI_PT', 'ROA_CFSI_PT', 'ROE_CFSI_PT', 'FSI99_CFSI_PT',
-             'FSI107_CFSI_PT', 'FSI765_CFSI_PT', 'FSI288_CFSI_PT', 'FSI289_CFSI_PT', 'FSI555_CFSI_PT']
-# Higher value = MORE risk for these; for all others a higher value = LESS risk (rank is flipped).
-RISK_UP = {'AQ12_CFSI_PT', 'FSI17_CFSI_PT', 'AQ1_CFSI_PT', 'FSI524_CFSI_PT', 'FSI107_CFSI_PT', 'FSI555_CFSI_PT'}
+# Groups and directions come from the FSI workbook: column Group, and column "More vulnerable when"
+# ("higher" or "lower"), set from a financial-sector vulnerability perspective.
 
 
 def percent_rank(s):
@@ -129,19 +126,24 @@ def percent_rank(s):
 
 
 def fsi_heatmap(country, quarters=12, min_history=8):
-    """Heat map of core FSIs: colour = risk percentile vs the country's own history
-    (0 = lowest risk ever, dark blue; 1 = highest risk ever, dark red); cells show actual values."""
+    """Heat map of FSIs: colour = vulnerability percentile vs the country's own history
+    (0 = least vulnerable ever, dark blue; 1 = most vulnerable ever, dark red); cells show actual values."""
     rows = F[(F['Economy'].str.lower() == country.lower()) | (F['Economy code'] == country.upper())]
-    rows = rows.set_index('Indicator code').reindex([c for c in FSI_ORDER if c in set(rows['Indicator code'])])
+    rows = rows.drop_duplicates('Indicator code').set_index('Indicator code')
     per = [c for c in rows.columns if re.fullmatch(r'\d{4}-Q\d', str(c))]
     V = rows[per].apply(pd.to_numeric, errors='coerce')
     V = V[V.notna().sum(axis=1) >= min_history]
+    rows = rows.loc[V.index]
     R = V.apply(percent_rank, axis=1).reindex(columns=per)
-    safer = ~R.index.isin(list(RISK_UP)); R.loc[safer] = 1 - R.loc[safer]
+    lower = (rows['More vulnerable when'] == 'lower').values; R.loc[lower] = 1 - R.loc[lower]
     first = min(V.apply(lambda r: r.first_valid_index(), axis=1).dropna())
     cols = [c for c in per if V[c].notna().any()][-quarters:]
     V, R = V[cols], R[cols]
-    fig, ax = plt.subplots(figsize=(4.5 + 0.7 * len(cols), 1.4 + 0.42 * len(V)))
+    # explicit layout in inches: labels left, group names right, colour bar and source below
+    L = 0.3 + 0.062 * rows['Indicator'].str.len().max(); Rt = 0.4 + 0.07 * rows['Group'].str.len().max()
+    w, h, top, bot = 0.7 * len(cols), 0.42 * len(V), 0.75, 1.75
+    W, H = L + w + Rt, top + h + bot
+    fig = plt.figure(figsize=(W, H)); ax = fig.add_axes([L / W, bot / H, w / W, h / H])
     im = ax.imshow(R.values.astype(float), cmap='RdBu_r', vmin=0, vmax=1, aspect='auto')
     for i in range(len(V)):
         for j in range(len(cols)):
@@ -149,16 +151,24 @@ def fsi_heatmap(country, quarters=12, min_history=8):
             if pd.notna(v):
                 ax.text(j, i, f'{v:.1f}', ha='center', va='center', fontsize=8,
                         color='white' if pd.notna(r) and abs(r - 0.5) > 0.3 else 'black')
-    labels = [f"{rows.at[c, 'Indicator']} ({'higher = riskier' if c in RISK_UP else 'higher = safer'})" for c in V.index]
-    ax.set_yticks(range(len(V))); ax.set_yticklabels(labels, fontsize=8)
+    ax.set_yticks(range(len(V))); ax.set_yticklabels(rows['Indicator'], fontsize=8)
     ax.set_xticks(range(len(cols))); ax.set_xticklabels(cols, rotation=45, ha='right', fontsize=8)
-    cb = fig.colorbar(im, ax=ax, fraction=0.03, pad=0.02); cb.set_ticks([0, 0.5, 1])
-    cb.set_ticklabels(['Lower risk', 'Median', 'Higher risk'])
+    groups = list(rows['Group'])
+    starts = [i for i in range(len(groups)) if i == 0 or groups[i] != groups[i - 1]]
+    for i in starts[1:]: ax.axhline(i - 0.5, color='black', lw=1.2)
+    ax2 = ax.twinx(); ax2.set_ylim(ax.get_ylim())
+    ax2.set_yticks([(s + e - 1) / 2 for s, e in zip(starts, starts[1:] + [len(groups)])])
+    ax2.set_yticklabels([groups[s] for s in starts], fontsize=8, weight='bold', color=BLUE)
+    ax2.tick_params(length=0); ax2.spines[:].set_visible(False)
+    cax = fig.add_axes([L / W, 0.55 / H, min(w, 5) / W, 0.13 / H])
+    cb = fig.colorbar(im, cax=cax, orientation='horizontal'); cb.set_ticks([0, 0.5, 1])
+    cb.set_ticklabels(['Less vulnerable', 'Median', 'More vulnerable']); cb.ax.tick_params(labelsize=8)
     ax.set_title(f"{rows['Economy'].dropna().iloc[0]}: financial soundness heat map\n"
-                 "colour = percent rank vs own history (dark red = highest risk, dark blue = lowest)",
+                 "colour = percent rank vs own history (dark red = most vulnerable, dark blue = least)",
                  loc='left', weight='bold', color=BLUE, fontsize=10)
-    note =f"Each indicator is ranked against all its own quarters since {first} (Excel PERCENTRANK.INC)."
-    _footer(fig, f"Source: {rows['Citation'].dropna().iloc[0]}. {note}")
-    return pd.DataFrame({'Latest value': V.ffill(axis=1).iloc[:, -1],
-                         'Risk percentile': R.ffill(axis=1).iloc[:, -1].round(2)},).set_index(pd.Index(
-                         [rows.at[c, 'Indicator'] for c in V.index], name='Indicator'))
+    note = f"Each indicator is ranked against all its own quarters since {first} (Excel PERCENTRANK.INC)."
+    fig.text(0.01, 0.06 / H, textwrap.fill(f"Source: {rows['Citation'].dropna().iloc[0]}. {note}", int(W * 14)),
+             fontsize=8, color='dimgray'); plt.show()
+    return pd.DataFrame({'Group': rows['Group'].values, 'Indicator': rows['Indicator'].values,
+                         'Latest value': V.ffill(axis=1).iloc[:, -1].round(2).values,
+                         'Vulnerability percentile': R.ffill(axis=1).iloc[:, -1].round(2).values})

@@ -1,15 +1,18 @@
 # Country Data agent for Microsoft 365 Copilot
 
-A no-code Microsoft 365 Copilot agent that answers questions and draws charts from four data files
-plus a code file. It uses the agent's built-in **Code interpreter**, so no API, connector or server is needed.
+A no-code Microsoft 365 Copilot agent that answers questions and draws charts from five data files and a
+code file, and answers questions from IMF FSAP reports on the Gulf countries. It uses the agent's built-in
+**Code interpreter**, so no API, connector or server is needed.
 
 | File | Contents |
 |---|---|
 | `IMF_World_Economic_Outlook_data.xlsx` | IMF World Economic Outlook and Fiscal Monitor: 23 annual indicators, about 200 countries and IMF aggregates, 1980–2031 (with projections); country groups including GCC |
-| `IMF_Financial_Soundness_Indicators.xlsx` | IMF core Financial Soundness Indicators (capital, NPLs, ROA/ROE, liquidity…), quarterly, 157 countries, 2001 onward |
+| `IMF_Financial_Soundness_Indicators.xlsx` | IMF Financial Soundness Indicators, core and selected additional (capital, asset quality, concentration, earnings, funding and liquidity incl. deposits to loans, FX exposure incl. FX loans), quarterly, 157 countries, 2001 onward; each indicator's group and vulnerability direction |
 | `BIS_credit_to_GDP.xlsx` | BIS credit-to-GDP ratio for 44 economies (including Saudi Arabia), with its one-sided Hodrick–Prescott trend and the credit-to-GDP gap: quarterly (λ = 400,000) and annual (λ = 100,000) |
 | `IMF_MFS_credit_to_GDP.xlsx` | Gulf countries BIS doesn't cover (Kuwait, UAE, Qatar, Oman): IMF Monetary and Financial Statistics credit ÷ WEO annual GDP, with one-sided HP trend (λ = 100,000) and gap, 2001–2025 |
+| `IMF_FSAP_reports_catalog.xlsx` | List of the 21 IMF FSAP reports for GCC countries (2001–2024): title, type, topics, eLibrary links and the PDF file name to use |
 | `Agent_tools.xlsx` | The agent's Python code (charts, credit gap from user data, FSI heat map), stored one line per row. Not a data source. |
+| FSAP report PDFs | The reports themselves, which you download once (see [FSAP reports](#fsap-reports)) |
 
 The data files are named after their sources, because Microsoft 365 Copilot shows the file name in its references.
 
@@ -19,31 +22,36 @@ The data files are named after their sources, because Microsoft 365 Copilot show
 - **Your own data:** attach or paste credit and GDP (or a ratio) and it computes the one-sided HP trend
   and gap and draws the same chart
 - **FSI heat map:** each indicator coloured by its percent rank against the country's own history
-  (Excel `PERCENTRANK.INC`); dark red = highest risk vs history, dark blue = lowest
+  (Excel `PERCENTRANK.INC`), oriented by financial-sector vulnerability; dark red = most vulnerable
+  vs history, dark blue = least
+- **FSAP reports:** questions on IMF Financial Sector Assessment Program findings, stress tests and
+  recommendations for Gulf countries, answered from the report text with citations
 
 ## What you need
 
 - A Microsoft 365 Copilot licence, with **Create agent** available in Copilot chat
   (in https://m365.cloud.microsoft/chat, the Teams Copilot app, or the Microsoft 365 Copilot app).
   If you don't see it, agent creation is turned off in your organisation.
-- The five `.xlsx` files from this folder. On GitHub: open each file, then **Download raw file**.
+- The six `.xlsx` files from this folder. On GitHub: open each file, then **Download raw file**.
   Keep the file names: the agent's instructions look for them.
+- For FSAP questions: the report PDFs (see [FSAP reports](#fsap-reports)).
 
 ## Step by step
 
 1. Open Microsoft 365 Copilot chat and select **Create agent** (sometimes under **Agents → Create agent**).
 2. Switch to the **Configure** tab. Menu names can differ slightly between versions.
 3. **Name:** `Country Data Assistant`
-4. **Description:** `Answers questions and draws charts on IMF macro data, bank financial soundness (with risk heat maps) and credit-to-GDP gaps, including from your own data.`
+4. **Description:** `Answers questions and draws charts on IMF macro data, bank financial soundness (with vulnerability heat maps) and credit-to-GDP gaps, including from your own data, and answers questions from IMF FSAP reports on Gulf countries.`
 5. **Instructions:** paste everything in the box in the [Instructions](#instructions-paste-into-the-agent) section below.
-   It is about 4,300 characters, within the 8,000-character limit.
-6. **Knowledge:** upload **all five** `.xlsx` files. You can also save them to OneDrive or SharePoint
-   and add them from there, which makes updating them easier later.
+   It is about 5,600 characters, within the 8,000-character limit.
+6. **Knowledge:** upload **all six** `.xlsx` files directly. Code interpreter needs them as uploaded files.
+   Then add the FSAP report PDFs (see [FSAP reports](#fsap-reports)).
    - If there is an option **"Only use specified sources"**, turn it **on**.
 7. **Capabilities:** turn on **Code interpreter**. It's needed to read the Excel files, run the code and draw charts.
 8. **Conversation starters:** add the ones listed [below](#conversation-starters).
 9. Test in the preview pane on the right, for example *"Plot Kuwait real GDP growth since 2000"*,
-   *"What is Kuwait's credit-to-GDP gap?"* and *"Show the FSI heat map for Kuwait"*.
+   *"What is Kuwait's credit-to-GDP gap?"*, *"Show the FSI heat map for Kuwait"* and
+   *"What were the main recommendations of Kuwait's 2018 FSAP?"*.
 10. Click **Create**. Use **Share** to give access to colleagues if you want to.
 
 **Updating an existing agent:** open it, click **Edit** → **Configure**, replace the Instructions,
@@ -52,11 +60,11 @@ upload the new files to Knowledge (remove older copies first), then click **Upda
 ## Instructions (paste into the agent)
 
 ```
-You are Country Data Assistant. Answer questions on country data using ONLY the uploaded workbooks
-and data the user attaches or pastes. Never use other sources or invent numbers. ALWAYS use Code
-interpreter (Python); never guess values.
+You are Country Data Assistant. Answer using ONLY your knowledge files (data workbooks and IMF FSAP
+report PDFs) and data the user attaches or pastes. Never use other sources or invent numbers.
 
-STEP 1 - before anything else, run exactly:
+DATA AND CHART questions: ALWAYS use Code interpreter (Python); never guess values.
+STEP 1 - before any data work, run exactly:
 import glob, pandas as pd
 f = [p for p in glob.glob('/mnt/data/*.xlsx') + glob.glob('**/*.xlsx', recursive=True) if 'Agent_tools' in p][0]
 exec('\n'.join(pd.read_excel(f, sheet_name='Code')['code'].fillna('')))
@@ -72,6 +80,7 @@ include Economy code (ISO3), Economy, Type, Indicator code, Indicator, Unit, Cit
   Africa, Emerging and developing Asia, Emerging and developing Europe, Advanced Asia, Advanced
   Europe, North America, Fuel exporters, GCC.
 - F: IMF Financial Soundness Indicators, quarterly.
+  Columns Group and "More vulnerable when" (higher/lower) give the vulnerability direction.
 - CQ / CA: BIS credit-to-GDP quarterly / annual, 44 economies. M: Kuwait, UAE, Qatar, Oman (IMF MFS
   credit / WEO GDP, annual). Each has 3 rows per economy: CREDIT_GDP, CREDIT_GDP_TREND (one-sided
   Hodrick-Prescott; lambda 400,000 quarterly, 100,000 annual), CREDIT_GDP_GAP (ratio - trend, pp).
@@ -82,7 +91,8 @@ MAPPING
   population = LP.
 - FSI: capital adequacy/CAR = FSI688_CFSI_PT; Tier 1 = FSI626_CFSI_PT; CET1 = FSI15_CFSI_PT; NPL
   ratio = AQ12_CFSI_PT; provisions to NPL = AQ14_CFSI_PT; ROA = ROA_CFSI_PT; ROE = ROE_CFSI_PT;
-  liquid assets to ST liabilities = FSI765_CFSI_PT; LCR = FSI288_CFSI_PT; NSFR = FSI289_CFSI_PT.
+  liquid assets to ST liabilities = FSI765_CFSI_PT; LCR = FSI288_CFSI_PT; NSFR = FSI289_CFSI_PT;
+  deposits to loans = FSI55_AFSI_PT; FX loans = FSI131_AFSI_PT; large exposures = FSI214_AFSI_PT.
 - Credit gap: Kuwait, UAE, Qatar, Oman -> M; others incl. Saudi Arabia -> CQ (CA if annual asked).
   Bahrain and economies not listed: not covered; offer to compute from the user's own data.
 - Countries: match Economy (case-insensitive) or Economy code; US = United States, UK = United
@@ -95,18 +105,30 @@ FUNCTIONS
   kind='gap' (top: ratio + Hodrick-Prescott trend; bottom: gap bars). One chart per economy.
   Examples: chart(D[(D['Economy']=='Kuwait') & (D['Indicator code']=='NGDP_RPCH')])
             chart(M[M['Economy']=='Kuwait'], kind='gap')
-- fsi_heatmap(country, quarters=12): heat map of the country's FSIs; returns a table of latest value
-  and risk percentile. Use for "heat map", "FSI risks", "banking sector risks".
+- fsi_heatmap(country, quarters=12): FSI heat map; colour = percent rank of each quarter in the
+  country's own history, oriented so dark red = most vulnerable. Returns group, latest value and
+  vulnerability percentile. Use for "heat map", "FSI risks", "banking sector vulnerabilities".
 - user_gap(credit=None, gdp=None, ratio=None, economy='...', lamb=None): the user's own data.
   Load the attached file or pasted numbers with pandas into Series indexed by year, quarter
   ('2020-Q1') or date. Give credit and gdp (same currency and scale; quarterly GDP is summed over
   4 quarters) or ratio (% of GDP). Lambda is automatic (quarterly 400,000, annual 100,000) unless the
   user gives one (lamb=). Then chart(user_gap(...), kind='gap'). State the data and lambda used.
 
-ANSWER
+FSAP REPORTS (IMF Financial Sector Assessment Program, GCC countries 2001-2024; the list with
+titles, years, types, topics and links is in IMF_FSAP_reports_catalog.xlsx, sheet Reports)
+- Questions on FSAP findings, risks, stress tests, recommendations, supervision (BCP), securities
+  (IOSCO), payment systems (FMI) or AML/CFT: answer from the report text in your knowledge, no code.
+  Use the latest relevant report unless asked otherwise and say its year. Give short quotes or
+  close paraphrases with report title, publication year and page or section. FSSA = main
+  stability assessment; DAR = detailed assessment of one standard.
+- "Which FSAP reports exist for X": list them from the catalog with year and eLibrary link.
+- If a report is not in your knowledge, say so and give its eLibrary link from the catalog.
+- You may combine a report's findings with the latest data (e.g. FSIs) - say which is which.
+
+ANSWER (data questions)
 1) chart(s); 2) 2-4 sentences with key numbers (which years are IMF projections; for gaps the
-Basel III thresholds 2 and 10 pp; for heat maps the reddest indicators in the latest quarter and
-that colours rank each quarter against the country's own history, Excel PERCENTRANK.INC);
+Basel III thresholds 2 and 10 pp; for heat maps the most vulnerable (reddest) indicators in the
+latest quarter and that colours rank each quarter against the country's own history);
 3) small table; 4) last line "Source: <Citation> - <Source link>" of the rows used, or "User-provided
 data" for the user's data. Cite the original source, never a workbook. Missing data: say so, never
 fill gaps.
@@ -122,6 +144,7 @@ fill gaps.
 | FSI heat map | Show the financial soundness heat map for Kuwait |
 | Kuwait credit gap | What is Kuwait's credit-to-GDP gap? |
 | My own data | I will attach credit and GDP data - calculate the credit-to-GDP gap |
+| Kuwait FSAP | What were the main findings and recommendations of Kuwait's latest FSAP? |
 
 ## Using your own credit and GDP data
 
@@ -143,25 +166,66 @@ This is also how to use **non-oil GDP** for oil exporters: provide credit and no
 
 ## FSI heat map
 
-For each core FSI the agent takes the country's full quarterly history and computes the percent rank of
+For each FSI the agent takes the country's full quarterly history and computes the percent rank of
 every quarter, the same as Excel `PERCENTRANK.INC`:
 (number of quarters with a lower value) ÷ (number of quarters − 1).
 
-- **Higher = riskier** indicators use the rank as is: NPL ratio, NPLs net of provisions to capital,
-  noninterest expenses to gross income, FX net open position, loan concentration, residential real
-  estate loans.
-- **Higher = safer** indicators use 1 − rank: capital ratios, provisions to NPLs, ROA, ROE,
-  interest margin, liquidity ratios, LCR, NSFR.
-- Colours run from **dark blue (0, the safest the country has been)** through white (median) to
-  **dark red (1, the riskiest)**. Cells show the actual values.
+Indicators are grouped and oriented from a **financial-sector vulnerability** perspective. The rank is
+used as is when a higher value means more vulnerability, and as 1 − rank when a lower value does:
+
+| Group | More vulnerable when **higher** | More vulnerable when **lower** |
+|---|---|---|
+| Capital adequacy | | Regulatory capital, Tier 1, CET1 to risk-weighted assets; Tier 1 capital to assets |
+| Asset quality | NPLs to gross loans; NPLs net of provisions to capital | Provisions to NPLs |
+| Concentration | Loan concentration by activity; large exposures to capital; residential and commercial real estate loans to total loans | |
+| Earnings | Noninterest expenses to gross income | ROA; ROE; interest margin to gross income |
+| Funding and liquidity | | Liquid assets to short-term liabilities and to total assets; LCR; NSFR; customer deposits to loans |
+| FX exposure | Net open FX position to capital; FX loans to total loans; FX liabilities to total liabilities | |
+| Household sector | Household debt to GDP | |
+
+- Colours run from **dark blue (0, the least vulnerable the country has been)** through white (median)
+  to **dark red (1, the most vulnerable)**. Cells show the actual values. Only indicators the country
+  reports appear.
 - By default it shows the last 12 quarters; ask for more or fewer.
 - Indicators with fewer than 8 quarters of history are left out.
 - Like Excel `PERCENTRANK`, the ranking uses the whole history, including quarters after the one
   being coloured.
 
-The risk direction of each indicator is set in `RISK_UP` in
-[`agent_tools.py`](agent_tools.py). Change it there if you classify an indicator differently, then run
-`python m365-agent/build_data_file.py --tools-only` and re-upload `Agent_tools.xlsx`.
+The groups and directions are set in `FSI_SERIES` in
+[`financial_data.py`](../.github/skills/country-data/scripts/financial_data.py) (the last field: `True` =
+more vulnerable when higher). They are written to the FSI workbook's "Group" and "More vulnerable when"
+columns. After changing them, run `python m365-agent/build_data_file.py` and re-upload
+`IMF_Financial_Soundness_Indicators.xlsx`.
+
+## FSAP reports
+
+`IMF_FSAP_reports_catalog.xlsx` lists 21 IMF FSAP reports for the GCC countries (from
+[`fsap_reports.csv`](fsap_reports.csv)):
+
+| Country | Reports (assessment year) |
+|---|---|
+| Kuwait | FSSA 2004, 2010 (update), **2018**; detailed assessments: IOSCO 2004, AML/CFT 2010 |
+| Saudi Arabia | FSSA 2004, 2011 (update), 2017, **2024**; detailed assessments: IOSCO, BCP, payment systems 2011; BCP 2024 |
+| United Arab Emirates | FSSA 2001, 2007; detailed assessments: DIFC IOSCO 2007, AML/CFT 2007 |
+| Bahrain | FSSA 2005; detailed assessments: AML/CFT 2005, FMI 2016 |
+| Qatar | Detailed assessment: AML/CFT 2007 |
+
+**Adding the PDFs (one time).** The IMF eLibrary blocks automated downloads, so download them in your browser:
+
+1. Open `IMF_FSAP_reports_catalog.xlsx`, sheet **Reports**.
+2. For each report, open the **PDF link** (or the **eLibrary link**, then *Download PDF*) and save the file
+   under the name in the **PDF file name** column, for example `IMF_FSAP_Kuwait_2018_FSSA_2019.pdf`.
+   Copilot shows the file name when it cites a report, so these names make the citations readable.
+3. Add the PDFs to the agent's **Knowledge**:
+   - **Recommended:** put them in one SharePoint or OneDrive folder and add that folder as a knowledge source.
+     This keeps them out of the uploaded-file limit, and you can add reports later without editing the agent.
+   - **Or** upload them directly, if your Agent Builder's file limit allows. At the time of writing it was
+     about 20 files in total, including the six `.xlsx` files. If so, start with the main FSSAs:
+     Kuwait 2018, Saudi Arabia 2024 and 2017, UAE 2007, Bahrain 2005, then the detailed assessments you need.
+4. Keep the six `.xlsx` files uploaded directly: Code interpreter reads them as uploaded files.
+
+To add more reports (other countries or newer FSAPs), add rows to `fsap_reports.csv`, run
+`python m365-agent/build_data_file.py --tools-only`, re-upload the catalog, and add the new PDFs.
 
 ## About the "source" shown by Copilot
 
@@ -239,6 +303,7 @@ re-upload `Agent_tools.xlsx`.
   is not covered, but you can supply your own data.
 - For World Bank indicators (life expectancy, CO2, ...) use the GitHub Copilot skill in this repo instead.
 - Numbers are a snapshot as of the build date shown in each file's README sheet.
+- FSAP answers are only as current as the latest report (e.g. Kuwait 2018); the agent states the report year.
 - The agent follows your organisation's Microsoft 365 policies. Sharing it with colleagues
   may be restricted by your admin. Whether you can attach files in the agent chat also depends on
   your organisation's settings; pasting a small table always works.

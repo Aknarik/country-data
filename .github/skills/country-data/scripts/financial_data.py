@@ -66,26 +66,36 @@ GULF_NAMES = {"KWT": "Kuwait", "ARE": "United Arab Emirates", "QAT": "Qatar", "O
               "SAU": "Saudi Arabia", "BHR": "Bahrain"}
 MFS_OTHER_SECTORS, MFS_PUBLIC_NFC = "DCORP_A_ACO_S1_Z", "DCORP_A_ACO_S11001"
 
-# Core FSIs (IMF FSIC dataflow). Code -> short name.
-CORE_FSI = {
-    "FSI688_CFSI_PT": "Regulatory capital to risk-weighted assets",
-    "FSI626_CFSI_PT": "Tier 1 capital to risk-weighted assets",
-    "FSI15_CFSI_PT": "Common equity Tier 1 capital to risk-weighted assets",
-    "T1KTA_CFSI_PT": "Tier 1 capital to assets",
-    "AQ12_CFSI_PT": "Nonperforming loans to total gross loans",
-    "FSI17_CFSI_PT": "Nonperforming loans net of provisions to capital",
-    "AQ14_CFSI_PT": "Provisions to nonperforming loans",
-    "AQ1_CFSI_PT": "Loan concentration by economic activity",
-    "FSI524_CFSI_PT": "Residential real estate loans to total gross loans",
-    "ROA_CFSI_PT": "Return on assets",
-    "ROE_CFSI_PT": "Return on equity",
-    "FSI99_CFSI_PT": "Interest margin to gross income",
-    "FSI107_CFSI_PT": "Noninterest expenses to gross income",
-    "FSI765_CFSI_PT": "Liquid assets to short-term liabilities",
-    "FSI288_CFSI_PT": "Liquidity coverage ratio",
-    "FSI289_CFSI_PT": "Net stable funding ratio",
-    "FSI555_CFSI_PT": "Net open position in foreign exchange to capital",
+# FSIs used (IMF FSIC dataflow): code -> (name, group, more vulnerable when higher?).
+# Grouped and oriented from a financial-sector vulnerability perspective.
+FSI_SERIES = {
+    "FSI688_CFSI_PT": ("Regulatory capital to risk-weighted assets", "Capital adequacy", False),
+    "FSI626_CFSI_PT": ("Tier 1 capital to risk-weighted assets", "Capital adequacy", False),
+    "FSI15_CFSI_PT": ("Common equity Tier 1 capital to risk-weighted assets", "Capital adequacy", False),
+    "T1KTA_CFSI_PT": ("Tier 1 capital to assets", "Capital adequacy", False),
+    "AQ12_CFSI_PT": ("Nonperforming loans to total gross loans", "Asset quality", True),
+    "FSI17_CFSI_PT": ("Nonperforming loans net of provisions to capital", "Asset quality", True),
+    "AQ14_CFSI_PT": ("Provisions to nonperforming loans", "Asset quality", False),
+    "AQ1_CFSI_PT": ("Loan concentration by economic activity", "Concentration", True),
+    "FSI214_AFSI_PT": ("Large exposures to capital", "Concentration", True),
+    "FSI524_CFSI_PT": ("Residential real estate loans to total gross loans", "Concentration", True),
+    "FSI520_AFSI_PT": ("Commercial real estate loans to total gross loans", "Concentration", True),
+    "ROA_CFSI_PT": ("Return on assets", "Earnings", False),
+    "ROE_CFSI_PT": ("Return on equity", "Earnings", False),
+    "FSI99_CFSI_PT": ("Interest margin to gross income", "Earnings", False),
+    "FSI107_CFSI_PT": ("Noninterest expenses to gross income", "Earnings", True),
+    "FSI765_CFSI_PT": ("Liquid assets to short-term liabilities", "Funding and liquidity", False),
+    "FSI283_LIQATTA_PT": ("Liquid assets to total assets", "Funding and liquidity", False),
+    "FSI288_CFSI_PT": ("Liquidity coverage ratio", "Funding and liquidity", False),
+    "FSI289_CFSI_PT": ("Net stable funding ratio", "Funding and liquidity", False),
+    "FSI55_AFSI_PT": ("Customer deposits to total (noninterbank) loans", "Funding and liquidity", False),
+    "FSI555_CFSI_PT": ("Net open position in foreign exchange to capital", "FX exposure", True),
+    "FSI131_AFSI_PT": ("Foreign currency denominated loans to total loans", "FX exposure", True),
+    "FSI680_AFSI_PT": ("Foreign currency denominated liabilities to total liabilities", "FX exposure", True),
+    "FSI179_AFSI_PT": ("Household debt to GDP", "Household sector", True),
 }
+FSI_NAMES = {k: v[0] for k, v in FSI_SERIES.items()}
+CORE_FSI = {k: v for k, v in FSI_NAMES.items() if "_CFSI_" in k}  # core FSIs only
 
 
 def _get(url, params=None, headers=None, timeout=180):
@@ -280,7 +290,7 @@ def mfs_credit_to_gdp_with_gap(countries=GULF_MFS, lamb=None, min_obs=None, non_
 # --------------------------------------------------------------------------- #
 def fetch_fsi(countries="all", indicators=None, freq="Q", start=None):
     """Long DataFrame: country (ISO3), sector, indicator, indicator_name, period, value."""
-    inds = "+".join(indicators or CORE_FSI)
+    inds = "+".join(indicators or FSI_SERIES)
     params = {"attributes": "none", "measures": "all"}
     if start:
         params["c[TIME_PERIOD]"] = f"ge:{start}"
@@ -291,7 +301,7 @@ def fetch_fsi(countries="all", indicators=None, freq="Q", start=None):
     df = pd.read_csv(StringIO(text))
     return pd.DataFrame({"country": df["COUNTRY"], "sector": df["SECTOR"],
                          "indicator": df["INDICATOR"],
-                         "indicator_name": df["INDICATOR"].map(CORE_FSI).fillna(df["INDICATOR"]),
+                         "indicator_name": df["INDICATOR"].map(FSI_NAMES).fillna(df["INDICATOR"]),
                          "period": df["TIME_PERIOD"], "value": df["OBS_VALUE"]})
 
 
@@ -341,7 +351,7 @@ def main():
             s.reconfigure(encoding="utf-8", errors="replace")
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="cmd", required=True)
-    s = sub.add_parser("fsi", help="IMF core Financial Soundness Indicators")
+    s = sub.add_parser("fsi", help="IMF Financial Soundness Indicators (core + selected additional)")
     s.add_argument("--countries", default="all", help="ISO3 codes, e.g. USA,GBR,KWT (default all)")
     s.add_argument("--freq", default="Q", choices=["Q", "A", "M"])
     s.add_argument("--start", help="e.g. 2015-Q1")

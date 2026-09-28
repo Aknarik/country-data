@@ -63,7 +63,9 @@ MAIN_GROUPS = {
 }
 
 
-FSI_SECTORS = {"S12CFSI": "Deposit takers", "REM": "Real estate markets"}
+FSI_SECTORS = {"S12CFSI": "Deposit takers", "REM": "Real estate markets", "S14": "Households",
+               "S1M": "Households", "S11": "Nonfinancial corporations"}
+FSAP_FILE = "IMF_FSAP_reports_catalog.xlsx"
 FSI_CITATION = ("International Monetary Fund, Financial Soundness Indicators (FSI) database "
                 "(dataset IMF.STA:FSIC)")
 BIS_CITATION = "Bank for International Settlements, credit-to-GDP statistics (dataset WS_CREDIT_GAP)"
@@ -93,14 +95,17 @@ def fsi_sheet(names):
         "Type": "Country",
         "Sector": wide["sector"].map(FSI_SECTORS).fillna(wide["sector"]),
         "Indicator code": wide["indicator"],
-        "Indicator": wide["indicator"].map(fd.CORE_FSI),
+        "Indicator": wide["indicator"].map(fd.FSI_NAMES),
+        "Group": wide["indicator"].map(lambda c: fd.FSI_SERIES[c][1]),
+        "More vulnerable when": wide["indicator"].map(lambda c: "higher" if fd.FSI_SERIES[c][2] else "lower"),
         "Unit": "Percent",
         "Citation": FSI_CITATION,
         "Source link": "https://data.imf.org",
     })
     out = pd.concat([out, wide[[c for c in wide.columns if "-Q" in str(c)]]], axis=1)
     print(f"  FSI: {len(out):,} rows, {out['Economy code'].nunique()} economies", file=sys.stderr)
-    return out.sort_values(["Economy", "Indicator"])
+    order = {c: i for i, c in enumerate(fd.FSI_SERIES)}
+    return out.assign(_o=out["Indicator code"].map(order)).sort_values(["Economy", "_o"]).drop(columns="_o")
 
 
 def mfs_sheet():
@@ -233,21 +238,27 @@ def main():
 
     # 2. IMF Financial Soundness Indicators (quarterly)
     fsi = fsi_sheet(countries)
-    fsi_ind = pd.DataFrame([{"Indicator code": k, "Indicator": v, "Unit": "Percent",
-                             "Sector": "Real estate markets" if k == "FSI524_CFSI_PT" else "Deposit takers",
-                             "Source": FSI_CITATION} for k, v in fd.CORE_FSI.items()])
+    fsi_ind = pd.DataFrame([{"Indicator code": k, "Indicator": name, "Group": group,
+                             "More vulnerable when": "higher" if up else "lower",
+                             "Core or additional FSI": "Core" if "_CFSI_" in k else "Additional",
+                             "Unit": "Percent", "Source": FSI_CITATION}
+                            for k, (name, group, up) in fd.FSI_SERIES.items()])
     write_book(HERE / FSI_FILE, {
         "README": [
-            "IMF Financial Soundness Indicators (FSI) - core indicators, quarterly",
+            "IMF Financial Soundness Indicators (FSI) - core and selected additional indicators, quarterly",
             f"Built on {built} from the public IMF SDMX API (api.imf.org), dataset IMF.STA:FSIC.",
             "Sheet 'FSI_Quarterly': one row per economy and indicator; one column per quarter "
             "(e.g. '2024-Q4'). Blank = not reported. All values in percent.",
-            "Covers capital adequacy (regulatory capital, Tier 1, CET1 to risk-weighted assets), asset "
-            "quality (NPLs to gross loans, provisions), earnings (ROA, ROE), liquidity (liquid assets, "
-            "LCR, NSFR) and FX exposure of deposit takers.",
+            "Groups: capital adequacy, asset quality, concentration (sectoral, large exposures, real "
+            "estate), earnings, funding and liquidity (incl. customer deposits to loans), FX exposure "
+            "(open position, FX loans and liabilities), household sector.",
+            "Column 'More vulnerable when' gives the direction from a financial-sector vulnerability "
+            "perspective (e.g. NPL ratio: higher; capital ratios and deposits to loans: lower).",
             "Cite the 'Citation' column (the IMF FSI database), not this workbook.",
             refresh],
         "FSI_Quarterly": fsi, "Indicators": fsi_ind})
+
+    write_fsap_catalog(built)
 
     # 3. BIS credit-to-GDP with one-sided HP trend and gap
     credit_q, credit_a = credit_sheet(annual=False), credit_sheet(annual=True)
@@ -303,6 +314,29 @@ def write_book(path, sheets):
     rows = {k: len(v) for k, v in sheets.items() if not isinstance(v, list)}
     print(f"{path.name}: {rows}, {path.stat().st_size / 1e6:.1f} MB", file=sys.stderr)
 
+def write_fsap_catalog(built=None):
+    """IMF FSAP reports for Gulf countries (fsap_reports.csv) as a knowledge file, with the file
+    name each PDF should be saved under so the agent's citations show the report."""
+    cat = pd.read_csv(HERE / "fsap_reports.csv")
+    kind = cat["Document type"].str.contains("FSSA").map({True: "FSSA", False: "DAR"})
+    topic = cat["Topics"].fillna("").str.replace(", ", "-").str.replace(" ", "")
+    cat["PDF file name"] = ("IMF_FSAP_" + cat["Country"].str.replace(" ", "_") + "_" + cat["Assessment year"].astype(str)
+                            + "_" + kind + [f"_{t}" if t and k == "DAR" else "" for t, k in zip(topic, kind)]
+                            + "_" + cat["Publication year"].astype(str) + ".pdf")
+    write_book(HERE / FSAP_FILE, {
+        "README": [
+            "IMF Financial Sector Assessment Program (FSAP) reports for Gulf countries (GCC).",
+            f"Catalog built on {built or time.strftime('%Y-%m-%d')} from m365-agent/fsap_reports.csv.",
+            "FSSA = Financial System Stability Assessment (main findings, stress tests, recommendations). "
+            "DAR = Detailed Assessment Report on a standard: BCP = Basel Core Principles (banking supervision), "
+            "IOSCO = securities regulation, FMI = payment systems / market infrastructures, AML = anti-money "
+            "laundering and combating the financing of terrorism, Transparency = monetary and financial policy "
+            "transparency.",
+            "The report texts are PDF knowledge files named as in column 'PDF file name'.",
+            "Cite the report (title, year, page), not this catalog."],
+        "Reports": cat})
+
+
 def write_tools():
     """Store agent_tools.py in Agent_tools.xlsx (sheet Code, one line per row) so the agent's
     Code interpreter can load it: exec('\\n'.join(pd.read_excel(f, 'Code')['code'].fillna('')))."""
@@ -327,6 +361,7 @@ def write_tools():
 if __name__ == "__main__":
     if "--tools-only" in sys.argv:
         write_tools()
+        write_fsap_catalog()
     else:
         main()
         write_tools()
