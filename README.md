@@ -40,6 +40,8 @@ a Microsoft 365 Copilot agent that charts them with Code interpreter. See
 - `IMF_Financial_Soundness_Indicators.xlsx`: IMF core Financial Soundness Indicators, quarterly, 157 countries
 - `BIS_credit_to_GDP.xlsx`: BIS credit-to-GDP ratio with a one-sided Hodrick–Prescott trend
   (λ = 400,000 quarterly, 100,000 annual) and the credit-to-GDP gap, 44 economies
+- `IMF_MFS_credit_to_GDP.xlsx`: the same for Gulf countries BIS doesn't cover (Kuwait, UAE, Qatar, Oman),
+  from IMF Monetary and Financial Statistics credit ÷ WEO annual GDP (λ = 100,000)
 
 ## Financial soundness and credit-to-GDP gap (Python)
 
@@ -51,6 +53,7 @@ BIS-published credit-to-GDP gaps.
 python .github/skills/country-data/scripts/financial_data.py credit --countries "SA,US" --out credit_gap.csv --plot gap.png
 python .github/skills/country-data/scripts/financial_data.py credit --countries US --annual
 python .github/skills/country-data/scripts/financial_data.py fsi --countries "KWT,SAU,ARE" --out fsi.csv
+python .github/skills/country-data/scripts/financial_data.py mfs --out gulf_gap.csv --plot gulf.png
 ```
 
 ## Run without Copilot

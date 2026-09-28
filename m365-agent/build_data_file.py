@@ -14,6 +14,9 @@ the file name in its references), for the agent's Code interpreter to read and p
   BIS_credit_to_GDP.xlsx
       Credit_GDP_Quarterly  BIS credit-to-GDP ratio + one-sided HP trend (lambda 400,000) + gap
       Credit_GDP_Annual     same on calendar-year averages, lambda 100,000
+  IMF_MFS_credit_to_GDP.xlsx
+      Credit_GDP_Annual     Gulf countries not covered by BIS (Kuwait, UAE, Qatar, Oman):
+                            IMF MFS credit / WEO nominal GDP + one-sided HP trend (100,000) + gap
 
 The FSI / BIS downloads and the HP filter live in
 .github/skills/country-data/scripts/financial_data.py.
@@ -39,6 +42,8 @@ import financial_data as fd  # noqa: E402
 OUT = HERE / "IMF_World_Economic_Outlook_data.xlsx"
 FSI_FILE = "IMF_Financial_Soundness_Indicators.xlsx"
 BIS_FILE = "BIS_credit_to_GDP.xlsx"
+MFS_FILE = "IMF_MFS_credit_to_GDP.xlsx"
+GCC = ["BHR", "KWT", "OMN", "QAT", "SAU", "ARE"]
 SOURCES = ("World Economic Outlook", "Fiscal Monitor")
 # Groups exposed as Yes/blank columns (short name -> WEO group column in country_group.csv)
 MAIN_GROUPS = {
@@ -59,6 +64,9 @@ FSI_SECTORS = {"S12CFSI": "Deposit takers", "REM": "Real estate markets"}
 FSI_CITATION = ("International Monetary Fund, Financial Soundness Indicators (FSI) database "
                 "(dataset IMF.STA:FSIC)")
 BIS_CITATION = "Bank for International Settlements, credit-to-GDP statistics (dataset WS_CREDIT_GAP)"
+MFS_CITATION = ("International Monetary Fund, Monetary and Financial Statistics (dataset IMF.STA:MFS_DC; "
+                "depository corporations' claims on other sectors less claims on public non-financial "
+                "corporations) and World Economic Outlook (nominal GDP)")
 CREDIT_SERIES = {  # column in financial_data output -> (code, name, unit)
     "ratio": ("CREDIT_GDP", "Credit to the private non-financial sector, % of GDP", "Percent of GDP"),
     "trend": ("CREDIT_GDP_TREND", "Credit-to-GDP trend (one-sided HP filter)", "Percent of GDP"),
@@ -90,6 +98,31 @@ def fsi_sheet(names):
     out = pd.concat([out, wide[[c for c in wide.columns if "-Q" in str(c)]]], axis=1)
     print(f"  FSI: {len(out):,} rows, {out['Economy code'].nunique()} economies", file=sys.stderr)
     return out.sort_values(["Economy", "Indicator"])
+
+
+def mfs_sheet():
+    """Gulf credit-to-GDP from IMF MFS / WEO GDP, annual, one-sided HP (lambda 100,000)."""
+    lamb = fd.LAMBDA["A"]
+    df = fd.mfs_credit_to_gdp_with_gap(fd.GULF_MFS)
+    method = (f"Credit = claims on other sectors minus claims on public non-financial corporations "
+              f"(end of year); ratio = credit / nominal GDP x 100; trend: one-sided HP filter, "
+              f"lambda = {lamb:,}, from 10 years after the series start")
+    rows = []
+    for cty, g in df.groupby("country"):
+        g = g.set_index("period")
+        for col, (code, name, unit) in CREDIT_SERIES.items():
+            name = name.replace("Credit to the private non-financial sector",
+                                "Credit to the non-government sector (excl. public corporations)")
+            rows.append({"Economy code": cty, "Economy": fd.GULF_NAMES.get(cty, cty), "Type": "Country",
+                         "Indicator code": code, "Indicator": name, "Unit": unit, "Method": method,
+                         "Citation": MFS_CITATION + ("" if col == "ratio" else
+                                                     f"; {col}: own calculation, one-sided HP filter "
+                                                     f"(lambda {lamb:,})"),
+                         "Source link": "https://data.imf.org", **g[col].round(4).to_dict()})
+    out = pd.DataFrame(rows)
+    periods = sorted(c for c in out.columns if re.fullmatch(r"\d{4}", str(c)))
+    print(f"  MFS credit: {out['Economy code'].nunique()} economies", file=sys.stderr)
+    return out[[c for c in out.columns if c not in periods] + periods]
 
 
 def credit_sheet(annual):
@@ -164,7 +197,8 @@ def main():
     for short, query in MAIN_GROUPS.items():
         members = set(cd.weo_groups()[cd.find_group(query)])
         groups[short] = ["Yes" if c in members else "" for c in groups["Economy code"]]
-    groups["All groups"] = [", ".join(s for s in MAIN_GROUPS if row[s] == "Yes")
+    groups["GCC"] = ["Yes" if c in GCC else "" for c in groups["Economy code"]]
+    groups["All groups"] = [", ".join(s for s in [*MAIN_GROUPS, "GCC"] if row[s] == "Yes")
                             for _, row in groups.iterrows()]
 
     indicators = pd.DataFrame([{"Indicator code": k, "Indicator": clean(v["label"]),
@@ -229,6 +263,25 @@ def main():
             "Cite the 'Citation' column (BIS; trend and gap are own calculations), not this workbook.",
             refresh],
         "Credit_GDP_Quarterly": credit_q, "Credit_GDP_Annual": credit_a})
+
+    # 4. Gulf credit-to-GDP from IMF MFS (countries BIS does not cover)
+    write_book(HERE / MFS_FILE, {
+        "README": [
+            "Credit-to-GDP ratio, one-sided HP trend and gap for Gulf countries not covered by BIS "
+            "(Kuwait, United Arab Emirates, Qatar, Oman). Saudi Arabia: see BIS_credit_to_GDP.xlsx. "
+            "Bahrain: no IMF MFS data.",
+            f"Built on {built} from the public IMF SDMX API (api.imf.org): dataset IMF.STA:MFS_DC "
+            "(depository corporations survey) and IMF.RES:WEO (nominal GDP, domestic currency).",
+            "Credit = depository corporations' claims on other sectors minus claims on public non-financial "
+            "corporations, end of year, domestic currency. The narrower 'claims on private sector' series "
+            "is not used because it has a reclassification break for Kuwait.",
+            "Ratio = credit / annual nominal GDP x 100. The latest year's GDP may be an IMF estimate.",
+            "Trend: one-sided Hodrick-Prescott filter, lambda 100,000 (annual data), reported from 10 years "
+            "after the series start. Gap = ratio - trend, percentage points of GDP.",
+            "Oil-price swings move GDP, so the ratio jumps when oil prices fall (e.g. 2009, 2015, 2020).",
+            "Cite the 'Citation' column (IMF; trend and gap are own calculations), not this workbook.",
+            refresh],
+        "Credit_GDP_Annual": mfs_sheet()})
 
 
 def write_book(path, sheets):

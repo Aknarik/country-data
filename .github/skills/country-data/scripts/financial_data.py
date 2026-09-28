@@ -7,6 +7,16 @@ Sources (public, no key needed)
   IMF FSI : IMF SDMX 3.0 API, dataflow IMF.STA:FSIC (core FSIs), quarterly
   BIS     : BIS SDMX API, dataflow WS_CREDIT_GAP - credit to the private non-financial
             sector from all sectors, % of GDP (adjusted for breaks), quarterly
+  IMF MFS : IMF SDMX 3.0 API, dataflow IMF.STA:MFS_DC (depository corporations survey),
+            annual, divided by nominal GDP from IMF.RES:WEO - used for Gulf countries that
+            BIS does not cover (Kuwait, UAE, Qatar, Oman)
+
+MFS credit measure
+  Claims on other sectors (DCORP_A_ACO_S1_Z) minus claims on public non-financial
+  corporations (DCORP_A_ACO_S11001), in domestic currency. The narrower "claims on
+  private sector" series (DCORP_A_ACO_PS) has a reclassification break for Kuwait
+  (about 98% of GDP in 2015 but 4% in 2024, the rest moved to other financial
+  corporations), which would create a false gap; the measure used here is continuous.
 
 One-sided HP filter
   For each period t, a standard (two-sided) HP filter is run on the data available
@@ -23,9 +33,11 @@ Usage
   python financial_data.py credit --countries all --out credit_gap.xlsx
   python financial_data.py credit --countries US --annual           # annual averages, lambda 100,000
   python financial_data.py credit --countries US --plot us_gap.png
+  python financial_data.py mfs    --countries "KWT,ARE,QAT,OMN" --out gulf_gap.csv --plot gulf.png
 
 As a module
   from financial_data import fetch_fsi, fetch_bis_credit_gdp, hp_one_sided, credit_gap
+  from financial_data import mfs_credit_to_gdp_with_gap
 """
 
 import argparse
@@ -42,6 +54,10 @@ HEADERS = {"User-Agent": "python-requests/2.34 country_data.py"}
 LAMBDA = {"Q": 400_000, "A": 100_000}
 PERIODS_PER_YEAR = {"Q": 4, "A": 1}
 MIN_YEARS = 10  # BIS publishes a trend only after 10 years of data
+GULF_MFS = ["KWT", "ARE", "QAT", "OMN"]  # Saudi Arabia: use BIS (longer); Bahrain: no MFS data
+GULF_NAMES = {"KWT": "Kuwait", "ARE": "United Arab Emirates", "QAT": "Qatar", "OMN": "Oman",
+              "SAU": "Saudi Arabia", "BHR": "Bahrain"}
+MFS_OTHER_SECTORS, MFS_PUBLIC_NFC = "DCORP_A_ACO_S1_Z", "DCORP_A_ACO_S11001"
 
 # Core FSIs (IMF FSIC dataflow). Code -> short name.
 CORE_FSI = {
@@ -188,6 +204,52 @@ def credit_to_gdp_with_gap(countries="all", annual=False, lamb=None, min_obs=Non
 
 
 # --------------------------------------------------------------------------- #
+# IMF Monetary and Financial Statistics credit / WEO GDP (annual)
+# --------------------------------------------------------------------------- #
+def _imf_csv(flow, key):
+    text = _get(f"{IMF_SDMX}/data/dataflow/{flow}/+/{key}", {"attributes": "none", "measures": "all"},
+                headers={"Accept": "application/vnd.sdmx.data+csv;version=2.0.0"})
+    return pd.read_csv(StringIO(text)) if text else pd.DataFrame()
+
+
+def fetch_mfs_credit(countries=GULF_MFS):
+    """Annual (end-year) depository corporations' credit to non-government, non-public-corporation
+    sectors, domestic currency units: claims on other sectors - claims on public NFCs."""
+    cty = _codes(countries)
+    df = _imf_csv("IMF.STA/MFS_DC", f"{cty}.{MFS_OTHER_SECTORS}+{MFS_PUBLIC_NFC}.XDC.A")
+    if df.empty:
+        raise RuntimeError(f"No IMF MFS credit data for {countries}")
+    w = df.pivot_table(index=["COUNTRY", "TIME_PERIOD"], columns="INDICATOR", values="OBS_VALUE")
+    w[MFS_PUBLIC_NFC] = w.get(MFS_PUBLIC_NFC, 0).fillna(0) if MFS_PUBLIC_NFC in w else 0
+    return (w[MFS_OTHER_SECTORS] - w[MFS_PUBLIC_NFC]).dropna().rename("credit")
+
+
+def fetch_weo_gdp(countries=GULF_MFS):
+    """Annual nominal GDP, domestic currency units (IMF WEO, NGDP)."""
+    df = _imf_csv("IMF.RES/WEO", f"{_codes(countries)}.NGDP.A")
+    if df.empty:
+        raise RuntimeError(f"No WEO GDP for {countries}")
+    return df.set_index(["COUNTRY", "TIME_PERIOD"])["OBS_VALUE"].rename("gdp")
+
+
+def mfs_credit_to_gdp_with_gap(countries=GULF_MFS, lamb=None, min_obs=None):
+    """Credit-to-GDP ratio (%) = MFS credit / WEO nominal GDP, with one-sided HP trend
+    (annual, lambda 100,000 by default) and gap. Returns country, period, credit, gdp, ratio, trend, gap."""
+    both = pd.concat([fetch_mfs_credit(countries), fetch_weo_gdp(countries)], axis=1, join="inner").dropna()
+    out = []
+    for cty, g in both.groupby(level=0):
+        g = g.droplevel(0).sort_index()
+        g.index = g.index.astype(str)
+        res = credit_gap(100 * g["credit"] / g["gdp"], lamb=lamb, freq="A", min_obs=min_obs)
+        res = g.join(res)
+        res.insert(0, "country", cty)
+        out.append(res.rename_axis("period").reset_index())
+    if not out:
+        raise RuntimeError(f"No overlapping MFS credit and WEO GDP data for {countries}")
+    return pd.concat(out, ignore_index=True)
+
+
+# --------------------------------------------------------------------------- #
 # IMF Financial Soundness Indicators
 # --------------------------------------------------------------------------- #
 def fetch_fsi(countries="all", indicators=None, freq="Q", start=None):
@@ -218,11 +280,11 @@ def _save(df, out):
     print(f"saved -> {out}")
 
 
-def _plot_gap(df, out):
+def _plot_gap(df, out, names=None, source="Source: BIS credit-to-GDP statistics; trend: one-sided HP filter"):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    names = bis_country_names()
+    names = names if names is not None else bis_country_names()
     for cty, g in df.groupby("country"):
         x = g["period"].astype(str)
         fig, (a1, a2) = plt.subplots(2, 1, figsize=(10, 7), sharex=True,
@@ -230,17 +292,17 @@ def _plot_gap(df, out):
         a1.plot(x, g["ratio"], lw=2, label="Credit-to-GDP ratio")
         a1.plot(x, g["trend"], lw=2, ls="--", label="One-sided HP trend")
         a1.set_ylabel("% of GDP"); a1.legend(frameon=False)
-        a1.set_title(f"{names.get(cty, cty)}: credit to the private non-financial sector", loc="left",
+        a1.set_title(f"{names.get(cty, cty)}: credit-to-GDP ratio, trend and gap", loc="left",
                      weight="bold", color="#4B82AD")
         a2.bar(x, g["gap"], color=np.where(g["gap"] >= 0, "#c0392b", "#4B82AD"))
+        a2.axhline(0, color="black", lw=0.8)
         a2.axhline(2, color="grey", ls=":", lw=1); a2.axhline(10, color="grey", ls=":", lw=1)
         a2.set_ylabel("Gap, pp")
         step = max(1, len(x) // 12)
         a2.set_xticks(range(0, len(x), step)); a2.set_xticklabels(x.iloc[::step], rotation=45)
         for a in (a1, a2):
             a.grid(alpha=0.3); a.spines[["top", "right"]].set_visible(False)
-        fig.text(0.01, 0.01, "Source: BIS credit-to-GDP statistics; trend: one-sided HP filter",
-                 fontsize=8, color="dimgray")
+        fig.text(0.01, 0.01, source, fontsize=8, color="dimgray")
         fig.tight_layout(rect=(0, 0.03, 1, 1))
         path = out if df["country"].nunique() == 1 else out.replace(".png", f"_{cty}.png")
         fig.savefig(path, dpi=130); plt.close(fig)
@@ -266,9 +328,24 @@ def main():
                    help="observations needed before a trend is reported (default 10 years)")
     s.add_argument("--out", default="credit_gap.csv")
     s.add_argument("--plot", help="also save a chart (PNG) per country")
+    s = sub.add_parser("mfs", help="IMF MFS credit / WEO GDP (annual) + one-sided HP trend and gap")
+    s.add_argument("--countries", default=",".join(GULF_MFS), help="ISO3 codes (default Gulf: KWT,ARE,QAT,OMN)")
+    s.add_argument("--lamb", type=float, help="override the smoothing parameter (default 100,000)")
+    s.add_argument("--min-obs", type=int, help="observations needed before a trend is reported (default 11)")
+    s.add_argument("--out", default="mfs_credit_gap.csv")
+    s.add_argument("--plot", help="also save a chart (PNG) per country")
     a = p.parse_args()
 
-    if a.cmd == "fsi":
+    if a.cmd == "mfs":
+        df = mfs_credit_to_gdp_with_gap(a.countries, a.lamb, a.min_obs)
+        print(f"{df['country'].nunique()} countries, lambda = {a.lamb or LAMBDA['A']:,.0f}")
+        print(df[["country", "period", "ratio", "trend", "gap"]].groupby("country").tail(1).round(1)
+              .to_string(index=False))
+        _save(df, a.out)
+        if a.plot:
+            _plot_gap(df, a.plot, names=GULF_NAMES, source="Source: IMF Monetary and Financial Statistics and World "
+                      "Economic Outlook; trend: one-sided HP filter (lambda 100,000)")
+    elif a.cmd == "fsi":
         df = fetch_fsi(a.countries, freq=a.freq, start=a.start)
         print(f"{len(df):,} observations, {df['country'].nunique()} countries, "
               f"{df['indicator'].nunique()} indicators, {df['period'].min()}-{df['period'].max()}")
