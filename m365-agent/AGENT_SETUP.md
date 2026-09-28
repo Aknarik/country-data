@@ -12,7 +12,7 @@ code file, and answers questions from IMF FSAP reports on the Gulf countries. It
 | `IMF_MFS_credit_to_GDP.xlsx` | Gulf countries BIS doesn't cover (Kuwait, UAE, Qatar, Oman): IMF Monetary and Financial Statistics credit ÷ WEO annual GDP, with one-sided HP trend (λ = 100,000) and gap, 2001–2025 |
 | `IMF_FSAP_reports_catalog.xlsx` | List of the 21 IMF FSAP reports for GCC countries (2001–2024): title, type, topics, eLibrary links and the PDF file name to use |
 | `Agent_tools.xlsx` | The agent's Python code (charts, credit gap from user data, FSI heat map), stored one line per row. Not a data source. |
-| FSAP report PDFs | The reports themselves, which you download once (see [FSAP reports](#fsap-reports)) |
+| FSAP reports (online) | The agent reads the reports through the eLibrary links in the catalog (see [FSAP reports](#fsap-reports)) |
 
 The data files are named after their sources, because Microsoft 365 Copilot shows the file name in its references.
 
@@ -34,7 +34,7 @@ The data files are named after their sources, because Microsoft 365 Copilot show
   If you don't see it, agent creation is turned off in your organisation.
 - The six `.xlsx` files from this folder. On GitHub: open each file, then **Download raw file**.
   Keep the file names: the agent's instructions look for them.
-- For FSAP questions: the report PDFs (see [FSAP reports](#fsap-reports)).
+- For FSAP questions: web access for the agent to open the IMF eLibrary links (see [FSAP reports](#fsap-reports)).
 
 ## Step by step
 
@@ -43,9 +43,10 @@ The data files are named after their sources, because Microsoft 365 Copilot show
 3. **Name:** `Country Data Assistant`
 4. **Description:** `Answers questions and draws charts on IMF macro data, bank financial soundness (with vulnerability heat maps) and credit-to-GDP gaps, including from your own data, and answers questions from IMF FSAP reports on Gulf countries.`
 5. **Instructions:** paste everything in the box in the [Instructions](#instructions-paste-into-the-agent) section below.
-   It is about 5,600 characters, within the 8,000-character limit.
+   It is about 5,700 characters, within the 8,000-character limit.
 6. **Knowledge:** upload **all six** `.xlsx` files directly. Code interpreter needs them as uploaded files.
-   Then add the FSAP report PDFs (see [FSAP reports](#fsap-reports)).
+   For FSAP questions, also add the website `https://www.elibrary.imf.org` as a knowledge source and/or
+   keep web search on (see [FSAP reports](#fsap-reports)).
    - If there is an option **"Only use specified sources"**, turn it **on**.
 7. **Capabilities:** turn on **Code interpreter**. It's needed to read the Excel files, run the code and draw charts.
 8. **Conversation starters:** add the ones listed [below](#conversation-starters).
@@ -60,8 +61,9 @@ upload the new files to Knowledge (remove older copies first), then click **Upda
 ## Instructions (paste into the agent)
 
 ```
-You are Country Data Assistant. Answer using ONLY your knowledge files (data workbooks and IMF FSAP
-report PDFs) and data the user attaches or pastes. Never use other sources or invent numbers.
+You are Country Data Assistant. Answer using ONLY your knowledge files, the IMF FSAP reports listed
+in the catalog (read via their links), and data the user attaches or pastes. Never use other sources
+or invent numbers.
 
 DATA AND CHART questions: ALWAYS use Code interpreter (Python); never guess values.
 STEP 1 - before any data work, run exactly:
@@ -117,12 +119,13 @@ FUNCTIONS
 FSAP REPORTS (IMF Financial Sector Assessment Program, GCC countries 2001-2024; the list with
 titles, years, types, topics and links is in IMF_FSAP_reports_catalog.xlsx, sheet Reports)
 - Questions on FSAP findings, risks, stress tests, recommendations, supervision (BCP), securities
-  (IOSCO), payment systems (FMI) or AML/CFT: answer from the report text in your knowledge, no code.
-  Use the latest relevant report unless asked otherwise and say its year. Give short quotes or
-  close paraphrases with report title, publication year and page or section. FSSA = main
-  stability assessment; DAR = detailed assessment of one standard.
+  (IOSCO), payment systems (FMI) or AML/CFT: find the report in the catalog (latest relevant one
+  unless asked otherwise), read it through its PDF link or eLibrary link, and answer from its text,
+  no code. Say the report year. Give short quotes or close paraphrases with report title,
+  publication year, page or section, and the eLibrary link. FSSA = main stability assessment;
+  DAR = detailed assessment of one standard.
 - "Which FSAP reports exist for X": list them from the catalog with year and eLibrary link.
-- If a report is not in your knowledge, say so and give its eLibrary link from the catalog.
+- If you cannot open a report, say so and give its eLibrary link; never answer from memory.
 - You may combine a report's findings with the latest data (e.g. FSIs) - say which is which.
 
 ANSWER (data questions)
@@ -210,22 +213,20 @@ columns. After changing them, run `python m365-agent/build_data_file.py` and re-
 | Bahrain | FSSA 2005; detailed assessments: AML/CFT 2005, FMI 2016 |
 | Qatar | Detailed assessment: AML/CFT 2007 |
 
-**Adding the PDFs (one time).** The IMF eLibrary blocks automated downloads, so download them in your browser:
+**How the agent reads the reports.** The catalog gives each report's eLibrary and PDF links, and the agent
+opens the report through them. Make sure the agent can reach the IMF eLibrary:
 
-1. Open `IMF_FSAP_reports_catalog.xlsx`, sheet **Reports**.
-2. For each report, open the **PDF link** (or the **eLibrary link**, then *Download PDF*) and save the file
-   under the name in the **PDF file name** column, for example `IMF_FSAP_Kuwait_2018_FSSA_2019.pdf`.
-   Copilot shows the file name when it cites a report, so these names make the citations readable.
-3. Add the PDFs to the agent's **Knowledge**:
-   - **Recommended:** put them in one SharePoint or OneDrive folder and add that folder as a knowledge source.
-     This keeps them out of the uploaded-file limit, and you can add reports later without editing the agent.
-   - **Or** upload them directly, if your Agent Builder's file limit allows. At the time of writing it was
-     about 20 files in total, including the six `.xlsx` files. If so, start with the main FSSAs:
-     Kuwait 2018, Saudi Arabia 2024 and 2017, UAE 2007, Bahrain 2005, then the detailed assessments you need.
-4. Keep the six `.xlsx` files uploaded directly: Code interpreter reads them as uploaded files.
+1. In **Knowledge**, add the public website `https://www.elibrary.imf.org` (if your Agent Builder offers
+   website knowledge), and/or
+2. keep **web search** turned on for the agent (setting name varies: *Web search* / *Search all websites*).
+
+Test with *"What were the main recommendations of Kuwait's 2018 FSAP?"*. The answer should quote the
+report and give its eLibrary link. If the agent says it can't open a report, download that PDF from the
+link (save it under the name in the catalog's **PDF file name** column, e.g.
+`IMF_FSAP_Kuwait_2018_FSSA_2019.pdf`) and add it to Knowledge, directly or via a SharePoint/OneDrive folder.
 
 To add more reports (other countries or newer FSAPs), add rows to `fsap_reports.csv`, run
-`python m365-agent/build_data_file.py --tools-only`, re-upload the catalog, and add the new PDFs.
+`python m365-agent/build_data_file.py --tools-only` and re-upload the catalog.
 
 ## About the "source" shown by Copilot
 
