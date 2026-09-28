@@ -34,6 +34,13 @@ Usage
   python financial_data.py credit --countries US --annual           # annual averages, lambda 100,000
   python financial_data.py credit --countries US --plot us_gap.png
   python financial_data.py mfs    --countries "KWT,ARE,QAT,OMN" --out gulf_gap.csv --plot gulf.png
+  python financial_data.py mfs    --non-oil-gdp non_oil_gdp.csv --out gulf_nonoil_gap.csv --plot gulf.png
+
+Non-oil GDP
+  For large oil exporters the ratio can use non-oil GDP instead of total GDP, so that oil-price
+  swings do not move the denominator. Public IMF data has no non-oil GDP series, so it is read
+  from a user file (CSV or XLSX) with columns: country (ISO3), year, non_oil_gdp (millions of
+  domestic currency, nominal), and optionally source. Only country-years in the file are used.
 
 As a module
   from financial_data import fetch_fsi, fetch_bis_credit_gdp, hp_one_sided, credit_gap
@@ -232,10 +239,29 @@ def fetch_weo_gdp(countries=GULF_MFS):
     return df.set_index(["COUNTRY", "TIME_PERIOD"])["OBS_VALUE"].rename("gdp")
 
 
-def mfs_credit_to_gdp_with_gap(countries=GULF_MFS, lamb=None, min_obs=None):
-    """Credit-to-GDP ratio (%) = MFS credit / WEO nominal GDP, with one-sided HP trend
-    (annual, lambda 100,000 by default) and gap. Returns country, period, credit, gdp, ratio, trend, gap."""
-    both = pd.concat([fetch_mfs_credit(countries), fetch_weo_gdp(countries)], axis=1, join="inner").dropna()
+def load_non_oil_gdp(path):
+    """Non-oil GDP from a user CSV/XLSX: columns country (ISO3), year, non_oil_gdp (millions of
+    domestic currency). Returned in currency units, indexed by (country, year), like fetch_weo_gdp."""
+    df = pd.read_excel(path) if str(path).lower().endswith((".xlsx", ".xls")) else pd.read_csv(path)
+    df.columns = [str(c).strip().lower() for c in df.columns]
+    df = df.dropna(subset=["country", "year", "non_oil_gdp"])
+    df["country"] = df["country"].str.strip().str.upper()
+    df["year"] = df["year"].astype(int)
+    return df.set_index(["country", "year"])["non_oil_gdp"].astype(float).mul(1e6).rename("gdp")
+
+
+def mfs_credit_to_gdp_with_gap(countries=GULF_MFS, lamb=None, min_obs=None, non_oil_gdp=None):
+    """Credit-to-GDP ratio (%) = MFS credit / nominal GDP, with one-sided HP trend
+    (annual, lambda 100,000 by default) and gap. GDP is WEO total GDP, or non-oil GDP from the
+    file `non_oil_gdp` (see load_non_oil_gdp). Returns country, period, credit, gdp, ratio, trend, gap."""
+    gdp = load_non_oil_gdp(non_oil_gdp) if non_oil_gdp else fetch_weo_gdp(countries)
+    if non_oil_gdp:
+        wanted = [c.strip().upper() for c in (countries if isinstance(countries, (list, tuple))
+                                             else str(countries).split(","))]
+        countries = [c for c in wanted if c in gdp.index.get_level_values(0)]
+        if not countries:
+            raise RuntimeError(f"No non-oil GDP in {non_oil_gdp} for {', '.join(wanted)}")
+    both = pd.concat([fetch_mfs_credit(countries), gdp], axis=1, join="inner").dropna()
     out = []
     for cty, g in both.groupby(level=0):
         g = g.droplevel(0).sort_index()
@@ -332,19 +358,23 @@ def main():
     s.add_argument("--countries", default=",".join(GULF_MFS), help="ISO3 codes (default Gulf: KWT,ARE,QAT,OMN)")
     s.add_argument("--lamb", type=float, help="override the smoothing parameter (default 100,000)")
     s.add_argument("--min-obs", type=int, help="observations needed before a trend is reported (default 11)")
+    s.add_argument("--non-oil-gdp", help="CSV/XLSX with country, year, non_oil_gdp (millions, domestic "
+                                         "currency); used instead of WEO total GDP")
     s.add_argument("--out", default="mfs_credit_gap.csv")
     s.add_argument("--plot", help="also save a chart (PNG) per country")
     a = p.parse_args()
 
     if a.cmd == "mfs":
-        df = mfs_credit_to_gdp_with_gap(a.countries, a.lamb, a.min_obs)
-        print(f"{df['country'].nunique()} countries, lambda = {a.lamb or LAMBDA['A']:,.0f}")
+        df = mfs_credit_to_gdp_with_gap(a.countries, a.lamb, a.min_obs, a.non_oil_gdp)
+        print(f"{df['country'].nunique()} countries, lambda = {a.lamb or LAMBDA['A']:,.0f}, "
+              f"denominator: {'non-oil GDP (' + a.non_oil_gdp + ')' if a.non_oil_gdp else 'total GDP (WEO)'}")
         print(df[["country", "period", "ratio", "trend", "gap"]].groupby("country").tail(1).round(1)
               .to_string(index=False))
         _save(df, a.out)
         if a.plot:
-            _plot_gap(df, a.plot, names=GULF_NAMES, source="Source: IMF Monetary and Financial Statistics and World "
-                      "Economic Outlook; trend: one-sided HP filter (lambda 100,000)")
+            gdp_src = "non-oil GDP: user-provided data" if a.non_oil_gdp else "GDP: IMF World Economic Outlook"
+            _plot_gap(df, a.plot, names=GULF_NAMES, source="Source: credit: IMF Monetary and Financial Statistics; "
+                      f"{gdp_src}; trend: one-sided HP filter (lambda {a.lamb or LAMBDA['A']:,.0f})")
     elif a.cmd == "fsi":
         df = fetch_fsi(a.countries, freq=a.freq, start=a.start)
         print(f"{len(df):,} observations, {df['country'].nunique()} countries, "
