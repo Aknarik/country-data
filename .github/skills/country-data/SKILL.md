@@ -73,6 +73,20 @@ The script prints:
 - Metadata is cached for 7 days in `~/.country_data_cache`. Delete that folder if
   lists look stale.
 
+## Bank soundness and credit-to-GDP gap
+
+For banking-sector health or credit cycles, use `scripts/financial_data.py`:
+
+- IMF core Financial Soundness Indicators (quarterly; capital adequacy, NPL ratio, ROA/ROE, liquidity):
+  `python <this-skill-dir>/scripts/financial_data.py fsi --countries "KWT,SAU,ARE" --out fsi.csv`
+  (ISO3 codes; the CSV has one row per country, indicator and quarter)
+- BIS credit-to-GDP ratio with a one-sided HP trend and gap (44 economies, BIS 2-letter codes such as
+  US, GB, SA, XM = euro area):
+  `python <this-skill-dir>/scripts/financial_data.py credit --countries "SA,US" --out credit_gap.csv --plot gap.png`
+  The trend uses lambda 400,000 for quarterly data; add `--annual` for calendar-year averages with lambda
+  100,000. The gap is ratio minus trend in percentage points. Basel III guide: above 2 pp may signal a
+  buffer build-up; above 10 pp the maximum buffer.
+
 ## Examples
 
 | User asks | Command |

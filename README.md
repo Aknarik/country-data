@@ -32,10 +32,26 @@ python -m pip install -r .github/skills/country-data/scripts/requirements.txt
 
 ## Microsoft 365 Copilot agent (no code)
 
-The [`m365-agent/`](m365-agent/) folder has a ready-made data file (`IMF_World_Economic_Outlook_data.xlsx`: 23 IMF
-indicators for about 200 countries and IMF aggregates, 1980–2031) and step-by-step instructions to build
-a Microsoft 365 Copilot agent that charts it with Code interpreter. See
+The [`m365-agent/`](m365-agent/) folder has ready-made data files and step-by-step instructions to build
+a Microsoft 365 Copilot agent that charts them with Code interpreter. See
 [`m365-agent/AGENT_SETUP.md`](m365-agent/AGENT_SETUP.md).
+
+- `IMF_World_Economic_Outlook_data.xlsx`: 23 IMF WEO / Fiscal Monitor indicators, about 200 countries, 1980–2031
+- `IMF_Financial_Soundness_Indicators.xlsx`: IMF core Financial Soundness Indicators, quarterly, 157 countries
+- `BIS_credit_to_GDP.xlsx`: BIS credit-to-GDP ratio with a one-sided Hodrick–Prescott trend
+  (λ = 400,000 quarterly, 100,000 annual) and the credit-to-GDP gap, 44 economies
+
+## Financial soundness and credit-to-GDP gap (Python)
+
+[`financial_data.py`](.github/skills/country-data/scripts/financial_data.py) downloads IMF FSIs and BIS
+credit-to-GDP data and computes the one-sided HP trend and gap. The quarterly results match the
+BIS-published credit-to-GDP gaps.
+
+```
+python .github/skills/country-data/scripts/financial_data.py credit --countries "SA,US" --out credit_gap.csv --plot gap.png
+python .github/skills/country-data/scripts/financial_data.py credit --countries US --annual
+python .github/skills/country-data/scripts/financial_data.py fsi --countries "KWT,SAU,ARE" --out fsi.csv
+```
 
 ## Run without Copilot
 
