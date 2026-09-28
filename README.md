@@ -42,6 +42,9 @@ a Microsoft 365 Copilot agent that charts them with Code interpreter. See
   (λ = 400,000 quarterly, 100,000 annual) and the credit-to-GDP gap, 44 economies
 - `IMF_MFS_credit_to_GDP.xlsx`: the same for Gulf countries BIS doesn't cover (Kuwait, UAE, Qatar, Oman),
   from IMF Monetary and Financial Statistics credit ÷ WEO annual GDP (λ = 100,000)
+- `Agent_tools.xlsx`: the agent's Python code ([`agent_tools.py`](m365-agent/agent_tools.py)): charts,
+  credit-to-GDP gap from the user's own data (e.g. non-oil GDP), and an FSI risk heat map based on each
+  indicator's percent rank in its own history (Excel `PERCENTRANK.INC`)
 
 ## Financial soundness and credit-to-GDP gap (Python)
 

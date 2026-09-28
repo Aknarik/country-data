@@ -21,6 +21,9 @@ the file name in its references), for the agent's Code interpreter to read and p
 The FSI / BIS downloads and the HP filter live in
 .github/skills/country-data/scripts/financial_data.py.
 
+It also writes Agent_tools.xlsx: the agent's Python code (agent_tools.py), one line per row.
+After changing only agent_tools.py:  python m365-agent/build_data_file.py --tools-only
+
 Refresh after each WEO release (April and October), or any time for new FSI/BIS quarters:
   python m365-agent/build_data_file.py
 then re-upload the .xlsx to the agent's knowledge.
@@ -300,5 +303,30 @@ def write_book(path, sheets):
     rows = {k: len(v) for k, v in sheets.items() if not isinstance(v, list)}
     print(f"{path.name}: {rows}, {path.stat().st_size / 1e6:.1f} MB", file=sys.stderr)
 
+def write_tools():
+    """Store agent_tools.py in Agent_tools.xlsx (sheet Code, one line per row) so the agent's
+    Code interpreter can load it: exec('\\n'.join(pd.read_excel(f, 'Code')['code'].fillna('')))."""
+    lines = (HERE / "agent_tools.py").read_text(encoding="utf-8").splitlines()
+    bad = [ln for ln in lines if ln.startswith("=")]
+    if bad:
+        raise ValueError(f"Lines starting with '=' would become Excel formulas: {bad[:3]}")
+    path = HERE / "Agent_tools.xlsx"
+    with pd.ExcelWriter(path, engine="openpyxl") as xw:
+        pd.DataFrame({"code": lines}).to_excel(xw, sheet_name="Code", index=False)
+        pd.DataFrame({"About this file": [
+            "Python code used by the Country Data Assistant agent (charts, credit-to-GDP gap from "
+            "user data, FSI heat map). Not a data source - do not cite it.",
+            "Source: m365-agent/agent_tools.py in github.com/Aknarik/country-data."]}).to_excel(
+            xw, sheet_name="README", index=False)
+    back = "\n".join(pd.read_excel(path, sheet_name="Code")["code"].fillna(""))
+    if back != "\n".join(lines):
+        raise ValueError("Agent_tools.xlsx does not round-trip the code exactly")
+    print(f"{path.name}: {len(lines)} lines of code", file=sys.stderr)
+
+
 if __name__ == "__main__":
-    main()
+    if "--tools-only" in sys.argv:
+        write_tools()
+    else:
+        main()
+        write_tools()
