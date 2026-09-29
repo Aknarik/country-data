@@ -202,8 +202,8 @@ used as is when a higher value means more vulnerability, and as 1 − rank when 
 | Capital adequacy | | Regulatory capital, Tier 1, CET1 to risk-weighted assets; Tier 1 capital to assets |
 | Asset quality | NPLs to gross loans; NPLs net of provisions to capital | Provisions to NPLs |
 | Concentration | Loan concentration by activity; large exposures to capital; residential and commercial real estate loans to total loans | |
-| Earnings | Noninterest expenses to gross income | ROA; ROE; interest margin to gross income |
-| Funding and liquidity | | Liquid assets to short-term liabilities and to total assets; LCR; NSFR; customer deposits to loans |
+| Earnings | | ROA; ROE |
+| Funding and liquidity | Customer deposits to loans | Liquid assets to short-term liabilities and to total assets; LCR; NSFR |
 | FX exposure | Net open FX position to capital; FX loans to total loans; FX liabilities to total liabilities | |
 | Household sector | Household debt to GDP | |
 

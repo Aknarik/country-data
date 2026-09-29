@@ -36,11 +36,9 @@ Anguilla: banking-sector Financial Soundness Indicators, percent, last 8 quarter
 | Concentration | Commercial real estate loans to total gross loans | 🟧 11.2 | 🟧 10.5 | 🟨 9.4 | 🟩 9.0 | 🟦 7.7 | 🟦 8.1 | 🟦 7.3 | 🟦 7.3 | █▁▁██▇▇▆▆▆▅▅ | 7.3 | 2026-Q1 | 0.07 | higher |
 | Earnings | Return on assets | 🟦 2.7 | 🟦 2.3 | 🟦 1.8 | 🟩 1.6 | 🟩 1.4 | 🟦 2.1 | 🟦 2.7 | 🟦 2.7 | ▃▃▄▆█▆▃▂▁▅██ | 2.7 | 2026-Q1 | 0.00 | lower |
 | Earnings | Return on equity | 🟦 32.1 | 🟦 26.6 | 🟨 19.4 | 🟨 17.3 | 🟨 14.2 | 🟩 20.0 | 🟦 24.8 | 🟩 24.1 | ▅▅▆▇█▆▃▂▁▃▅▅ | 24.1 | 2026-Q1 | 0.23 | lower |
-| Earnings | Interest margin to gross income | 🟥 53.9 | 🟥 57.0 | 🟧 59.0 | 🟥 53.4 | 🟥 55.9 | 🟥 54.3 | 🟥 52.1 | 🟧 58.7 | ▇▇█▂▂▄▆▂▄▃▁▆ | 58.7 | 2026-Q1 | 0.77 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 50.2 | 🟩 63.8 | 🟩 67.9 | 🟦 62.1 | 🟦 60.1 | 🟦 56.7 | 🟦 54.2 | 🟦 55.9 | █▆▄▃▁▅▇▅▄▃▂▃ | 55.9 | 2026-Q1 | 0.05 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟧 51.5 | 🟨 52.9 | 🟧 50.1 | 🟧 50.3 | 🟨 53.2 | 🟨 54.1 | 🟨 53.9 | 🟦 58.1 | ▆▆▅▂▂▃▁▁▄▄▄█ | 58.1 | 2026-Q1 | 0.14 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟥 39.2 | 🟧 45.0 | 🟧 43.1 | 🟧 43.7 | 🟨 45.9 | 🟨 46.0 | 🟧 45.7 | 🟩 49.3 | ██▇▃▁▅▄▄▆▆▅█ | 49.3 | 2026-Q1 | 0.32 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟩 209.3 | 🟩 207.8 | 🟩 206.4 | 🟦 219.4 | 🟦 220.4 | 🟦 213.5 | 🟦 221.1 | 🟦 246.5 | ▂▁▂▃▂▂▂▄▄▃▄█ | 246.5 | 2026-Q1 | 0.00 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟧 209.3 | 🟧 207.8 | 🟧 206.4 | 🟥 219.4 | 🟥 220.4 | 🟥 213.5 | 🟥 221.1 | 🟥 246.5 | ▂▁▂▃▂▂▂▄▄▃▄█ | 246.5 | 2026-Q1 | 1.00 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟥 19.3 | 🟧 -7.2 | 🟧 -25.8 | 🟨 -44.9 | 🟧 -20.9 | 🟧 0.3 | 🟧 -18.6 | 🟧 -28.7 | ▇██▄▅▃▂▁▂▄▃▂ | -28.7 | 2026-Q1 | 0.64 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟦 68.1 | 🟩 68.8 | 🟩 68.4 | 🟩 68.4 | 🟩 68.5 | 🟩 68.5 | 🟩 68.3 | 🟩 68.2 | ▇▄▂▁▆█▇▇▇▇▇▇ | 68.2 | 2026-Q1 | 0.20 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟦 56.6 | 🟧 64.4 | 🟧 64.2 | 🟥 66.2 | 🟧 65.6 | 🟧 64.2 | 🟧 64.2 | 🟥 67.2 | ▃▃▂▃▁▆▆▇▇▆▆█ | 67.2 | 2026-Q1 | 0.93 | higher |
@@ -90,11 +88,9 @@ Antigua and Barbuda: banking-sector Financial Soundness Indicators, percent, las
 | Concentration | Commercial real estate loans to total gross loans | 🟧 5.7 | 🟧 5.6 | 🟧 5.9 | 🟧 6.0 | 🟥 6.3 | 🟥 7.5 | 🟥 7.8 | 🟥 8.4 | ▁▃▃▄▅▅▅▅▅▇▇█ | 8.4 | 2026-Q1 | 1.00 | higher |
 | Earnings | Return on assets | 🟦 1.8 | 🟦 1.7 | 🟩 1.4 | 🟨 1.3 | 🟩 1.4 | 🟩 1.4 | 🟨 1.4 | 🟧 1.2 | ▅▆▇█▆▅▃▂▃▃▂▁ | 1.2 | 2026-Q1 | 0.66 | lower |
 | Earnings | Return on equity | 🟨 16.9 | 🟨 15.9 | 🟨 13.1 | 🟨 12.2 | 🟨 12.3 | 🟧 11.9 | 🟧 11.1 | 🟧 9.5 | ▆▇▇█▆▅▃▃▃▃▂▁ | 9.5 | 2026-Q1 | 0.70 | lower |
-| Earnings | Interest margin to gross income | 🟥 54.7 | 🟧 55.2 | 🟧 56.1 | 🟥 52.2 | 🟧 55.1 | 🟧 56.1 | 🟨 57.1 | 🟥 53.5 | ▃▅▄▄▅▅▇▁▅▇█▃ | 53.5 | 2026-Q1 | 0.93 | lower |
-| Earnings | Noninterest expenses to gross income | 🟨 67.0 | 🟧 70.6 | 🟧 70.1 | 🟩 62.4 | 🟩 64.4 | 🟧 68.5 | 🟧 69.2 | 🟩 62.6 | ▅▇▅▃▅██▁▃▆▇▁ | 62.6 | 2026-Q1 | 0.25 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟧 51.7 | 🟨 52.7 | 🟧 50.9 | 🟨 52.5 | 🟨 52.3 | 🟧 51.8 | 🟨 52.0 | 🟨 53.0 | ▃▁▄▇▆█▅▇▇▆▇█ | 53.0 | 2026-Q1 | 0.41 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟨 45.4 | 🟨 44.9 | 🟧 44.2 | 🟧 44.8 | 🟨 45.5 | 🟧 44.8 | 🟧 44.4 | 🟨 45.7 | ▄▁▅█▇▆▅▆▇▆▅█ | 45.7 | 2026-Q1 | 0.52 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟩 147.5 | 🟨 144.4 | 🟨 142.6 | 🟦 149.2 | 🟩 148.4 | 🟩 145.6 | 🟩 148.1 | 🟦 155.2 | ▆▃▃▆▄▂▁▅▄▃▄█ | 155.2 | 2026-Q1 | 0.02 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟧 147.5 | 🟨 144.4 | 🟨 142.6 | 🟥 149.2 | 🟧 148.4 | 🟧 145.6 | 🟧 148.1 | 🟥 155.2 | ▆▃▃▆▄▂▁▅▄▃▄█ | 155.2 | 2026-Q1 | 0.98 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟧 153.5 | 🟧 156.6 | 🟧 191.2 | 🟧 149.5 | 🟨 144.6 | 🟥 355.5 | 🟧 189.1 | 🟨 145.9 | ▁▁▁▂▂▂▃▂▂█▃▂ | 145.9 | 2026-Q1 | 0.59 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟦 9.6 | 🟩 10.3 | 🟦 9.7 | 🟦 9.7 | 🟦 8.8 | 🟦 8.7 | 🟦 6.9 | 🟦 6.9 | █▆▆▄▃▄▃▃▂▂▁▁ | 6.9 | 2026-Q1 | 0.02 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟦 13.8 | 🟩 16.0 | 🟩 15.8 | 🟩 14.8 | 🟩 13.8 | 🟩 14.8 | 🟦 12.9 | 🟦 12.7 | █▄▇▄▃▆▆▄▃▄▁▁ | 12.7 | 2026-Q1 | 0.02 | higher |
@@ -145,13 +141,11 @@ Argentina: banking-sector Financial Soundness Indicators, percent, last 8 quarte
 | Concentration | Commercial real estate loans to total gross loans | 🟦 2.1 | 🟦 1.6 | 🟦 1.5 | 🟦 1.5 | 🟦 1.4 | 🟦 1.4 | 🟦 1.5 | 🟦 1.6 | █▇▇▅▄▂▁▁▁▁▁▂ | 1.6 | 2025-Q4 | 0.09 | higher |
 | Earnings | Return on assets | 🟦 7.4 | 🟦 9.1 | 🟦 6.9 | 🟩 5.6 | 🟥 0.0 | 🟥 1.9 | 🟥 0.4 | 🟥 1.5 | ▃▄▅▇▇█▆▅▁▂▁▂ | 1.5 | 2025-Q4 | 0.91 | lower |
 | Earnings | Return on equity | 🟧 22.0 | 🟨 24.8 | 🟧 18.9 | 🟧 15.6 | 🟥 -1.6 | 🟥 5.0 | 🟥 -0.1 | 🟥 4.4 | ▄▆▅█▇▇▆▅▁▃▁▂ | 4.4 | 2025-Q4 | 0.95 | lower |
-| Earnings | Interest margin to gross income | 🟦 74.8 | 🟦 79.4 | 🟦 77.9 | 🟦 75.7 | 🟦 71.2 | 🟦 72.0 | 🟦 72.8 | 🟦 72.9 | ▂▂▂▁▇██▇▆▇▇▇ | 72.9 | 2025-Q4 | 0.07 | lower |
-| Earnings | Noninterest expenses to gross income | 🟥 78.4 | 🟧 71.9 | 🟧 73.7 | 🟧 74.1 | 🟥 83.4 | 🟧 75.0 | 🟧 76.8 | 🟧 75.8 | ▆▄▄▂▅▁▂▂█▃▄▃ | 75.8 | 2025-Q4 | 0.75 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟦 71.3 | 🟨 50.1 | 🟥 39.7 | 🟥 37.1 | 🟥 33.7 | 🟥 35.1 | 🟥 41.3 |  | ▇█▇▇▇▇▃▂▂▁▁▂ | 41.3 | 2025-Q3 | 0.93 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟩 43.9 | 🟧 31.6 | 🟥 25.9 | 🟥 24.5 | 🟥 22.0 | 🟥 22.8 | 🟥 27.5 | 🟥 26.5 | ███▇▆▃▂▂▁▁▂▂ | 26.5 | 2025-Q4 | 0.93 | lower |
 | Funding and liquidity | Liquidity coverage ratio | 🟩 220.0 | 🟥 189.0 | 🟧 192.7 | 🟨 206.4 | 🟥 184.9 | 🟥 178.8 | 🟥 173.7 | 🟥 168.4 | █▆▃▇█▄▄▆▃▂▂▁ | 168.4 | 2025-Q4 | 1.00 | lower |
 | Funding and liquidity | Net stable funding ratio | 🟧 175.7 | 🟥 157.1 | 🟥 162.0 | 🟨 177.5 | 🟥 159.9 | 🟧 163.5 | 🟧 162.5 |  | █▇▅▅▆▄▁▂▄▁▂▂ | 162.5 | 2025-Q3 | 0.77 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟦 201.4 | 🟩 174.8 | 🟩 167.2 | 🟩 147.9 | 🟨 130.1 | 🟨 123.4 | 🟧 120.0 | 🟨 122.5 | ▇▇▇█▆▅▄▃▂▁▁▁ | 122.5 | 2025-Q4 | 0.55 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟥 201.4 | 🟧 174.8 | 🟧 167.2 | 🟧 147.9 | 🟨 130.1 | 🟨 123.4 | 🟨 120.0 | 🟨 122.5 | ▇▇▇█▆▅▄▃▂▁▁▁ | 122.5 | 2025-Q4 | 0.45 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟨 18.4 | 🟨 16.8 | 🟩 11.5 | 🟩 9.4 | 🟦 5.7 | 🟦 5.0 | 🟦 8.3 | 🟦 5.7 | ▄▆▆█▃▃▂▂▁▁▁▁ | 5.7 | 2025-Q4 | 0.05 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟧 15.6 | 🟧 15.3 | 🟨 13.9 | 🟧 15.8 | 🟥 17.5 | 🟥 18.3 | 🟥 22.1 | 🟥 21.3 | ▁▁▁▄▅▄▄▅▆▆██ | 21.3 | 2025-Q4 | 0.85 | higher |
 
@@ -274,11 +268,9 @@ Barbados: banking-sector Financial Soundness Indicators, percent, last 8 quarter
 | Concentration | Commercial real estate loans to total gross loans | 🟨 5.0 | 🟨 4.6 | 🟨 5.2 | 🟨 4.9 | 🟨 5.2 | 🟥 5.5 | 🟧 5.3 | 🟧 5.4 | ▃█▃▂▂▁▂▁▂▃▂▂ | 5.4 | 2026-Q1 | 0.70 | higher |
 | Earnings | Return on assets | 🟨 1.4 | 🟨 1.4 | 🟨 1.4 | 🟧 1.4 | 🟧 1.3 | 🟨 1.4 | 🟨 1.4 | 🟧 1.2 | ▂█▇▃▃▂▃▂▂▃▃▁ | 1.2 | 2026-Q1 | 0.78 | lower |
 | Earnings | Return on equity | 🟩 10.9 | 🟩 10.4 | 🟩 10.8 | 🟩 10.2 | 🟨 9.7 | 🟩 10.5 | 🟩 10.3 | 🟧 7.9 | ▃█▇▄▃▃▃▃▂▃▃▁ | 7.9 | 2026-Q1 | 0.68 | lower |
-| Earnings | Interest margin to gross income | 🟥 64.0 | 🟧 64.6 | 🟧 64.5 | 🟥 63.5 | 🟥 63.9 | 🟧 64.7 | 🟧 64.7 | 🟥 62.0 | ▆██▃▆▇▇▅▅▇▇▁ | 62.0 | 2026-Q1 | 1.00 | lower |
-| Earnings | Noninterest expenses to gross income | 🟥 76.0 | 🟥 76.5 | 🟥 75.9 | 🟧 75.1 | 🟥 75.4 | 🟥 76.4 | 🟥 76.0 | 🟨 72.4 | ▁▅▇▅▇█▇▆▆█▇▁ | 72.4 | 2026-Q1 | 0.49 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟥 34.5 | 🟥 33.9 | 🟥 31.9 | 🟨 41.6 | 🟨 42.1 | 🟨 40.8 | 🟨 39.9 | 🟥 32.5 | █▇█▃▃▂▁██▇▇▁ | 32.5 | 2026-Q1 | 0.97 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟩 31.7 | 🟨 31.2 | 🟧 28.6 | 🟨 30.7 | 🟨 30.1 | 🟧 29.1 | 🟧 28.8 | 🟧 28.8 | █▇▄▇▆▆▁▅▄▂▁▁ | 28.8 | 2026-Q1 | 0.73 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟦 149.7 | 🟩 148.0 | 🟨 138.2 | 🟨 139.3 | 🟨 137.5 | 🟨 134.9 | 🟧 134.7 | 🟨 135.9 | █▆▆█▇▇▃▃▂▁▁▂ | 135.9 | 2026-Q1 | 0.51 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟥 149.7 | 🟧 148.0 | 🟨 138.2 | 🟨 139.3 | 🟨 137.5 | 🟨 134.9 | 🟩 134.7 | 🟨 135.9 | █▆▆█▇▇▃▃▂▁▁▂ | 135.9 | 2026-Q1 | 0.49 | higher |
 | FX exposure | Net open position in foreign exchange to capital |  |  |  |  |  |  |  |  | █▇▇▆██▆▃▄▄▂▁ | 32.1 | 2023-Q3 | 0.00 | higher |
 | FX exposure | Foreign currency denominated loans to total loans |  |  |  |  |  |  |  |  | ▂▁▃▃▃▆█▅▄▇▅▂ | 16.6 | 2023-Q3 | 0.11 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities |  |  |  |  |  |  |  |  | ▁▁▃▅▄█▇▅▆▇▆▅ | 10.3 | 2023-Q3 | 0.41 | higher |
@@ -330,11 +322,9 @@ Belize: banking-sector Financial Soundness Indicators, percent, last 8 quarters.
 | Concentration | Commercial real estate loans to total gross loans | 🟥 30.9 | 🟥 31.5 | 🟥 32.0 | 🟥 32.9 | 🟥 31.4 | 🟨 29.3 | 🟨 29.8 | 🟧 29.8 | ▄▄▃▄▄▅▆█▅▁▂▂ | 29.8 | 2024-Q4 | 0.61 | higher |
 | Earnings | Return on assets | 🟨 2.6 | 🟩 2.7 | 🟨 2.5 | 🟨 2.5 | 🟨 2.5 | 🟧 2.4 | 🟩 2.7 | 🟦 3.0 | ▁▁▁▁▆▇▆▆▆▅▆█ | 3.0 | 2024-Q4 | 0.16 | lower |
 | Earnings | Return on equity | 🟦 16.4 | 🟦 16.9 | 🟩 15.1 | 🟩 15.1 | 🟩 14.7 | 🟨 14.2 | 🟩 15.9 | 🟦 18.4 | ▁▁▂▁▇▇▆▆▆▅▆█ | 18.4 | 2024-Q4 | 0.10 | lower |
-| Earnings | Interest margin to gross income | 🟥 68.4 | 🟧 70.1 | 🟩 71.9 | 🟩 73.3 | 🟨 70.5 | 🟧 70.0 | 🟧 70.4 | 🟨 71.4 | ▃▅▄▅▁▃▆█▄▃▄▅ | 71.4 | 2024-Q4 | 0.42 | lower |
-| Earnings | Noninterest expenses to gross income | 🟧 60.9 | 🟨 59.9 | 🟨 60.5 | 🟩 59.2 | 🟨 59.5 | 🟧 60.8 | 🟨 60.2 | 🟨 60.0 | █▅▄▃▂▁▂▁▁▂▂▂ | 60.0 | 2024-Q4 | 0.48 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟩 43.0 | 🟩 42.6 | 🟩 43.2 | 🟨 41.1 | 🟨 41.5 | 🟨 41.6 | 🟧 41.1 | 🟧 38.9 | ▅▅▅█▄▄▄▃▃▃▃▁ | 38.9 | 2024-Q4 | 0.77 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟦 31.7 | 🟩 31.6 | 🟦 32.0 | 🟨 29.8 | 🟨 29.9 | 🟩 30.8 | 🟨 30.2 | 🟨 28.6 | ▇█▇▆▇▇█▃▄▅▄▁ | 28.6 | 2024-Q4 | 0.58 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟦 130.9 | 🟦 131.3 | 🟩 130.2 | 🟩 130.5 | 🟦 135.8 | 🟦 138.0 | 🟦 134.5 | 🟦 133.1 | ▃▄▁▁▄▄▃▄▇█▆▅ | 133.1 | 2024-Q4 | 0.10 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟥 130.9 | 🟥 131.3 | 🟧 130.2 | 🟧 130.5 | 🟥 135.8 | 🟥 138.0 | 🟥 134.5 | 🟥 133.1 | ▃▄▁▁▄▄▃▄▇█▆▅ | 133.1 | 2024-Q4 | 0.90 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟦 0.8 | 🟩 0.9 | 🟩 0.9 | 🟩 0.9 | 🟦 0.8 | 🟦 0.2 | 🟦 0.5 | 🟦 0.4 | █▇▂▃▃▃▃▃▃▁▂▁ | 0.4 | 2024-Q4 | 0.03 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟩 3.8 | 🟦 3.7 | 🟦 3.7 | 🟦 3.5 | 🟦 3.4 | 🟦 3.3 | 🟦 3.4 | 🟦 3.3 | █▇▇▆▄▄▄▃▂▁▂▁ | 3.3 | 2024-Q4 | 0.03 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟩 10.5 | 🟩 10.5 | 🟦 10.3 | 🟦 10.4 | 🟨 10.8 | 🟩 10.7 | 🟩 10.6 | 🟨 11.1 | ██▃▁▃▄▃▃▅▄▄▆ | 11.1 | 2024-Q4 | 0.55 | higher |
@@ -383,11 +373,9 @@ Bolivia: banking-sector Financial Soundness Indicators, percent, last 8 quarters
 | Concentration | Residential real estate loans to total gross loans | 🟨 23.5 | 🟨 23.6 | 🟨 23.3 | 🟧 24.1 | 🟧 23.9 | 🟨 23.6 | 🟨 23.1 | 🟨 22.9 | ▅▄██▃▄▃▆▅▄▂▁ | 22.9 | 2025-Q3 | 0.48 | higher |
 | Earnings | Return on assets | 🟧 1.1 | 🟥 0.9 | 🟧 1.0 | 🟧 1.0 | 🟨 1.3 | 🟥 0.9 | 🟧 1.2 | 🟨 1.3 | ▅▁▂▃▅▃▄▅█▃▆█ | 1.3 | 2025-Q3 | 0.45 | lower |
 | Earnings | Return on equity | 🟧 8.9 | 🟥 6.0 | 🟧 7.2 | 🟧 8.0 | 🟨 10.7 | 🟥 6.8 | 🟧 8.6 | 🟨 10.5 | ▅▁▂▃▆▂▃▄█▃▅█ | 10.5 | 2025-Q3 | 0.58 | lower |
-| Earnings | Interest margin to gross income | 🟥 62.2 | 🟥 58.1 | 🟥 54.0 | 🟥 52.7 | 🟥 51.1 | 🟥 46.9 | 🟥 36.6 | 🟥 33.9 | █▇▇▇▆▆▅▅▄▃▁▁ | 33.9 | 2025-Q3 | 1.00 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 69.2 | 🟩 71.4 | 🟨 72.4 | 🟧 73.7 | 🟧 74.3 | 🟥 83.7 | 🟥 86.3 | 🟥 86.4 | ▁▂▂▂▁▂▂▃▃▇██ | 86.4 | 2025-Q3 | 1.00 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟨 55.8 | 🟨 56.6 | 🟨 55.3 | 🟨 55.6 | 🟨 55.9 | 🟨 55.3 | 🟧 50.0 | 🟧 54.3 | ▃▁▄▇██▇██▇▅▇ | 54.3 | 2025-Q3 | 0.63 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟧 21.8 | 🟨 22.1 | 🟧 21.4 | 🟧 21.7 | 🟨 22.3 | 🟨 22.3 | 🟧 19.5 | 🟧 21.6 | ▃▁▄▆██▇▇██▅▇ | 21.6 | 2025-Q3 | 0.66 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟥 103.0 | 🟧 103.7 | 🟥 102.3 | 🟥 102.8 | 🟧 103.9 | 🟧 103.5 | 🟥 99.2 | 🟥 101.4 | █▁▁▂▆▇▅▆▇▆▁▄ | 101.4 | 2025-Q3 | 0.92 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟦 103.0 | 🟩 103.7 | 🟦 102.3 | 🟦 102.8 | 🟩 103.9 | 🟩 103.5 | 🟦 99.2 | 🟦 101.4 | █▁▁▂▆▇▅▆▇▆▁▄ | 101.4 | 2025-Q3 | 0.08 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟥 11.8 | 🟥 11.4 | 🟥 10.5 | 🟥 12.7 | 🟥 13.4 | 🟥 13.0 | 🟥 14.9 | 🟥 15.1 | ▁▂▆▆▅▅▄▆▆▆██ | 15.1 | 2025-Q3 | 1.00 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟦 0.7 | 🟦 0.6 | 🟦 0.6 | 🟦 0.5 | 🟦 0.5 | 🟦 0.5 | 🟦 0.4 | 🟦 0.4 | ██▇▇▇▅▄▃▃▂▁▁ | 0.4 | 2025-Q3 | 0.00 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟦 8.9 | 🟦 8.8 | 🟦 8.3 | 🟦 7.8 | 🟦 7.4 | 🟦 7.2 | 🟦 7.0 | 🟦 6.9 | ██▅▅▄▄▃▂▂▁▁▁ | 6.9 | 2025-Q3 | 0.00 | higher |
@@ -439,13 +427,11 @@ Brazil: banking-sector Financial Soundness Indicators, percent, last 8 quarters.
 | Concentration | Commercial real estate loans to total gross loans | 🟩 1.2 | 🟩 1.2 | 🟩 1.3 | 🟨 1.3 | 🟨 1.3 | 🟨 1.4 | 🟨 1.4 | 🟨 1.4 | ▁▂▅▅▅▅▆▆▇▇██ | 1.4 | 2026-Q1 | 0.50 | higher |
 | Earnings | Return on assets | 🟨 1.8 | 🟨 1.8 | 🟨 1.8 | 🟩 2.0 | 🟧 1.8 | 🟧 1.7 | 🟧 1.6 | 🟥 1.4 | ▃▄▃▅▆▅▅█▅▄▃▁ | 1.4 | 2026-Q1 | 0.89 | lower |
 | Earnings | Return on equity | 🟨 14.9 | 🟨 14.8 | 🟨 15.3 | 🟩 15.9 | 🟨 15.4 | 🟨 14.7 | 🟨 14.9 | 🟧 12.8 | ▂▂▃▄▆▆▇█▇▅▆▁ | 12.8 | 2026-Q1 | 0.80 | lower |
-| Earnings | Interest margin to gross income | 🟦 78.7 | 🟨 75.1 | 🟨 75.9 | 🟨 71.8 | 🟨 69.0 | 🟨 69.1 | 🟨 69.4 | 🟨 71.5 | ▂▁▁▄█▆▆▄▂▂▂▄ | 71.5 | 2026-Q1 | 0.52 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 50.4 | 🟩 51.4 | 🟩 51.6 | 🟦 48.6 | 🟦 49.2 | 🟦 48.9 | 🟦 49.4 | 🟦 48.4 | █▇█▅▄▅▆▁▂▂▂▁ | 48.4 | 2026-Q1 | 0.01 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟩 259.7 | 🟩 251.9 | 🟨 238.4 | 🟨 231.9 | 🟩 248.3 | 🟦 267.4 | 🟦 264.9 | 🟩 246.0 | ▁▂▄▆▇▆▃▂▅██▅ | 246.0 | 2026-Q1 | 0.39 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟨 13.7 | 🟨 13.9 | 🟧 13.4 | 🟧 12.9 | 🟧 13.5 | 🟨 13.8 | 🟩 15.0 | 🟨 14.2 | ▁▃▄▄▄▄▃▁▃▄█▅ | 14.2 | 2026-Q1 | 0.40 | lower |
 | Funding and liquidity | Liquidity coverage ratio | 🟧 186.7 | 🟨 195.3 | 🟧 188.9 | 🟥 178.9 | 🟧 193.6 | 🟨 201.2 | 🟨 199.4 | 🟧 194.3 | ▃▃▃▂▃▆▄▁▆█▇▆ | 194.3 | 2026-Q1 | 0.61 | lower |
 | Funding and liquidity | Net stable funding ratio | 🟥 117.9 | 🟥 117.8 | 🟥 116.1 | 🟥 116.4 | 🟨 120.2 | 🟦 122.6 | 🟩 122.0 | 🟧 119.3 | ▅▅▆▄▃▃▁▁▅█▇▅ | 119.3 | 2026-Q1 | 0.62 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 96.9 | 🟨 97.5 | 🟨 95.1 | 🟨 93.7 | 🟨 94.4 | 🟨 94.9 | 🟨 94.7 | 🟨 93.8 | ▁▇▆▄▇█▄▁▃▃▃▂ | 93.8 | 2026-Q1 | 0.57 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 96.9 | 🟨 97.5 | 🟨 95.1 | 🟨 93.7 | 🟨 94.4 | 🟨 94.9 | 🟨 94.7 | 🟨 93.8 | ▁▇▆▄▇█▄▁▃▃▃▂ | 93.8 | 2026-Q1 | 0.43 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟥 2.7 | 🟥 2.8 | 🟥 3.7 | 🟥 3.1 | 🟥 3.9 | 🟥 4.0 | 🟥 4.2 | 🟥 4.0 | ▄▂▁▁▃▄▆▅▇▇█▇ | 4.0 | 2026-Q1 | 0.97 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟩 13.7 | 🟩 13.8 | 🟨 13.9 | 🟩 13.4 | 🟩 13.2 | 🟦 11.9 | 🟦 12.0 | 🟦 11.4 | ▆▅▃▃▇██▇▆▂▃▁ | 11.4 | 2026-Q1 | 0.01 | higher |
 | Household sector | Household debt to GDP |  |  |  |  |  |  |  |  | ▂▁▂▃▅▄▄▆█▂▄▆ | 23.0 | 2021-Q3 | 0.97 | higher |
@@ -515,11 +501,9 @@ Canada: banking-sector Financial Soundness Indicators, percent, last 8 quarters.
 | Concentration | Commercial real estate loans to total gross loans | 🟥 3.4 | 🟥 3.4 | 🟥 3.4 | 🟥 3.5 | 🟨 3.2 | 🟨 3.2 | 🟨 3.2 | 🟨 3.2 | █▇▅▅▆▆▆█▂▂▁▂ | 3.2 | 2026-Q1 | 0.55 | higher |
 | Earnings | Return on assets | 🟧 0.8 | 🟥 0.8 | 🟧 0.8 | 🟧 0.9 | 🟨 1.1 | 🟧 1.0 | 🟧 1.0 | 🟨 1.1 | ▁▁▁▁▂▁▂▃█▇▇█ | 1.1 | 2026-Q1 | 0.52 | lower |
 | Earnings | Return on equity | 🟥 12.9 | 🟥 12.3 | 🟥 12.7 | 🟧 13.3 | 🟨 16.7 | 🟧 16.1 | 🟧 15.6 | 🟧 16.1 | ▁▂▂▃▃▂▃▄█▇▇▇ | 16.1 | 2026-Q1 | 0.68 | lower |
-| Earnings | Interest margin to gross income | 🟨 53.9 | 🟩 54.2 | 🟩 54.6 | 🟨 54.0 | 🟥 51.4 | 🟧 52.8 | 🟧 53.4 | 🟨 53.7 | █▇▇▅▄▄▅▄▁▃▃▄ | 53.7 | 2026-Q1 | 0.54 | lower |
-| Earnings | Noninterest expenses to gross income | 🟧 60.2 | 🟧 61.3 | 🟧 60.5 | 🟨 59.0 | 🟦 54.3 | 🟦 55.0 | 🟦 55.8 | 🟦 55.3 | ███▇▆▇▇▅▁▂▂▂ | 55.3 | 2026-Q1 | 0.07 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟧 45.7 | 🟨 48.6 | 🟩 53.2 | 🟩 51.4 | 🟩 54.1 | 🟩 52.2 | 🟩 51.6 | 🟩 52.6 | ▆▅▄▂▁▃▇▆█▆▆▇ | 52.6 | 2026-Q1 | 0.26 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟧 11.4 | 🟨 11.6 | 🟩 12.3 | 🟩 12.2 | 🟩 12.5 | 🟩 12.4 | 🟨 11.8 | 🟨 12.1 | █▇▆▃▁▃▇▆█▇▃▆ | 12.1 | 2026-Q1 | 0.40 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 107.3 | 🟨 107.5 | 🟨 108.5 | 🟩 110.7 | 🟨 109.7 | 🟩 110.6 | 🟩 110.4 | 🟩 111.5 | ▂▁▂▁▂▂▄▇▅▇▆█ | 111.5 | 2026-Q1 | 0.25 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 107.3 | 🟨 107.5 | 🟨 108.5 | 🟧 110.7 | 🟨 109.7 | 🟧 110.6 | 🟧 110.4 | 🟧 111.5 | ▂▁▂▁▂▂▄▇▅▇▆█ | 111.5 | 2026-Q1 | 0.75 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟥 38.5 | 🟥 38.2 | 🟥 38.0 | 🟥 38.1 | 🟧 37.5 | 🟧 37.0 | 🟧 37.8 | 🟧 37.3 | █▇█▆▅▄▄▄▂▁▃▂ | 37.3 | 2026-Q1 | 0.75 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟥 69.0 | 🟥 67.7 | 🟥 70.4 | 🟥 72.8 | 🟨 49.7 | 🟥 68.4 | 🟥 70.5 | 🟨 49.1 | ▄▁▇▂▇▆▇█▁▇▇▁ | 49.1 | 2026-Q1 | 0.51 | higher |
 | Household sector | Household debt to GDP | 🟨 98.0 | 🟧 99.4 | 🟧 100.7 | 🟨 96.8 | 🟨 98.3 | 🟧 99.7 | 🟧 100.7 | 🟨 95.9 | ▅▇█▂▄▆▇▂▄▆▇▁ | 95.9 | 2026-Q1 | 0.49 | higher |
@@ -588,12 +572,10 @@ Chile: banking-sector Financial Soundness Indicators, percent, last 8 quarters. 
 | Asset quality | Provisions to nonperforming loans | 🟧 115.3 | 🟧 111.8 | 🟥 106.1 | 🟥 105.9 | 🟧 111.8 | 🟧 111.0 | 🟥 107.1 | 🟥 106.3 | █▇▅▄▃▂▁▁▂▂▁▁ | 106.3 | 2025-Q4 | 0.83 | lower |
 | Earnings | Return on assets | 🟩 1.6 | 🟩 1.7 | 🟩 1.7 | 🟩 1.7 | 🟩 1.7 | 🟦 1.8 | 🟦 1.8 | 🟩 1.7 | ▁▄▄▄▆▆▆▇▇██▆ | 1.7 | 2025-Q4 | 0.33 | lower |
 | Earnings | Return on equity | 🟧 15.3 | 🟨 15.9 | 🟧 15.7 | 🟧 15.2 | 🟩 17.0 | 🟨 16.7 | 🟨 15.9 | 🟧 15.0 | ▃█▂▂▂▄▃▂█▇▄▁ | 15.0 | 2025-Q4 | 0.72 | lower |
-| Earnings | Interest margin to gross income | 🟨 69.0 | 🟩 70.1 | 🟩 70.1 | 🟩 70.4 | 🟩 69.6 | 🟩 69.5 | 🟨 68.5 | 🟨 68.6 | █▃▂▃▂▄▄▅▃▃▁▁ | 68.6 | 2025-Q4 | 0.44 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 42.8 | 🟦 42.3 | 🟦 42.5 | 🟦 42.6 | 🟦 42.6 | 🟦 42.3 | 🟦 42.4 | 🟦 43.1 | ▅▁▂▅▇▆▆▇▇▆▆█ | 43.1 | 2025-Q4 | 0.15 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities |  |  |  |  |  |  |  |  | ██▆▆▆▃▂▂▂▂▁▁ | 20.7 | 2007-Q4 | 1.00 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟨 14.3 | 🟧 13.4 | 🟨 14.4 | 🟨 14.1 | 🟨 14.5 | 🟩 15.3 | 🟨 14.8 | 🟩 15.5 | ██▇▆▃▁▃▂▃▄▃▅ | 15.5 | 2025-Q4 | 0.33 | lower |
 | Funding and liquidity | Liquidity coverage ratio | 🟩 232.4 | 🟩 228.6 | 🟧 210.8 | 🟧 208.5 | 🟧 207.2 | 🟥 194.6 | 🟥 190.0 | 🟧 199.3 | ▆█▆▇▅▄▃▃▂▁▁▂ | 199.3 | 2025-Q4 | 0.77 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans |  |  |  |  |  |  |  |  | ▃▁▂▁▃▅▄▄▇▅██ | 83.5 | 2021-Q3 | 0.46 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans |  |  |  |  |  |  |  |  | ▃▁▂▁▃▅▄▄▇▅██ | 83.5 | 2021-Q3 | 0.54 | higher |
 | FX exposure | Net open position in foreign exchange to capital |  |  |  |  |  |  |  |  | ▁▂▂▃▂▅▇▂▅█▇▇ | 13.3 | 2021-Q2 | 0.98 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟥 21.0 | 🟥 20.3 | 🟥 19.3 | 🟥 20.7 | 🟥 20.0 | 🟥 20.0 | 🟥 20.6 | 🟥 19.1 | ▁▁▅▃█▆▄▇▆▆▇▃ | 19.1 | 2025-Q4 | 0.86 | higher |
 
@@ -661,11 +643,9 @@ Colombia: banking-sector Financial Soundness Indicators, percent, last 8 quarter
 | Concentration | Large exposures to capital | 🟥 46.0 | 🟥 46.5 | 🟥 45.0 | 🟧 44.3 | 🟧 40.0 | 🟧 38.2 | 🟧 36.7 | 🟧 38.7 | ▆▅▃▇██▇▆▃▂▁▂ | 38.7 | 2026-Q1 | 0.65 | higher |
 | Earnings | Return on assets | 🟥 1.1 | 🟥 1.2 | 🟥 1.1 | 🟥 1.8 | 🟨 2.6 | 🟥 1.9 | 🟧 2.1 | 🟧 2.1 | ▃▂▁▂▁▁▁▄█▅▆▆ | 2.1 | 2026-Q1 | 0.77 | lower |
 | Earnings | Return on equity | 🟥 6.6 | 🟥 7.0 | 🟥 7.1 | 🟥 11.0 | 🟩 16.1 | 🟧 11.7 | 🟨 13.9 | 🟧 12.5 | ▂▁▁▂▁▁▁▄█▅▆▅ | 12.5 | 2026-Q1 | 0.73 | lower |
-| Earnings | Interest margin to gross income | 🟧 50.4 | 🟧 49.8 | 🟧 49.4 | 🟥 48.1 | 🟧 49.8 | 🟥 49.1 | 🟥 47.2 | 🟥 49.1 | ▇█▆▆█▆▆▃▆▅▁▅ | 49.1 | 2026-Q1 | 0.81 | lower |
-| Earnings | Noninterest expenses to gross income | 🟧 52.2 | 🟧 52.1 | 🟧 53.1 | 🟥 56.1 | 🟥 56.2 | 🟧 55.1 | 🟧 53.9 | 🟥 56.2 | ▁▂▃▁▄▄▅██▇▆█ | 56.2 | 2026-Q1 | 0.85 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟥 35.9 | 🟥 34.2 | 🟥 35.0 | 🟥 34.8 | 🟧 37.1 | 🟥 36.0 | 🟥 35.7 | 🟥 34.6 | ▂▁▇▃▅▁▃▃█▆▅▂ | 34.6 | 2026-Q1 | 0.92 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟧 18.7 | 🟧 18.2 | 🟧 19.1 | 🟧 19.1 | 🟩 20.7 | 🟨 20.2 | 🟨 20.1 | 🟨 19.9 | ▁▁▃▂▄▄▅▅█▇▇▇ | 19.9 | 2026-Q1 | 0.52 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟦 102.7 | 🟦 102.1 | 🟦 103.8 | 🟦 105.4 | 🟦 107.0 | 🟦 105.5 | 🟦 106.2 | 🟦 108.4 | ▁▂▃▄▅▄▅▆▇▆▇█ | 108.4 | 2026-Q1 | 0.00 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟥 102.7 | 🟥 102.1 | 🟥 103.8 | 🟥 105.4 | 🟥 107.0 | 🟥 105.5 | 🟥 106.2 | 🟥 108.4 | ▁▂▃▄▅▄▅▆▇▆▇█ | 108.4 | 2026-Q1 | 1.00 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟦 0.1 | 🟦 0.2 | 🟦 0.1 | 🟦 0.4 | 🟨 1.0 | 🟩 0.7 | 🟧 1.2 | 🟥 2.2 | ▃▃▂▃▁▁▁▂▄▃▅█ | 2.2 | 2026-Q1 | 0.81 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟦 4.1 | 🟦 4.0 | 🟩 4.5 | 🟦 4.2 | 🟦 3.9 | 🟦 3.8 | 🟦 4.2 | 🟦 3.7 | ▆▄▁▁▄▄█▅▃▂▅▁ | 3.7 | 2026-Q1 | 0.00 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟩 8.5 | 🟩 8.1 | 🟩 8.8 | 🟩 8.1 | 🟦 6.9 | 🟦 7.4 | 🟩 7.8 | 🟩 7.8 | █▇▄▄▅▄▅▄▁▂▃▃ | 7.8 | 2026-Q1 | 0.21 | higher |
@@ -736,12 +716,10 @@ Costa Rica: banking-sector Financial Soundness Indicators, percent, last 8 quart
 | Concentration | Commercial real estate loans to total gross loans |  |  |  |  |  |  |  |  | ▁▁▄▄▇▇▇▇██▆▇ | 2.9 | 2023-Q4 | 0.48 | higher |
 | Earnings | Return on assets | 🟧 1.3 | 🟧 1.3 | 🟨 1.4 | 🟨 1.4 | 🟧 1.4 | 🟧 1.4 | 🟧 1.4 | 🟨 1.5 | ▁▄▄▄▆▆██▇▇▇█ | 1.5 | 2025-Q4 | 0.54 | lower |
 | Earnings | Return on equity | 🟥 5.4 | 🟥 5.1 | 🟥 5.6 | 🟧 5.7 | 🟥 5.0 | 🟥 5.5 | 🟥 5.2 | 🟥 4.9 | ▁▅▅▄▇▇██▆▇▇▆ | 4.9 | 2025-Q4 | 0.92 | lower |
-| Earnings | Interest margin to gross income | 🟥 52.1 | 🟥 49.1 | 🟥 50.5 | 🟥 50.6 | 🟥 55.0 | 🟧 55.3 | 🟧 55.4 | 🟥 54.3 | █▆▅▄▄▁▃▃███▇ | 54.3 | 2025-Q4 | 0.86 | lower |
-| Earnings | Noninterest expenses to gross income | 🟨 64.7 | 🟨 64.8 | 🟨 64.9 | 🟨 64.9 | 🟧 66.2 | 🟨 65.6 | 🟨 65.4 | 🟨 65.1 | █▅▅▅▁▁▁▁▂▂▂▁ | 65.1 | 2025-Q4 | 0.51 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟩 68.5 | 🟩 68.2 | 🟨 64.9 | 🟧 60.7 | 🟧 62.2 | 🟧 61.9 | 🟥 59.8 | 🟥 58.6 | ██▆▅▆▆▄▂▃▃▂▁ | 58.6 | 2025-Q4 | 0.90 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟦 32.9 | 🟦 32.8 | 🟩 32.3 | 🟩 31.9 | 🟩 31.2 | 🟨 30.7 | 🟩 30.8 | 🟩 30.8 | █▇▆▅▆▅▄▄▂▁▁▁ | 30.8 | 2025-Q4 | 0.38 | lower |
 | Funding and liquidity | Liquidity coverage ratio | 🟦 235.3 | 🟩 219.1 | 🟦 227.3 | 🟨 211.9 | 🟦 243.1 | 🟦 228.0 | 🟩 222.9 | 🟦 238.4 | ▄▄▅▄▆▃▄▁█▅▃▇ | 238.4 | 2025-Q4 | 0.02 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟦 114.3 | 🟦 114.6 | 🟩 112.7 | 🟩 112.6 | 🟩 112.4 | 🟩 111.9 | 🟩 111.9 | 🟩 112.4 | ▇▄▃▅▇█▃▃▂▁▁▂ | 112.4 | 2025-Q4 | 0.27 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟥 114.3 | 🟥 114.6 | 🟧 112.7 | 🟧 112.6 | 🟧 112.4 | 🟧 111.9 | 🟧 111.9 | 🟧 112.4 | ▇▄▃▅▇█▃▃▂▁▁▂ | 112.4 | 2025-Q4 | 0.73 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟩 21.6 | 🟨 21.8 | 🟨 21.9 | 🟩 20.8 | 🟦 20.2 | 🟩 20.6 | 🟩 20.5 | 🟩 20.3 | █▆▆▄▄▄▅▂▁▂▂▁ | 20.3 | 2025-Q4 | 0.23 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟦 30.5 | 🟦 31.7 | 🟦 31.9 | 🟦 31.5 | 🟦 31.4 | 🟦 31.4 | 🟦 31.4 | 🟦 31.4 | ▃▅▅▃▁▇█▆▅▆▆▆ | 31.4 | 2025-Q4 | 0.10 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟦 33.5 | 🟦 34.7 | 🟦 34.3 | 🟦 33.7 | 🟦 35.2 | 🟦 35.0 | 🟦 34.8 | 🟦 34.9 | █▆▄▃▁▄▃▁▅▄▄▄ | 34.9 | 2025-Q4 | 0.10 | higher |
@@ -771,11 +749,9 @@ Curaçao: banking-sector Financial Soundness Indicators, percent, last 8 quarter
 | Concentration | Commercial real estate loans to total gross loans | 🟨 11.1 | 🟥 13.0 | 🟧 11.7 | 🟥 12.8 | 🟥 12.7 | 🟥 13.0 | 🟧 12.5 | 🟧 12.4 | ▁▁▂▃▃█▅▇▇█▇▆ | 12.4 | 2025-Q1 | 0.70 | higher |
 | Earnings | Return on assets | 🟩 1.7 | 🟨 1.3 | 🟩 1.7 | 🟥 0.4 | 🟧 0.9 | 🟨 1.3 | 🟩 1.7 | 🟦 1.9 | ▅▅▇▆▇▅▇▁▃▅▇█ | 1.9 | 2025-Q1 | 0.15 | lower |
 | Earnings | Return on equity | 🟩 12.9 | 🟧 9.2 | 🟨 11.9 | 🟥 3.1 | 🟧 6.2 | 🟧 9.2 | 🟨 11.9 | 🟩 12.8 | ▅█▆▆▆▄▆▁▃▄▆▆ | 12.8 | 2025-Q1 | 0.33 | lower |
-| Earnings | Interest margin to gross income | 🟩 57.1 | 🟥 53.1 | 🟦 60.0 | 🟨 56.0 | 🟨 56.5 | 🟨 56.7 | 🟧 55.5 | 🟥 54.4 | ▂▃▂▃▅▁█▄▄▅▃▂ | 54.4 | 2025-Q1 | 0.85 | lower |
-| Earnings | Noninterest expenses to gross income | 🟩 72.2 | 🟨 76.9 | 🟩 72.2 | 🟩 72.5 | 🟦 71.3 | 🟦 71.0 | 🟩 71.8 | 🟦 70.5 | █▇▆▃▃▇▃▃▂▂▂▁ | 70.5 | 2025-Q1 | 0.07 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟧 47.0 | 🟩 49.2 | 🟧 46.6 | 🟨 48.1 | 🟩 49.1 | 🟩 49.2 | 🟦 50.4 | 🟦 51.6 | ▆▄▃▂▂▅▁▃▅▅▆█ | 51.6 | 2025-Q1 | 0.07 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟨 36.1 | 🟨 36.5 | 🟧 35.0 | 🟨 36.5 | 🟩 37.1 | 🟨 36.5 | 🟩 37.5 | 🟦 38.7 | █▆▅▄▃▄▁▄▅▄▆█ | 38.7 | 2025-Q1 | 0.15 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 135.3 | 🟩 136.3 | 🟨 132.7 | 🟩 135.8 | 🟦 137.3 | 🟩 136.3 | 🟩 135.6 | 🟦 138.2 | █▅▄▅▄▅▁▅▆▅▄█ | 138.2 | 2025-Q1 | 0.07 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 135.3 | 🟧 136.3 | 🟨 132.7 | 🟧 135.8 | 🟥 137.3 | 🟧 136.3 | 🟧 135.6 | 🟥 138.2 | █▅▄▅▄▅▁▅▆▅▄█ | 138.2 | 2025-Q1 | 0.93 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟩 0.9 | 🟨 1.5 | 🟥 2.7 | 🟦 0.5 | 🟦 0.6 | 🟨 1.5 | 🟨 1.2 | 🟦 0.8 | ▂▂▃▂▂▄█▁▁▄▃▂ | 0.8 | 2025-Q1 | 0.19 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟧 49.9 | 🟥 52.3 | 🟧 51.2 | 🟥 52.3 | 🟥 51.9 | 🟥 52.3 | 🟥 51.4 | 🟥 52.2 | ▁▆▆▇▇█▇█████ | 52.2 | 2025-Q1 | 0.89 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟧 53.9 | 🟥 54.5 | 🟧 53.5 | 🟥 54.2 | 🟥 54.0 | 🟥 54.5 | 🟧 53.2 | 🟧 52.6 | ▁█████▇███▇▇ | 52.6 | 2025-Q1 | 0.63 | higher |
@@ -825,11 +801,9 @@ Dominica: banking-sector Financial Soundness Indicators, percent, last 8 quarter
 | Concentration | Commercial real estate loans to total gross loans | 🟦 8.0 | 🟦 7.9 | 🟩 8.1 | 🟩 9.3 | 🟩 9.3 | 🟩 9.2 | 🟧 10.1 | 🟩 9.3 | ▂▂▁▃▂▁▂▆▆▅█▆ | 9.3 | 2026-Q1 | 0.34 | higher |
 | Earnings | Return on assets | 🟩 1.0 | 🟩 1.5 | 🟩 1.1 | 🟩 1.1 | 🟦 1.7 | 🟦 1.5 | 🟦 1.7 | 🟦 1.6 | ▁▁▅▆▅▇▅▅█▇██ | 1.6 | 2026-Q1 | 0.14 | lower |
 | Earnings | Return on equity | 🟨 12.5 | 🟩 17.0 | 🟨 11.9 | 🟨 11.6 | 🟩 18.4 | 🟩 15.9 | 🟩 17.6 | 🟩 16.6 | ▁▂▆▇▆▇▅▅█▇█▇ | 16.6 | 2026-Q1 | 0.32 | lower |
-| Earnings | Interest margin to gross income | 🟩 56.7 | 🟨 56.2 | 🟩 56.7 | 🟦 68.5 | 🟦 62.0 | 🟩 59.0 | 🟩 57.8 | 🟥 48.5 | ▂▃▃▁▄▄▄█▆▅▄▁ | 48.5 | 2026-Q1 | 0.84 | lower |
-| Earnings | Noninterest expenses to gross income | 🟧 78.5 | 🟨 70.1 | 🟧 74.4 | 🟨 63.6 | 🟩 59.9 | 🟩 61.0 | 🟨 63.7 | 🟨 69.7 | ▂▂▂▁█▅▇▃▂▃▃▅ | 69.7 | 2026-Q1 | 0.55 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟧 56.8 | 🟧 54.2 | 🟧 56.0 | 🟩 62.9 | 🟦 64.6 | 🟦 66.2 | 🟦 64.9 | 🟦 67.6 | ▅▄▃▂▂▁▂▆▆▇▇█ | 67.6 | 2026-Q1 | 0.07 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟨 50.0 | 🟧 48.0 | 🟧 48.2 | 🟩 51.2 | 🟩 52.3 | 🟩 51.2 | 🟨 50.4 | 🟩 52.6 | █▆▅▃▄▁▁▆▇▆▅█ | 52.6 | 2026-Q1 | 0.30 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟧 153.5 | 🟥 147.4 | 🟥 146.9 | 🟨 158.7 | 🟨 161.8 | 🟥 152.6 | 🟥 151.7 | 🟨 158.5 | █▄▄▃▄▁▁▆█▃▃▆ | 158.5 | 2026-Q1 | 0.55 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟩 153.5 | 🟦 147.4 | 🟦 146.9 | 🟨 158.7 | 🟨 161.8 | 🟦 152.6 | 🟦 151.7 | 🟨 158.5 | █▄▄▃▄▁▁▆█▃▃▆ | 158.5 | 2026-Q1 | 0.45 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟨 266.5 | 🟩 241.1 | 🟦 210.7 | 🟩 239.2 | 🟨 260.1 | 🟨 250.2 | 🟩 219.1 | 🟨 256.4 | ▁█▁▇▇▇▇▇▇▇▇▇ | 256.4 | 2026-Q1 | 0.45 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟨 1.0 | 🟩 1.0 | 🟩 0.9 | 🟧 2.1 | 🟥 2.1 | 🟥 3.4 | 🟥 3.3 | 🟥 3.3 | ▁▁▁▂▂▂▂▅▅███ | 3.3 | 2026-Q1 | 0.95 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟩 4.9 | 🟦 4.5 | 🟩 5.6 | 🟥 9.7 | 🟨 5.9 | 🟨 5.8 | 🟦 4.2 | 🟦 4.5 | ▃▆▃▃▂▁▃█▃▃▁▁ | 4.5 | 2026-Q1 | 0.09 | higher |
@@ -879,12 +853,10 @@ Dominican Republic: banking-sector Financial Soundness Indicators, percent, last
 | Concentration | Commercial real estate loans to total gross loans | 🟨 24.6 | 🟨 24.8 | 🟧 25.7 | 🟧 26.2 | 🟥 26.8 | 🟧 25.9 | 🟥 26.4 | 🟥 26.6 | ▃▂▁▄▄▄▆▇█▆▇█ | 26.6 | 2025-Q4 | 0.91 | higher |
 | Earnings | Return on assets | 🟦 3.1 | 🟦 3.0 | 🟦 2.9 | 🟦 2.7 | 🟩 2.7 | 🟩 2.6 | 🟩 2.6 | 🟩 2.5 | █▆▆▅▇▅▄▃▂▂▂▁ | 2.5 | 2025-Q4 | 0.37 | lower |
 | Earnings | Return on equity | 🟦 21.6 | 🟦 20.5 | 🟦 19.7 | 🟩 19.4 | 🟨 18.3 | 🟨 18.3 | 🟩 18.5 | 🟩 18.7 | █▆▆▅▆▄▃▃▁▁▁▂ | 18.7 | 2025-Q4 | 0.34 | lower |
-| Earnings | Interest margin to gross income | 🟨 74.8 | 🟨 74.5 | 🟨 74.5 | 🟨 74.1 | 🟧 73.3 | 🟥 72.7 | 🟥 72.6 | 🟥 72.2 | ▇▄▄▁█▇▇▆▄▂▂▁ | 72.2 | 2025-Q4 | 0.91 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 57.7 | 🟦 58.6 | 🟦 58.8 | 🟩 59.1 | 🟦 58.1 | 🟩 59.0 | 🟦 58.5 | 🟦 58.5 | ▅▇▆█▁▃▄▄▂▄▃▃ | 58.5 | 2025-Q4 | 0.11 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟥 231.0 | 🟩 268.7 | 🟦 290.7 | 🟦 319.6 | 🟦 288.5 | 🟦 311.9 | 🟨 267.5 | 🟨 264.3 | ▁▃▃▃▂▅▆█▆█▅▅ | 264.3 | 2025-Q4 | 0.49 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟦 18.0 | 🟦 19.2 | 🟦 19.1 | 🟩 17.9 | 🟦 18.6 | 🟨 16.5 | 🟩 17.2 | 🟨 16.6 | ▁█▅▅▅██▅▆▁▃▁ | 16.6 | 2025-Q4 | 0.46 | lower |
 | Funding and liquidity | Liquidity coverage ratio | 🟨 94.1 | 🟨 93.7 | 🟩 98.5 | 🟩 94.5 | 🟩 96.7 | 🟨 90.7 | 🟨 88.4 | 🟨 91.9 | █▃▃▁▅▅▆▅▆▄▄▅ | 91.9 | 2025-Q4 | 0.52 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟩 120.1 | 🟩 120.0 | 🟩 119.2 | 🟨 117.8 | 🟩 118.9 | 🟩 119.2 | 🟦 120.6 | 🟩 118.7 | ▇█▆▃▂▂▂▁▂▂▂▁ | 118.7 | 2025-Q4 | 0.37 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟧 120.1 | 🟧 120.0 | 🟧 119.2 | 🟧 117.8 | 🟧 118.9 | 🟧 119.2 | 🟥 120.6 | 🟧 118.7 | ▇█▆▃▂▂▂▁▂▂▂▁ | 118.7 | 2025-Q4 | 0.63 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟨 6.7 | 🟨 5.0 | 🟩 4.5 | 🟧 8.5 | 🟦 2.2 | 🟦 3.8 | 🟨 5.8 | 🟩 4.2 | ▆▇▅█▃▂▂▄▁▂▃▂ | 4.2 | 2025-Q4 | 0.29 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟩 21.2 | 🟨 21.7 | 🟨 22.3 | 🟧 22.9 | 🟥 24.0 | 🟨 22.7 | 🟧 23.0 | 🟥 23.9 | ▂▂▁▁▁▂▄▅█▅▆█ | 23.9 | 2025-Q4 | 0.91 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟦 28.1 | 🟩 28.4 | 🟦 27.8 | 🟨 28.9 | 🟥 31.2 | 🟥 30.4 | 🟧 30.1 | 🟥 30.8 | ▄▂▃▂▂▂▁▃█▆▆▇ | 30.8 | 2025-Q4 | 0.91 | higher |
@@ -935,11 +907,9 @@ Ecuador: banking-sector Financial Soundness Indicators, percent, last 8 quarters
 | Concentration | Commercial real estate loans to total gross loans | 🟥 2.1 | 🟥 2.2 | 🟥 2.1 | 🟧 2.1 | 🟧 2.1 | 🟥 2.1 | 🟥 2.3 | 🟥 2.4 | ▁▁▂▂▃▅▃▂▂▃▇█ | 2.4 | 2026-Q2 | 1.00 | higher |
 | Earnings | Return on assets | 🟥 1.2 | 🟥 1.2 | 🟥 1.3 | 🟧 1.4 | 🟧 1.5 | 🟧 1.5 | 🟨 1.6 | 🟨 1.7 | █▆▁▁▁▂▂▄▅▆▇█ | 1.7 | 2026-Q2 | 0.54 | lower |
 | Earnings | Return on equity | 🟥 7.0 | 🟥 7.2 | 🟧 7.5 | 🟧 9.0 | 🟧 9.4 | 🟨 9.9 | 🟨 10.7 | 🟨 11.0 | ▆▅▁▁▂▂▃▅▆▆▇█ | 11.0 | 2026-Q2 | 0.46 | lower |
-| Earnings | Interest margin to gross income | 🟨 65.7 | 🟨 64.9 | 🟨 66.3 | 🟨 65.0 | 🟨 65.1 | 🟨 65.2 | 🟨 66.1 | 🟨 65.8 | ▇▅▅█▄▁▆▁▂▂▅▄ | 65.8 | 2026-Q2 | 0.47 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 52.6 | 🟦 52.2 | 🟦 50.1 | 🟦 50.0 | 🟦 49.4 | 🟦 49.6 | 🟦 47.0 | 🟦 47.4 | ▄▅▆█▇▇▄▄▄▄▁▁ | 47.4 | 2026-Q2 | 0.01 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟨 35.2 | 🟩 37.0 | 🟧 34.1 | 🟩 35.8 | 🟨 34.3 | 🟨 35.7 | 🟥 31.1 | 🟥 30.4 | ▃▃▅▆▆█▅▇▅▇▂▁ | 30.4 | 2026-Q2 | 0.87 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟥 17.8 | 🟧 19.9 | 🟧 18.3 | 🟧 19.0 | 🟧 18.4 | 🟧 20.1 | 🟥 17.1 | 🟥 16.3 | ▂▃▃▄▄█▅▆▅█▃▁ | 16.3 | 2026-Q2 | 1.00 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟥 113.3 | 🟧 117.2 | 🟧 119.2 | 🟧 121.1 | 🟧 120.5 | 🟧 121.6 | 🟧 121.6 | 🟧 120.8 | ▁▂▁▃▄▆▇█▇███ | 120.8 | 2026-Q2 | 0.68 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟦 113.3 | 🟩 117.2 | 🟩 119.2 | 🟩 121.1 | 🟩 120.5 | 🟩 121.6 | 🟩 121.6 | 🟩 120.8 | ▁▂▁▃▄▆▇█▇███ | 120.8 | 2026-Q2 | 0.32 | higher |
 
 Source: International Monetary Fund, Financial Soundness Indicators (FSI) database (dataset IMF.STA:FSIC). https://data.imf.org
 
@@ -984,11 +954,9 @@ El Salvador: banking-sector Financial Soundness Indicators, percent, last 8 quar
 | Concentration | Loan concentration by economic activity | 🟦 145.7 | 🟩 147.3 | 🟦 145.2 | 🟦 143.4 | 🟦 141.3 | 🟦 140.4 | 🟦 137.6 | 🟦 135.8 | ▇█▇▇▇█▇▅▄▄▂▁ | 135.8 | 2026-Q1 | 0.00 | higher |
 | Earnings | Return on assets | 🟩 1.9 | 🟩 1.8 | 🟩 1.8 | 🟦 2.5 | 🟨 1.7 | 🟨 1.7 | 🟩 1.7 | 🟩 1.8 | ▅▄▃▁▃▂▂█▁▁▁▂ | 1.8 | 2026-Q1 | 0.37 | lower |
 | Earnings | Return on equity | 🟦 12.9 | 🟨 9.9 | 🟦 12.6 | 🟦 13.2 | 🟦 12.6 | 🟩 12.3 | 🟦 12.9 | 🟦 13.8 | █▇▆▄▆▁▅▆▅▅▆▇ | 13.8 | 2026-Q1 | 0.05 | lower |
-| Earnings | Interest margin to gross income | 🟩 79.3 | 🟩 79.2 | 🟩 79.0 | 🟩 78.8 | 🟨 78.7 | 🟨 78.2 | 🟨 78.2 | 🟧 77.6 | ▆▅▄█▆▆▅▄▄▃▃▁ | 77.6 | 2026-Q1 | 0.62 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 53.2 | 🟦 53.5 | 🟦 54.1 | 🟧 58.1 | 🟩 54.4 | 🟦 54.2 | 🟩 54.7 | 🟦 53.5 | ▁▂▃▃▁▁▂█▃▂▃▁ | 53.5 | 2026-Q1 | 0.13 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟨 23.6 | 🟨 23.6 | 🟨 25.7 | 🟩 27.2 | 🟨 26.2 | 🟩 30.6 | 🟩 29.6 | 🟩 28.4 | ▂▃▃▂▁▁▃▅▄█▇▆ | 28.4 | 2026-Q1 | 0.31 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟧 16.1 | 🟧 16.1 | 🟨 18.0 | 🟨 18.9 | 🟨 19.4 | 🟩 21.9 | 🟩 21.2 | 🟩 20.6 | ▂▃▃▂▁▁▃▄▅█▇▆ | 20.6 | 2026-Q1 | 0.35 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 99.7 | 🟨 100.6 | 🟩 105.2 | 🟩 106.2 | 🟦 110.9 | 🟦 113.1 | 🟦 112.4 | 🟦 113.3 | ▂▂▂▂▁▁▄▄▇███ | 113.3 | 2026-Q1 | 0.00 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 99.7 | 🟨 100.6 | 🟧 105.2 | 🟧 106.2 | 🟥 110.9 | 🟥 113.1 | 🟥 112.4 | 🟥 113.3 | ▂▂▂▂▁▁▄▄▇███ | 113.3 | 2026-Q1 | 1.00 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟦 102.4 | 🟦 100.8 | 🟩 105.6 | 🟦 100.7 | 🟦 102.6 | 🟦 103.7 | 🟩 104.9 | 🟦 100.9 | ▄▆▇▂▄▁█▁▄▅▇▁ | 100.9 | 2026-Q1 | 0.02 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟥 100.0 | 🟥 100.0 | 🟥 102.0 | 🟧 100.0 | 🟩 100.0 | 🟩 100.0 | 🟩 100.0 | 🟩 100.0 | ▁▁▁▁▁▁█▁▁▁▁▁ | 100.0 | 2026-Q1 | 0.35 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟦 97.9 | 🟦 98.2 | 🟦 98.8 | 🟦 97.8 | 🟦 90.4 | 🟦 98.7 | 🟦 98.6 | 🟦 98.6 | █▇█▆▅▆▆▅▁▆▆▆ | 98.6 | 2026-Q1 | 0.07 | higher |
@@ -1037,11 +1005,9 @@ Grenada: banking-sector Financial Soundness Indicators, percent, last 8 quarters
 | Concentration | Commercial real estate loans to total gross loans | 🟨 11.5 | 🟨 12.0 | 🟧 12.1 | 🟨 12.0 | 🟧 12.7 | 🟧 12.5 | 🟧 13.1 | 🟧 13.6 | █▁▄▂▄▄▄▄▄▄▄▅ | 13.6 | 2025-Q4 | 0.70 | higher |
 | Earnings | Return on assets | 🟦 1.5 | 🟦 1.3 | 🟨 1.0 | 🟨 1.2 | 🟨 0.7 | 🟧 0.7 | 🟧 0.6 | 🟧 0.5 | ▂▃▆▆█▇▄▆▃▂▂▁ | 0.5 | 2025-Q4 | 0.79 | lower |
 | Earnings | Return on equity | 🟨 15.5 | 🟨 13.9 | 🟨 10.0 | 🟨 12.1 | 🟧 7.7 | 🟧 7.1 | 🟧 6.2 | 🟧 5.1 | ▂▄▇▆█▇▄▆▃▂▂▁ | 5.1 | 2025-Q4 | 0.79 | lower |
-| Earnings | Interest margin to gross income | 🟥 59.7 | 🟧 63.2 | 🟥 61.4 | 🟧 62.2 | 🟧 64.2 | 🟨 65.8 | 🟨 65.3 | 🟨 65.0 | ▁▂▂▂▄▆▅▆▇███ | 65.0 | 2025-Q4 | 0.58 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 64.0 | 🟦 67.9 | 🟦 68.2 | 🟦 64.0 | 🟥 88.7 | 🟧 80.4 | 🟧 79.3 | 🟩 74.1 | ▆▄▃▃▁▂▂▁█▆▅▄ | 74.1 | 2025-Q4 | 0.30 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟦 56.3 | 🟦 56.4 | 🟦 59.4 | 🟦 58.4 | 🟦 58.9 | 🟦 57.9 | 🟦 56.9 | 🟩 56.0 | ▂▁▁▁▂▂█▆▇▅▃▁ | 56.0 | 2025-Q4 | 0.21 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟦 50.3 | 🟦 50.5 | 🟦 52.8 | 🟦 52.3 | 🟦 52.7 | 🟦 51.2 | 🟩 50.0 | 🟩 49.0 | ▃▂▂▃▃▄█▇█▅▃▁ | 49.0 | 2025-Q4 | 0.33 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟦 187.9 | 🟩 185.6 | 🟦 191.3 | 🟦 186.9 | 🟦 187.1 | 🟨 177.4 | 🟧 169.3 | 🟥 162.3 | █▆▆▇▇▇█▇▇▅▃▁ | 162.3 | 2025-Q4 | 0.81 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟥 187.9 | 🟧 185.6 | 🟥 191.3 | 🟥 186.9 | 🟥 187.1 | 🟨 177.4 | 🟩 169.3 | 🟦 162.3 | █▆▆▇▇▇█▇▇▅▃▁ | 162.3 | 2025-Q4 | 0.19 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟧 231.6 | 🟥 247.6 | 🟥 256.8 | 🟧 236.9 | 🟥 254.2 | 🟥 260.6 | 🟧 243.1 | 🟥 246.3 | ▁▂▂▂▆▇█▆▇█▇▇ | 246.3 | 2025-Q4 | 0.81 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟥 16.1 | 🟥 16.1 | 🟥 15.6 | 🟧 15.2 | 🟧 15.1 | 🟥 16.3 | 🟥 15.8 | 🟥 15.3 | ▁▆█▇▇▇▅▃▂█▆▃ | 15.3 | 2025-Q4 | 0.81 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟥 18.5 | 🟥 19.7 | 🟥 22.0 | 🟥 20.2 | 🟥 20.2 | 🟥 20.1 | 🟥 19.4 | 🟨 14.6 | ▄▂▂▃▅▆█▆▆▆▆▁ | 14.6 | 2025-Q4 | 0.53 | higher |
@@ -1090,11 +1056,9 @@ Guatemala: banking-sector Financial Soundness Indicators, percent, last 8 quarte
 | Concentration | Commercial real estate loans to total gross loans | 🟧 8.2 | 🟧 8.5 | 🟧 8.7 | 🟧 9.2 | 🟧 9.4 | 🟧 9.7 | 🟥 9.9 | 🟥 10.1 | ▂▂▁▁▅▅▅▆▇▇██ | 10.1 | 2025-Q4 | 0.84 | higher |
 | Earnings | Return on assets | 🟦 2.2 | 🟩 2.0 | 🟨 1.7 | 🟧 1.5 | 🟧 1.6 | 🟥 1.5 | 🟥 1.4 | 🟥 1.4 | █▇▇▅█▆▄▂▃▂▁▁ | 1.4 | 2025-Q4 | 0.96 | lower |
 | Earnings | Return on equity | 🟦 19.0 | 🟩 16.7 | 🟧 14.7 | 🟥 12.8 | 🟥 13.6 | 🟥 13.0 | 🟥 11.8 | 🟥 11.5 | ██▇▅▇▅▄▂▃▂▁▁ | 11.5 | 2025-Q4 | 1.00 | lower |
-| Earnings | Interest margin to gross income | 🟥 70.6 | 🟥 72.1 | 🟧 72.7 | 🟨 73.5 | 🟧 73.3 | 🟩 74.5 | 🟩 74.1 | 🟨 73.8 | ▁▃▄▅▁▄▅▆▆█▇▇ | 73.8 | 2025-Q4 | 0.46 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 54.1 | 🟦 56.2 | 🟩 56.8 | 🟩 57.8 | 🟦 56.2 | 🟩 56.2 | 🟩 57.9 | 🟩 57.9 | ▁▁▂▅▁▅▆█▅▅██ | 57.9 | 2025-Q4 | 0.33 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟧 28.7 | 🟧 28.9 | 🟧 28.8 | 🟧 28.9 | 🟧 29.1 | 🟥 23.4 | 🟥 24.3 | 🟥 24.6 | ██▇▇▆▆▆▆▆▁▂▂ | 24.6 | 2025-Q4 | 0.85 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟥 37.1 | 🟥 37.1 | 🟥 36.9 | 🟥 37.0 | 🟥 37.3 | 🟥 37.6 | 🟧 38.9 | 🟨 39.5 | █▇▅▄▁▁▁▁▂▂▄▅ | 39.5 | 2025-Q4 | 0.54 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟧 128.8 | 🟥 127.3 | 🟥 126.6 | 🟥 126.9 | 🟥 127.1 | 🟥 127.4 | 🟥 128.0 | 🟧 129.7 | ██▅▄▂▁▁▁▁▁▂▃ | 129.7 | 2025-Q4 | 0.72 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟩 128.8 | 🟦 127.3 | 🟦 126.6 | 🟦 126.9 | 🟦 127.1 | 🟦 127.4 | 🟦 128.0 | 🟩 129.7 | ██▅▄▂▁▁▁▁▁▂▃ | 129.7 | 2025-Q4 | 0.28 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟨 13.4 | 🟨 14.0 | 🟦 7.8 | 🟦 8.9 | 🟩 10.9 | 🟨 13.8 | 🟦 1.5 | 🟦 5.0 | ▅▆▇▆██▅▅▆█▁▃ | 5.0 | 2025-Q4 | 0.01 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟦 29.0 | 🟦 28.5 | 🟦 27.9 | 🟦 27.9 | 🟦 28.3 | 🟦 28.6 | 🟦 28.4 | 🟦 27.9 | █▆▅▄▃▂▁▁▂▃▂▁ | 27.9 | 2025-Q4 | 0.00 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟦 25.0 | 🟦 24.9 | 🟦 24.8 | 🟦 24.7 | 🟩 25.1 | 🟦 24.8 | 🟩 26.0 | 🟦 24.9 | █▅▄▃▂▂▁▁▃▂▆▂ | 24.9 | 2025-Q4 | 0.16 | higher |
@@ -1192,11 +1156,9 @@ Honduras: banking-sector Financial Soundness Indicators, percent, last 8 quarter
 | Asset quality | Provisions to nonperforming loans | 🟩 147.2 | 🟩 143.8 | 🟦 148.1 | 🟨 128.8 | 🟨 130.7 | 🟨 130.7 | 🟨 133.9 | 🟨 131.6 | ▆▆█▆▅▄▅▁▁▁▂▂ | 131.6 | 2026-Q1 | 0.52 | lower |
 | Earnings | Return on assets | 🟧 1.9 | 🟧 1.8 | 🟥 1.6 | 🟧 1.8 | 🟥 1.7 | 🟥 1.6 | 🟥 1.7 | 🟦 2.1 | █▇▆▃▅▄▁▃▂▁▂▇ | 2.1 | 2026-Q1 | 0.12 | lower |
 | Earnings | Return on equity | 🟩 13.4 | 🟩 12.9 | 🟧 11.8 | 🟩 12.6 | 🟨 12.2 | 🟧 11.8 | 🟨 12.4 | 🟦 15.2 | ▇▆▄▃▄▃▁▃▂▁▂█ | 15.2 | 2026-Q1 | 0.06 | lower |
-| Earnings | Interest margin to gross income | 🟥 71.1 | 🟥 71.2 | 🟥 70.6 | 🟥 71.5 | 🟥 71.5 | 🟥 71.5 | 🟥 70.6 | 🟧 72.9 | ▇▇▅▅▃▃▁▄▄▄▁█ | 72.9 | 2026-Q1 | 0.69 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 61.3 | 🟦 61.3 | 🟦 61.6 | 🟦 60.1 | 🟦 60.0 | 🟦 60.7 | 🟦 59.5 | 🟦 58.4 | ▇██▅▄▄▅▃▃▄▂▁ | 58.4 | 2026-Q1 | 0.00 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟥 32.4 | 🟥 32.3 | 🟥 33.7 | 🟥 35.3 | 🟥 37.4 | 🟧 39.5 | 🟧 39.2 | 🟧 39.5 | ▅▄▃▂▁▁▂▄▆███ | 39.5 | 2026-Q1 | 0.66 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟥 23.5 | 🟥 22.9 | 🟥 23.9 | 🟥 25.4 | 🟧 27.1 | 🟨 28.6 | 🟨 28.3 | 🟩 28.8 | ▅▄▃▂▂▁▂▄▆█▇█ | 28.8 | 2026-Q1 | 0.38 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟧 98.8 | 🟥 96.5 | 🟧 98.5 | 🟧 99.3 | 🟨 102.4 | 🟩 105.1 | 🟩 104.6 | 🟦 107.4 | ▆▅▄▃▂▁▂▃▅▇▆█ | 107.4 | 2026-Q1 | 0.17 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟩 98.8 | 🟦 96.5 | 🟩 98.5 | 🟩 99.3 | 🟨 102.4 | 🟧 105.1 | 🟧 104.6 | 🟥 107.4 | ▆▅▄▃▂▁▂▃▅▇▆█ | 107.4 | 2026-Q1 | 0.83 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟨 9.5 | 🟨 9.6 | 🟩 7.6 | 🟧 10.7 | 🟥 11.4 | 🟥 11.7 | 🟥 12.1 | 🟥 13.4 | ▂▁▁▂▄▄▂▅▆▆▇█ | 13.4 | 2026-Q1 | 0.98 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟦 23.1 | 🟦 22.8 | 🟦 23.4 | 🟦 24.4 | 🟦 24.7 | 🟦 24.4 | 🟦 25.4 | 🟩 25.8 | ▆▄▃▃▂▁▂▅▆▅▇█ | 25.8 | 2026-Q1 | 0.22 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟦 24.2 | 🟦 24.5 | 🟦 25.5 | 🟦 26.7 | 🟦 26.6 | 🟦 25.7 | 🟦 25.9 | 🟦 26.0 | ▆▄▃▂▁▂▅██▅▆▆ | 26.0 | 2026-Q1 | 0.12 | higher |
@@ -1272,11 +1234,9 @@ Mexico: banking-sector Financial Soundness Indicators, percent, last 8 quarters.
 | Concentration | Commercial real estate loans to total gross loans | 🟥 1.6 | 🟥 1.6 | 🟥 1.6 | 🟥 1.6 | 🟥 1.6 | 🟥 1.7 | 🟥 1.6 | 🟥 1.7 | ▂▂▁▂▄▅▃▄▆▇▃█ | 1.7 | 2026-Q1 | 0.98 | higher |
 | Earnings | Return on assets | 🟦 2.8 | 🟦 2.8 | 🟦 2.8 | 🟦 2.8 | 🟦 2.7 | 🟦 2.6 | 🟦 2.7 | 🟦 2.8 | ▆▇▇▆▆█▆▆▃▁▄▆ | 2.8 | 2026-Q1 | 0.12 | lower |
 | Earnings | Return on equity | 🟩 18.3 | 🟦 18.6 | 🟩 18.2 | 🟩 18.2 | 🟩 17.7 | 🟩 17.1 | 🟩 17.3 | 🟩 17.2 | █▇▇▅▆▇▅▅▄▁▂▂ | 17.2 | 2026-Q1 | 0.31 | lower |
-| Earnings | Interest margin to gross income | 🟦 77.8 | 🟦 77.9 | 🟦 77.6 | 🟩 75.8 | 🟦 76.5 | 🟦 77.3 | 🟦 77.5 | 🟦 76.4 | ▁▇▅███▇▃▅▇▇▅ | 76.4 | 2026-Q1 | 0.15 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 46.6 | 🟦 46.4 | 🟦 47.6 | 🟦 46.8 | 🟦 47.4 | 🟦 46.8 | 🟦 46.7 | 🟦 44.6 | ▇▇█▆▅▅▇▆▇▆▅▁ | 44.6 | 2026-Q1 | 0.04 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟨 112.4 | 🟨 111.2 | 🟧 108.0 | 🟨 109.7 | 🟩 114.8 | 🟨 110.1 | 🟦 120.3 | 🟨 111.5 | ▆▃█▅▃▃▁▂▄▂▇▃ | 111.5 | 2026-Q1 | 0.49 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟧 30.6 | 🟧 30.6 | 🟧 30.4 | 🟧 30.9 | 🟧 32.0 | 🟧 30.6 | 🟧 31.3 | 🟧 30.3 | ▂▁▂▆▅▅▄▅█▄▆▄ | 30.3 | 2026-Q1 | 0.79 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟩 103.3 | 🟩 101.5 | 🟩 102.4 | 🟩 102.3 | 🟩 101.9 | 🟩 100.5 | 🟩 101.9 | 🟩 101.7 | ▇▆█▇▅▂▄▃▃▁▃▃ | 101.7 | 2026-Q1 | 0.32 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟧 103.3 | 🟧 101.5 | 🟧 102.4 | 🟧 102.3 | 🟧 101.9 | 🟧 100.5 | 🟧 101.9 | 🟧 101.7 | ▇▆█▇▅▂▄▃▃▁▃▃ | 101.7 | 2026-Q1 | 0.68 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟧 14.6 | 🟧 13.7 | 🟥 17.8 | 🟥 15.2 | 🟥 17.4 | 🟥 15.2 | 🟥 15.0 | 🟧 13.4 | ▄▃▁▁▄▃█▅▇▅▅▃ | 13.4 | 2026-Q1 | 0.67 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟧 30.4 | 🟥 34.5 | 🟥 37.9 | 🟥 37.4 | 🟧 31.3 | 🟨 29.5 | 🟩 27.1 | 🟨 28.1 | ▂▂▁▁▄▆██▅▄▂▃ | 28.1 | 2026-Q1 | 0.49 | higher |
 | Household sector | Household debt to GDP |  |  |  |  |  |  |  |  | ▁▂▃▂▃▄▃▇▇▇█▂ | 15.3 | 2021-Q1 | 0.59 | higher |
@@ -1338,11 +1298,9 @@ Montserrat: banking-sector Financial Soundness Indicators, percent, last 8 quart
 | Concentration | Commercial real estate loans to total gross loans | 🟩 3.4 | 🟩 3.3 | 🟩 3.4 | 🟩 3.6 | 🟨 3.7 | 🟨 3.6 | 🟩 3.5 | 🟨 3.7 | ▇▆██▂▁▂▅▇▆▄▆ | 3.7 | 2026-Q2 | 0.44 | higher |
 | Earnings | Return on assets | 🟦 1.5 | 🟦 1.5 | 🟦 1.3 | 🟩 1.2 | 🟩 1.1 | 🟦 1.3 | 🟦 1.7 |  | ▂▅▅▆▄▅▆▃▂▁▃█ | 1.7 | 2026-Q1 | 0.00 | lower |
 | Earnings | Return on equity | 🟦 14.6 | 🟦 14.7 | 🟦 12.5 | 🟩 10.7 | 🟩 10.0 | 🟩 12.1 | 🟦 15.8 |  | ▅███▅▆▆▄▂▁▃▇ | 15.8 | 2026-Q1 | 0.07 | lower |
-| Earnings | Interest margin to gross income | 🟦 71.0 | 🟦 72.8 | 🟩 66.4 | 🟦 67.3 | 🟦 67.7 | 🟦 67.2 | 🟩 66.2 |  | ▁▂▃▅▅▇█▄▅▅▄▄ | 66.2 | 2026-Q1 | 0.25 | lower |
-| Earnings | Noninterest expenses to gross income | 🟩 56.2 | 🟦 53.2 | 🟦 50.6 | 🟦 49.2 | 🟦 48.7 | 🟦 45.2 | 🟦 35.5 |  | ▇██▇▆▇▆▅▅▅▄▁ | 35.5 | 2026-Q1 | 0.00 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟩 88.7 | 🟩 90.0 | 🟦 90.7 | 🟦 91.4 | 🟦 91.2 | 🟩 90.6 | 🟦 93.8 |  | ▂▁▂▄▅▂▄▅▅▅▅█ | 93.8 | 2026-Q1 | 0.02 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟩 78.9 | 🟩 80.3 | 🟦 80.3 | 🟦 80.8 | 🟦 80.7 | 🟦 82.1 | 🟦 81.9 | 🟦 80.9 | ▂▃▅█▁▄▄▅▅██▅ | 80.9 | 2026-Q2 | 0.07 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟧 311.8 | 🟩 332.1 | 🟨 322.6 | 🟩 335.1 | 🟩 333.6 | 🟦 420.4 | 🟦 372.9 | 🟦 360.9 | ▁▂▂▃▁▂▂▂▂█▅▄ | 360.9 | 2026-Q2 | 0.18 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟩 311.8 | 🟧 332.1 | 🟨 322.6 | 🟧 335.1 | 🟧 333.6 | 🟥 420.4 | 🟥 372.9 | 🟥 360.9 | ▁▂▂▃▁▂▂▂▂█▅▄ | 360.9 | 2026-Q2 | 0.82 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟧 558.7 | 🟥 598.3 | 🟧 557.0 | 🟧 553.9 | 🟧 542.5 | 🟥 720.6 | 🟧 520.6 | 🟨 465.5 | ▅▅▅▆▄▅▄▃▃█▃▁ | 465.5 | 2026-Q2 | 0.47 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟧 0.4 | 🟧 0.4 | 🟧 0.4 | 🟧 0.4 | 🟧 0.4 | 🟥 0.5 | 🟥 0.5 | 🟥 0.5 | ▁▇▇▇▆▆▇▇▇███ | 0.5 | 2026-Q2 | 1.00 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟩 4.5 | 🟩 4.5 | 🟨 5.2 | 🟨 5.3 | 🟨 5.2 | 🟦 4.2 | 🟩 5.0 | 🟨 5.8 | ▁▁▃▂▂▂▅▆▅▁▄█ | 5.8 | 2026-Q2 | 0.47 | higher |
@@ -1391,11 +1349,9 @@ Nicaragua: banking-sector Financial Soundness Indicators, percent, last 8 quarte
 | Concentration | Residential real estate loans to total gross loans | 🟦 10.7 | 🟦 10.3 | 🟦 10.2 | 🟦 10.2 | 🟦 10.2 | 🟦 10.0 | 🟦 9.9 | 🟦 10.0 | █▇▅▄▃▂▂▂▂▁▁▁ | 10.0 | 2026-Q2 | 0.03 | higher |
 | Earnings | Return on assets | 🟦 3.4 | 🟦 3.4 | 🟦 3.5 | 🟦 3.3 | 🟦 3.4 | 🟦 3.4 | 🟦 3.5 | 🟦 3.4 | ▄▁▂▅▆▆█▅▆▆▇▆ | 3.4 | 2026-Q2 | 0.05 | lower |
 | Earnings | Return on equity | 🟨 14.6 | 🟨 14.5 | 🟨 14.6 | 🟨 14.1 | 🟨 14.5 | 🟨 14.5 | 🟨 15.3 | 🟨 15.0 | ▄▁▂▅▆▅▆▃▅▅█▇ | 15.0 | 2026-Q2 | 0.44 | lower |
-| Earnings | Interest margin to gross income | 🟦 78.7 | 🟦 77.6 | 🟦 75.5 | 🟦 75.7 | 🟦 75.8 | 🟦 75.4 | 🟦 75.2 | 🟦 75.1 | ▁▁▇▇█▇▄▄▅▄▄▄ | 75.1 | 2026-Q2 | 0.14 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 52.1 | 🟦 51.7 | 🟦 50.3 | 🟦 51.2 | 🟦 51.2 | 🟦 51.1 | 🟦 49.7 | 🟦 50.0 | █▆▇▅▅▅▂▄▄▃▁▁ | 50.0 | 2026-Q2 | 0.01 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟩 74.6 | 🟩 68.1 | 🟩 65.8 | 🟩 68.1 | 🟩 71.1 | 🟩 67.8 | 🟩 68.9 | 🟩 70.7 | █▆▅▄▃▂▁▂▂▂▂▂ | 70.7 | 2026-Q2 | 0.33 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟧 38.7 | 🟧 36.2 | 🟧 36.0 | 🟧 37.3 | 🟧 38.0 | 🟧 37.2 | 🟧 38.2 | 🟧 38.3 | █▇▅▅▄▁▁▂▃▂▃▃ | 38.3 | 2026-Q2 | 0.63 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 120.2 | 🟧 114.9 | 🟧 115.9 | 🟧 118.4 | 🟧 119.8 | 🟧 118.2 | 🟨 121.3 | 🟨 121.5 | █▇▆▅▄▁▂▃▃▃▄▄ | 121.5 | 2026-Q2 | 0.55 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 120.2 | 🟩 114.9 | 🟩 115.9 | 🟩 118.4 | 🟩 119.8 | 🟩 118.2 | 🟨 121.3 | 🟨 121.5 | █▇▆▅▄▁▂▃▃▃▄▄ | 121.5 | 2026-Q2 | 0.45 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟥 136.3 | 🟥 136.0 | 🟥 135.2 | 🟥 127.9 | 🟥 130.3 | 🟥 130.1 | 🟥 130.3 | 🟧 116.7 | ▆▅█▇▇▆▆▄▅▅▅▁ | 116.7 | 2026-Q2 | 0.63 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟨 98.5 | 🟩 98.0 | 🟦 97.0 | 🟦 96.1 | 🟦 95.8 | 🟦 95.6 | 🟦 95.9 | 🟦 96.2 | ▇▇▇▇█▇▄▂▂▁▂▂ | 96.2 | 2026-Q2 | 0.10 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟩 89.0 | 🟦 87.0 | 🟦 85.6 | 🟦 85.5 | 🟦 86.6 | 🟦 84.9 | 🟦 85.4 | 🟦 86.9 | █▇▅▅▄▂▁▁▂▁▁▂ | 86.9 | 2026-Q2 | 0.15 | higher |
@@ -1442,11 +1398,9 @@ Panama: banking-sector Financial Soundness Indicators, percent, last 8 quarters.
 | Asset quality | Provisions to nonperforming loans | 🟦 121.2 | 🟩 120.3 | 🟦 120.8 | 🟩 120.1 | 🟩 111.1 | 🟩 109.6 | 🟩 111.5 | 🟩 109.1 | ███▇▇▇▇▆▂▁▂▁ | 109.1 | 2026-Q1 | 0.27 | lower |
 | Earnings | Return on assets | 🟦 2.1 | 🟩 2.0 | 🟩 1.9 | 🟩 1.9 | 🟩 2.0 | 🟩 2.0 | 🟦 2.0 | 🟨 1.8 | ▅▄▃▅█▆▃▃▆▆▆▁ | 1.8 | 2026-Q1 | 0.43 | lower |
 | Earnings | Return on equity | 🟦 17.6 | 🟦 16.3 | 🟦 16.5 | 🟩 16.0 | 🟦 16.7 | 🟦 16.6 | 🟦 16.6 | 🟨 13.9 | ▇▇▆▆█▆▆▅▆▆▆▁ | 13.9 | 2026-Q1 | 0.49 | lower |
-| Earnings | Interest margin to gross income | 🟥 56.8 | 🟧 57.1 | 🟥 56.4 | 🟥 55.4 | 🟥 53.6 | 🟥 54.0 | 🟥 53.0 | 🟥 54.9 | ██▇▇▅▅▄▃▂▂▁▃ | 54.9 | 2026-Q1 | 0.90 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 40.4 | 🟦 41.4 | 🟩 42.2 | 🟩 42.9 | 🟦 41.8 | 🟦 41.8 | 🟦 41.8 | 🟩 42.5 | ▄▆█▄▁▃▅▇▄▄▄▆ | 42.5 | 2026-Q1 | 0.23 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟧 28.7 | 🟧 29.0 | 🟧 28.3 | 🟨 29.7 | 🟨 29.6 | 🟨 29.9 | 🟩 30.5 | 🟦 33.0 | ▃▄▂▁▂▂▂▃▃▄▅█ | 33.0 | 2026-Q1 | 0.19 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟧 9.8 | 🟧 10.0 | 🟧 10.1 | 🟨 10.4 | 🟨 10.4 | 🟨 10.7 | 🟨 10.9 | 🟩 11.4 | ▁▁▁▁▁▂▃▄▄▅▆█ | 11.4 | 2026-Q1 | 0.32 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟩 101.0 | 🟩 99.6 | 🟩 101.2 | 🟩 99.8 | 🟩 99.5 | 🟩 98.5 | 🟦 101.8 | 🟩 100.9 | ▆▃██▅▃▅▃▂▁▆▅ | 100.9 | 2026-Q1 | 0.24 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟧 101.0 | 🟧 99.6 | 🟧 101.2 | 🟧 99.8 | 🟧 99.5 | 🟧 98.5 | 🟥 101.8 | 🟧 100.9 | ▆▃██▅▃▅▃▂▁▆▅ | 100.9 | 2026-Q1 | 0.76 | higher |
 
 Source: International Monetary Fund, Financial Soundness Indicators (FSI) database (dataset IMF.STA:FSIC). https://data.imf.org
 
@@ -1490,11 +1444,9 @@ Paraguay: banking-sector Financial Soundness Indicators, percent, last 8 quarter
 | Asset quality | Provisions to nonperforming loans | 🟧 76.1 | 🟨 81.8 | 🟧 80.1 | 🟥 74.6 | 🟥 70.2 | 🟧 79.1 | 🟧 76.5 | 🟥 70.8 | ▄▅▃▂▅█▇▄▁▆▅▁ | 70.8 | 2026-Q2 | 0.93 | lower |
 | Earnings | Return on assets | 🟨 2.5 | 🟨 2.5 | 🟨 2.5 | 🟨 2.5 | 🟨 2.5 | 🟨 2.5 | 🟨 2.5 | 🟧 2.4 | ▁▃▅▆▇█▇▆▆▆▆▃ | 2.4 | 2026-Q2 | 0.67 | lower |
 | Earnings | Return on equity | 🟨 18.5 | 🟨 18.7 | 🟧 18.5 | 🟧 18.3 | 🟧 18.4 | 🟧 18.1 | 🟧 17.9 | 🟥 17.0 | ▁▃▄▅▇█▇▆▇▆▅▂ | 17.0 | 2026-Q2 | 0.82 | lower |
-| Earnings | Interest margin to gross income | 🟨 65.7 | 🟧 63.8 | 🟧 59.8 | 🟧 58.8 | 🟥 58.2 | 🟥 57.4 | 🟧 60.8 | 🟥 57.8 | █▇▆▆▆▅▂▂▁▁▃▁ | 57.8 | 2026-Q2 | 0.82 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 49.6 | 🟩 51.0 | 🟨 53.6 | 🟨 54.0 | 🟨 53.3 | 🟨 53.4 | 🟦 50.6 | 🟩 52.5 | ▁▃▁▂▂▄▇█▇▇▃▆ | 52.5 | 2026-Q2 | 0.38 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟥 20.0 | 🟥 17.2 | 🟥 16.5 | 🟥 17.5 | 🟥 14.5 | 🟥 16.5 | 🟥 16.8 | 🟥 14.7 | ▆█▆▅▅▃▃▃▁▃▃▁ | 14.7 | 2026-Q2 | 0.99 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟥 7.8 | 🟥 6.5 | 🟥 6.2 | 🟥 6.5 | 🟥 5.3 | 🟥 5.9 | 🟥 6.1 | 🟥 5.5 | ▇█▆▅▅▃▃▃▁▂▂▁ | 5.5 | 2026-Q2 | 0.99 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟥 93.2 | 🟥 89.1 | 🟥 89.8 | 🟥 88.2 | 🟥 88.6 | 🟥 88.7 | 🟥 90.2 | 🟥 91.5 | █▇▇▆▄▂▂▁▁▁▂▃ | 91.5 | 2026-Q2 | 0.93 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟦 93.2 | 🟦 89.1 | 🟦 89.8 | 🟦 88.2 | 🟦 88.6 | 🟦 88.7 | 🟦 90.2 | 🟦 91.5 | █▇▇▆▄▂▂▁▁▁▂▃ | 91.5 | 2026-Q2 | 0.07 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟧 11.0 | 🟧 10.7 | 🟩 7.9 | 🟧 10.6 | 🟧 11.4 | 🟧 9.8 | 🟨 9.1 | 🟨 9.4 | ██▁▅▅▅▁▄▅▃▃▃ | 9.4 | 2026-Q2 | 0.54 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟧 46.7 | 🟥 47.2 | 🟥 47.9 | 🟧 46.8 | 🟨 45.4 | 🟨 44.3 | 🟨 44.3 | 🟨 43.2 | ▆▆▇▆▆▇█▆▄▃▃▁ | 43.2 | 2026-Q2 | 0.41 | higher |
 
@@ -1540,11 +1492,9 @@ Peru: banking-sector Financial Soundness Indicators, percent, last 8 quarters. C
 | Asset quality | Provisions to nonperforming loans | 🟨 102.4 | 🟧 101.8 | 🟧 101.2 | 🟨 102.6 | 🟩 107.9 | 🟩 107.2 | 🟩 109.7 | 🟩 110.5 | ▁▂▃▂▃▃▃▃▆▆██ | 110.5 | 2025-Q3 | 0.20 | lower |
 | Earnings | Return on assets | 🟥 2.2 | 🟥 1.9 | 🟥 1.9 | 🟥 2.2 | 🟧 2.4 | 🟦 3.0 | 🟦 3.2 | 🟦 3.3 | ▄▅▄▃▂▁▁▃▃▇██ | 3.3 | 2025-Q3 | 0.00 | lower |
 | Earnings | Return on equity | 🟥 13.0 | 🟥 12.1 | 🟥 12.1 | 🟥 13.9 | 🟧 14.5 | 🟨 18.5 | 🟩 19.1 | 🟩 19.1 | ▅▅▄▃▂▁▁▃▃▇██ | 19.1 | 2025-Q3 | 0.32 | lower |
-| Earnings | Interest margin to gross income | 🟦 91.7 | 🟦 92.2 | 🟦 92.1 | 🟦 91.8 | 🟦 91.6 | 🟦 91.1 | 🟩 90.1 | 🟩 90.4 | ▃▅▆▇▆█▇▆▆▄▁▂ | 90.4 | 2025-Q3 | 0.25 | lower |
-| Earnings | Noninterest expenses to gross income | 🟩 44.8 | 🟦 43.1 | 🟦 43.4 | 🟦 43.3 | 🟦 44.1 | 🟦 43.5 | 🟦 43.4 | 🟦 43.7 | █▄▄▄▄▁▁▁▃▂▁▂ | 43.7 | 2025-Q3 | 0.08 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟥 35.1 | 🟨 39.3 | 🟧 37.7 | 🟨 39.6 | 🟨 38.9 | 🟨 39.8 | 🟧 36.7 | 🟥 36.2 | ▃▄▁▁▂▇▆█▇█▄▄ | 36.2 | 2025-Q3 | 0.81 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟧 23.3 | 🟩 25.8 | 🟨 25.2 | 🟩 27.3 | 🟩 27.4 | 🟩 27.9 | 🟩 26.2 | 🟨 25.5 | ▂▃▁▂▃▆▅▇▇█▆▅ | 25.5 | 2025-Q3 | 0.46 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 92.4 | 🟩 95.4 | 🟩 96.3 | 🟦 101.0 | 🟦 102.8 | 🟦 102.4 | 🟦 100.9 | 🟦 100.7 | ▁▂▁▂▃▄▅▇██▇▇ | 100.7 | 2025-Q3 | 0.08 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 92.4 | 🟧 95.4 | 🟧 96.3 | 🟥 101.0 | 🟥 102.8 | 🟥 102.4 | 🟥 100.9 | 🟥 100.7 | ▁▂▁▂▃▄▅▇██▇▇ | 100.7 | 2025-Q3 | 0.92 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟨 1.4 | 🟩 1.4 | 🟨 1.4 | 🟨 1.9 | 🟨 1.9 | 🟨 1.7 | 🟩 1.4 | 🟩 1.2 | ▆▆▅▁▆▆▆██▇▆▅ | 1.2 | 2025-Q3 | 0.24 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟩 24.6 | 🟩 24.4 | 🟩 24.8 | 🟦 23.9 | 🟩 24.0 | 🟦 23.7 | 🟦 23.8 | 🟦 23.6 | ▄▄▃█▅▅▆▂▃▂▂▁ | 23.6 | 2025-Q3 | 0.08 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟦 35.9 | 🟩 36.8 | 🟦 35.7 | 🟩 36.4 | 🟩 36.2 | 🟦 36.0 | 🟦 35.4 | 🟦 35.6 | ▇▃▁▆▄█▃▆▅▄▁▂ | 35.6 | 2025-Q3 | 0.10 | higher |
@@ -1593,11 +1543,9 @@ Sint Maarten: banking-sector Financial Soundness Indicators, percent, last 8 qua
 | Concentration | Residential real estate loans to total gross loans | 🟨 31.6 | 🟧 31.9 | 🟥 32.1 | 🟨 31.7 | 🟥 32.2 | 🟧 31.9 | 🟧 31.8 | 🟥 31.9 | ▁▃▄▃▅▇█▆█▆▆▇ | 31.9 | 2023-Q2 | 0.80 | higher |
 | Concentration | Commercial real estate loans to total gross loans | 🟥 29.8 | 🟥 28.9 | 🟨 27.7 | 🟩 27.3 | 🟩 27.3 | 🟨 27.7 | 🟨 27.4 | 🟩 27.3 | ▂▁▁▄█▆▂▂▁▂▂▁ | 27.3 | 2023-Q2 | 0.20 | higher |
 | Earnings | Return on assets | 🟨 0.5 | 🟩 0.8 | 🟧 0.3 | 🟩 0.7 | 🟨 0.6 | 🟨 0.6 | 🟧 0.3 | 🟧 0.3 | ▂▁▅▅▆█▅▇▇▇▅▅ | 0.3 | 2023-Q2 | 0.70 | lower |
-| Earnings | Interest margin to gross income | 🟧 62.0 | 🟧 61.1 | 🟥 55.1 | 🟧 56.1 | 🟥 56.0 | 🟥 54.5 | 🟥 51.7 | 🟥 54.9 | ██▆▆▆▅▃▃▃▂▁▂ | 54.9 | 2023-Q2 | 0.90 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 75.5 | 🟦 75.1 | 🟥 87.1 | 🟧 84.6 | 🟧 83.3 | 🟨 81.7 | 🟧 86.8 | 🟩 81.0 | ██▄▄▁▁▆▅▅▄▆▄ | 81.0 | 2023-Q2 | 0.30 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟨 73.6 | 🟨 73.5 | 🟥 70.7 | 🟥 70.4 | 🟧 73.4 |  |  |  | █▄▃▆▇▅▄▃▃▁▁▃ | 73.4 | 2022-Q3 | 0.65 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟩 59.4 | 🟩 59.3 | 🟨 58.2 | 🟨 57.9 | 🟦 60.2 |  |  |  | ▄▂▁▄▅█▇▅▅▂▂▇ | 60.2 | 2022-Q3 | 0.12 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 129.4 | 🟦 131.7 | 🟦 137.5 | 🟦 139.1 | 🟦 131.6 | 🟥 120.0 | 🟨 127.5 | 🟦 136.8 | ▃▄▅▅▄▅▇█▅▁▄▇ | 136.8 | 2023-Q2 | 0.10 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟧 129.4 | 🟥 131.7 | 🟥 137.5 | 🟥 139.1 | 🟥 131.6 | 🟦 120.0 | 🟨 127.5 | 🟥 136.8 | ▃▄▅▅▄▅▇█▅▁▄▇ | 136.8 | 2023-Q2 | 0.90 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟥 12.0 | 🟧 11.8 | 🟨 11.7 | 🟧 11.8 | 🟥 69.6 | 🟥 68.3 | 🟥 68.0 | 🟥 68.5 | ▁▁▁▁▁▁▁▁████ | 68.5 | 2023-Q2 | 0.95 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟧 40.2 | 🟧 41.1 | 🟥 41.4 | 🟧 41.1 | 🟥 76.2 | 🟥 74.8 | 🟥 76.5 | 🟥 77.0 | ▁▁▂▂▂▂▂▂████ | 77.0 | 2023-Q2 | 1.00 | higher |
 
@@ -1646,11 +1594,9 @@ St. Kitts and Nevis: banking-sector Financial Soundness Indicators, percent, las
 | Concentration | Commercial real estate loans to total gross loans | 🟨 3.4 | 🟨 3.4 | 🟩 3.1 | 🟩 3.3 | 🟩 3.3 | 🟨 3.8 | 🟨 4.3 | 🟨 4.4 | ▂▁▃▃▂▂▁▂▂▅██ | 4.4 | 2026-Q2 | 0.56 | higher |
 | Earnings | Return on assets | 🟦 1.7 | 🟨 1.1 | 🟦 2.0 | 🟦 1.6 | 🟩 1.4 | 🟦 1.9 | 🟨 1.0 | 🟩 1.2 | ▁▁▃▄▆▂█▅▄▇▁▃ | 1.2 | 2026-Q2 | 0.31 | lower |
 | Earnings | Return on equity | 🟦 16.7 | 🟧 10.2 | 🟦 18.5 | 🟩 13.5 | 🟨 11.4 | 🟦 15.5 | 🟥 7.6 | 🟧 9.4 | ▃▃▄▅▇▃█▅▃▆▁▂ | 9.4 | 2026-Q2 | 0.76 | lower |
-| Earnings | Interest margin to gross income | 🟨 33.9 | 🟨 37.5 | 🟥 15.6 | 🟧 25.3 | 🟧 29.4 | 🟧 31.7 | 🟨 34.7 | 🟨 37.1 | ▅▅█▇▆▇▁▄▅▆▇▇ | 37.1 | 2026-Q2 | 0.49 | lower |
-| Earnings | Noninterest expenses to gross income | 🟩 61.1 | 🟧 71.5 | 🟦 37.3 | 🟩 56.0 | 🟩 58.3 | 🟩 61.4 | 🟧 70.9 | 🟧 74.6 | ██▆▅▅▆▁▄▄▅▆▇ | 74.6 | 2026-Q2 | 0.78 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟥 50.8 | 🟧 52.6 | 🟥 51.6 | 🟥 50.0 | 🟥 47.7 | 🟥 48.0 | 🟥 50.3 | 🟥 47.1 | █▅▅▃▄▆▅▄▂▂▄▁ | 47.1 | 2026-Q2 | 1.00 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟥 44.2 | 🟥 45.3 | 🟥 43.8 | 🟥 43.1 | 🟥 40.8 | 🟥 39.5 | 🟥 40.1 | 🟥 40.9 | █▆▆▅▄▅▄▄▂▁▁▂ | 40.9 | 2026-Q2 | 0.93 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟥 164.7 | 🟥 159.8 | 🟥 156.1 | 🟥 153.4 | 🟥 150.4 | 🟥 147.6 | 🟥 150.1 | 🟥 149.9 | █▇▇▆▄▃▂▂▁▁▁▁ | 149.9 | 2026-Q2 | 0.98 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟦 164.7 | 🟦 159.8 | 🟦 156.1 | 🟦 153.4 | 🟦 150.4 | 🟦 147.6 | 🟦 150.1 | 🟦 149.9 | █▇▇▆▄▃▂▂▁▁▁▁ | 149.9 | 2026-Q2 | 0.02 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟧 203.8 | 🟧 181.0 | 🟩 144.5 | 🟦 129.0 | 🟦 114.8 | 🟦 102.6 | 🟦 106.2 | 🟦 96.8 | █▇▇▆▅▄▃▂▂▁▁▁ | 96.8 | 2026-Q2 | 0.07 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟩 20.9 | 🟦 20.3 | 🟦 18.9 | 🟦 19.2 | 🟦 18.7 | 🟦 18.7 | 🟦 18.4 | 🟦 18.4 | █▇▇▇▅▄▂▂▂▂▁▁ | 18.4 | 2026-Q2 | 0.02 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟩 18.1 | 🟩 21.2 | 🟨 21.6 | 🟨 22.0 | 🟩 21.1 | 🟩 21.1 | 🟨 22.1 | 🟨 22.6 | ▁▂▃▂▃▆▇▇▆▆▇█ | 22.6 | 2026-Q2 | 0.47 | higher |
@@ -1700,11 +1646,9 @@ St. Lucia: banking-sector Financial Soundness Indicators, percent, last 8 quarte
 | Concentration | Commercial real estate loans to total gross loans | 🟧 7.2 | 🟧 7.5 | 🟧 7.4 | 🟧 7.4 | 🟧 7.4 | 🟥 7.8 | 🟥 8.1 | 🟥 8.6 | ▂▁▁▄▅▆▆▆▆▆▇█ | 8.6 | 2026-Q2 | 0.98 | higher |
 | Earnings | Return on assets | 🟨 1.3 | 🟩 1.3 | 🟨 1.1 | 🟨 1.2 | 🟩 1.5 | 🟨 1.2 | 🟦 1.6 | 🟦 1.8 | ▄▄▅▆▂▃▁▂▄▂▆█ | 1.8 | 2026-Q2 | 0.04 | lower |
 | Earnings | Return on equity | 🟨 15.0 | 🟨 15.5 | 🟧 12.9 | 🟨 13.3 | 🟨 16.4 | 🟨 13.4 | 🟨 17.2 | 🟩 19.0 | ▇▆▇█▃▄▁▁▅▂▆▇ | 19.0 | 2026-Q2 | 0.29 | lower |
-| Earnings | Interest margin to gross income | 🟥 53.5 | 🟥 55.8 | 🟩 62.8 | 🟨 60.9 | 🟧 59.0 | 🟧 59.3 | 🟥 56.2 | 🟧 58.0 | ▄▄▂▄▁▃█▇▅▅▃▄ | 58.0 | 2026-Q2 | 0.71 | lower |
-| Earnings | Noninterest expenses to gross income | 🟧 66.9 | 🟧 66.0 | 🟥 68.4 | 🟨 65.8 | 🟨 64.8 | 🟥 67.8 | 🟨 64.2 | 🟧 66.1 | ▇▅▁▄▇▇█▇▆█▆▇ | 66.1 | 2026-Q2 | 0.64 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟩 47.0 | 🟦 48.5 | 🟦 53.6 | 🟦 53.4 | 🟦 51.9 | 🟦 50.7 | 🟦 51.9 | 🟩 47.5 | ▃▁▃▃▃▄██▇▆▇▃ | 47.5 | 2026-Q2 | 0.22 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟦 44.6 | 🟦 45.8 | 🟦 46.4 | 🟦 46.1 | 🟦 44.8 | 🟦 43.9 | 🟦 44.7 | 🟩 40.8 | ▃▃▇▇▆▇██▆▅▆▁ | 40.8 | 2026-Q2 | 0.36 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟦 152.7 | 🟦 153.2 | 🟦 156.5 | 🟦 156.2 | 🟦 155.1 | 🟦 151.9 | 🟦 157.4 | 🟦 152.1 | ▁▂▅▆▇▇██▇▆█▆ | 152.1 | 2026-Q2 | 0.13 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟥 152.7 | 🟥 153.2 | 🟥 156.5 | 🟥 156.2 | 🟥 155.1 | 🟥 151.9 | 🟥 157.4 | 🟥 152.1 | ▁▂▅▆▇▇██▇▆█▆ | 152.1 | 2026-Q2 | 0.87 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟩 152.2 | 🟨 167.5 | 🟧 171.4 | 🟨 165.1 | 🟨 154.0 | 🟩 152.2 | 🟦 -19.6 | 🟩 148.2 | ███▇▇▇█▇▇▇▁▇ | 148.2 | 2026-Q2 | 0.29 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟩 3.7 | 🟩 4.0 | 🟨 4.5 | 🟨 4.7 | 🟨 4.9 | 🟨 4.8 | 🟨 4.7 | 🟨 4.8 | █▂▂▃▁▂▃▃▃▃▃▃ | 4.8 | 2026-Q2 | 0.49 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟧 17.4 | 🟥 19.6 | 🟥 19.4 | 🟥 19.0 | 🟧 18.1 | 🟥 18.8 | 🟥 18.5 | 🟥 18.1 | ▂▃▃▁▃██▇▅▆▆▅ | 18.1 | 2026-Q2 | 0.80 | higher |
@@ -1754,11 +1698,9 @@ St. Vincent and the Grenadines: banking-sector Financial Soundness Indicators, p
 | Concentration | Commercial real estate loans to total gross loans | 🟦 1.0 | 🟩 1.2 | 🟨 1.5 | 🟧 1.6 | 🟧 1.7 | 🟧 1.7 | 🟥 1.9 | 🟥 2.0 | ▁▁▂▃▃▄▆▆▆▆▇█ | 2.0 | 2026-Q2 | 0.96 | higher |
 | Earnings | Return on assets | 🟦 1.7 | 🟦 1.4 | 🟦 1.3 | 🟦 1.1 | 🟦 1.2 | 🟦 1.5 | 🟦 1.6 | 🟦 1.5 | ▁▃▅▇█▆▅▄▅▆▇▇ | 1.5 | 2026-Q2 | 0.07 | lower |
 | Earnings | Return on equity | 🟦 25.8 | 🟦 20.2 | 🟦 18.5 | 🟦 16.4 | 🟦 16.3 | 🟦 20.2 | 🟦 21.6 | 🟦 20.0 | ▁▃▅▇█▆▅▄▄▆▆▅ | 20.0 | 2026-Q2 | 0.11 | lower |
-| Earnings | Interest margin to gross income | 🟥 58.7 | 🟧 61.1 | 🟧 63.0 | 🟩 66.3 | 🟦 67.9 | 🟦 69.8 | 🟨 64.3 | 🟩 66.1 | ▂▂▁▃▄▅▅▇▇█▆▇ | 66.1 | 2026-Q2 | 0.31 | lower |
-| Earnings | Noninterest expenses to gross income | 🟦 63.8 | 🟩 66.3 | 🟦 63.2 | 🟦 63.8 | 🟦 63.8 | 🟦 63.4 | 🟦 60.7 | 🟦 64.5 | █▆▂▁▃▃▂▃▃▂▁▃ | 64.5 | 2026-Q2 | 0.18 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟧 45.3 | 🟦 52.1 | 🟩 50.7 | 🟦 53.3 | 🟦 52.4 | 🟦 54.0 | 🟦 53.9 | 🟦 52.9 | ▂▂▁▁▁▇▅▇▇██▇ | 52.9 | 2026-Q2 | 0.07 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟨 42.5 | 🟦 46.2 | 🟦 47.3 | 🟦 46.4 | 🟩 45.5 | 🟦 46.9 | 🟩 45.8 | 🟩 44.7 | ▃▃▁▂▂▇█▇▆▇▆▅ | 44.7 | 2026-Q2 | 0.33 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 146.7 | 🟦 157.4 | 🟩 156.6 | 🟩 149.4 | 🟩 149.3 | 🟩 154.7 | 🟩 150.2 | 🟨 145.2 | ▇█▅▄▂▇▇▃▃▆▄▁ | 145.2 | 2026-Q2 | 0.44 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟧 146.7 | 🟥 157.4 | 🟧 156.6 | 🟧 149.4 | 🟧 149.3 | 🟧 154.7 | 🟧 150.2 | 🟨 145.2 | ▇█▅▄▂▇▇▃▃▆▄▁ | 145.2 | 2026-Q2 | 0.56 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟧 116.4 | 🟦 18.3 | 🟧 103.4 | 🟥 146.3 | 🟦 7.4 | 🟩 30.9 | 🟩 25.6 | 🟩 27.6 | ▅▄▅▇▆▂▆█▁▂▂▂ | 27.6 | 2026-Q2 | 0.22 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟦 0.3 | 🟦 0.3 | 🟦 0.3 | 🟥 3.9 | 🟥 3.8 | 🟥 3.8 | 🟥 3.5 | 🟥 5.0 | ▁▁▁▁▁▁▁▆▆▆▆█ | 5.0 | 2026-Q2 | 1.00 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟦 6.8 | 🟥 9.2 | 🟦 6.1 | 🟦 6.1 | 🟨 7.3 | 🟨 8.1 | 🟨 7.5 | 🟨 7.9 | ▁▂▁▃▃█▁▁▄▆▄▅ | 7.9 | 2026-Q2 | 0.53 | higher |
@@ -1835,11 +1777,9 @@ Trinidad and Tobago: banking-sector Financial Soundness Indicators, percent, las
 | Concentration | Commercial real estate loans to total gross loans | 🟧 10.8 | 🟧 10.7 | 🟧 10.7 | 🟥 10.8 | 🟧 10.5 | 🟧 10.3 | 🟧 10.3 | 🟧 10.5 | ▆█▆▅▅▄▄▅▂▁▁▂ | 10.5 | 2026-Q1 | 0.72 | higher |
 | Earnings | Return on assets | 🟨 2.4 | 🟩 2.6 | 🟩 2.7 | 🟩 2.6 | 🟨 2.5 | 🟩 2.8 | 🟩 2.8 | 🟧 2.4 | ▃▁▅▄▄▅▆▅▄██▃ | 2.4 | 2026-Q1 | 0.60 | lower |
 | Earnings | Return on equity | 🟧 12.6 | 🟧 13.4 | 🟨 13.9 | 🟧 12.9 | 🟧 12.7 | 🟩 14.7 | 🟩 14.5 | 🟥 11.4 | ▃▂▆▄▄▅▆▄▄██▁ | 11.4 | 2026-Q1 | 0.85 | lower |
-| Earnings | Interest margin to gross income | 🟦 68.8 | 🟦 68.0 | 🟦 67.6 | 🟦 65.9 | 🟦 66.2 | 🟩 64.4 | 🟩 64.3 | 🟦 66.0 | ▃▃▁█▇▆▆▄▄▂▂▄ | 66.0 | 2026-Q1 | 0.11 | lower |
-| Earnings | Noninterest expenses to gross income | 🟧 57.4 | 🟧 56.9 | 🟨 55.6 | 🟨 55.6 | 🟨 54.6 | 🟨 54.4 | 🟩 53.9 | 🟥 60.3 | ▃▃▁▅▅▄▃▃▂▂▁█ | 60.3 | 2026-Q1 | 0.87 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟥 20.7 | 🟥 18.2 | 🟥 17.3 | 🟥 18.4 | 🟥 16.1 | 🟥 14.8 | 🟥 15.1 | 🟥 16.6 | █▇▆▇▆▄▃▄▂▁▁▂ | 16.6 | 2026-Q1 | 0.96 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟥 16.8 | 🟥 14.8 | 🟥 14.3 | 🟥 15.3 | 🟥 13.3 | 🟥 12.2 | 🟥 12.4 | 🟥 13.6 | █▇▅▇▅▄▃▄▂▁▁▂ | 13.6 | 2026-Q1 | 0.96 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟥 121.9 | 🟥 119.2 | 🟥 116.8 | 🟥 118.1 | 🟥 115.5 | 🟥 113.5 | 🟥 112.7 | 🟥 112.4 | ▇█▆▆▅▄▃▃▂▁▁▁ | 112.4 | 2026-Q1 | 0.93 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟦 121.9 | 🟦 119.2 | 🟦 116.8 | 🟦 118.1 | 🟦 115.5 | 🟦 113.5 | 🟦 112.7 | 🟦 112.4 | ▇█▆▆▅▄▃▃▂▁▁▁ | 112.4 | 2026-Q1 | 0.07 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟥 22.5 | 🟥 20.4 | 🟥 26.2 | 🟥 26.3 | 🟥 29.8 | 🟥 28.4 | 🟧 16.1 | 🟨 13.4 | ▆▆▆▅▅▄▆▇█▇▂▁ | 13.4 | 2026-Q1 | 0.50 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟩 16.3 | 🟨 16.9 | 🟩 16.5 | 🟦 15.5 | 🟨 16.5 | 🟨 17.1 | 🟨 16.6 | 🟩 16.4 | ▅▃▅▆▄▇▅▁▅█▆▅ | 16.4 | 2026-Q1 | 0.35 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟩 24.9 | 🟨 25.8 | 🟩 25.0 | 🟦 24.3 | 🟨 25.2 | 🟩 24.6 | 🟦 24.5 | 🟩 24.9 | ▅▁▂▂▅█▅▃▆▄▃▅ | 24.9 | 2026-Q1 | 0.32 | higher |
@@ -1890,11 +1830,9 @@ United States: banking-sector Financial Soundness Indicators, percent, last 8 qu
 | Concentration | Commercial real estate loans to total gross loans | 🟥 18.4 | 🟥 18.2 | 🟥 18.2 | 🟥 18.1 | 🟧 17.8 | 🟧 17.8 | 🟧 17.7 | 🟧 17.5 | ▇▇▇█▇▆▆▅▃▃▂▁ | 17.5 | 2026-Q1 | 0.69 | higher |
 | Earnings | Return on assets | 🟧 1.4 | 🟧 1.4 | 🟧 1.3 | 🟨 1.4 | 🟧 1.4 | 🟧 1.4 | 🟨 1.4 | 🟩 1.5 | █▇▁▁▃▂▂▄▃▄▅█ | 1.5 | 2026-Q1 | 0.28 | lower |
 | Earnings | Return on equity | 🟩 11.6 | 🟩 11.2 | 🟩 11.1 | 🟩 11.5 | 🟩 11.2 | 🟩 11.4 | 🟩 11.4 | 🟦 12.4 | █▇▂▁▃▂▁▂▁▂▂▅ | 12.4 | 2026-Q1 | 0.09 | lower |
-| Earnings | Interest margin to gross income | 🟦 67.9 | 🟦 68.7 | 🟦 69.0 | 🟦 68.9 | 🟦 68.5 | 🟦 68.8 | 🟦 69.0 | 🟦 68.3 | ▂▅█▄▁▄▅▄▃▄▅▂ | 68.3 | 2026-Q1 | 0.16 | lower |
-| Earnings | Noninterest expenses to gross income | 🟩 58.7 | 🟩 58.4 | 🟩 58.7 | 🟩 58.4 | 🟩 57.9 | 🟦 57.4 | 🟦 57.4 | 🟦 57.6 | ▁▂██▅▅▅▅▄▃▃▃ | 57.6 | 2026-Q1 | 0.19 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟧 170.1 | 🟧 177.8 | 🟧 187.7 | 🟨 198.4 | 🟧 193.3 | 🟧 191.4 | 🟨 198.5 | 🟨 198.4 | ▆▂▂▃▁▃▅█▇▆██ | 198.4 | 2026-Q1 | 0.53 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟧 29.8 | 🟨 30.5 | 🟨 30.0 | 🟨 31.0 | 🟩 31.2 | 🟨 30.9 | 🟨 30.5 | 🟩 31.7 | ▂▁▂▅▄▅▄▆▇▆▅█ | 31.7 | 2026-Q1 | 0.35 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 137.4 | 🟩 138.1 | 🟩 138.1 | 🟩 139.2 | 🟨 137.4 | 🟨 136.7 | 🟨 136.3 | 🟨 137.6 | ▆▄▄█▃▄▄▆▃▂▁▃ | 137.6 | 2026-Q1 | 0.46 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟨 137.4 | 🟧 138.1 | 🟧 138.1 | 🟧 139.2 | 🟨 137.4 | 🟨 136.7 | 🟨 136.3 | 🟨 137.6 | ▆▄▄█▃▄▄▆▃▂▁▃ | 137.6 | 2026-Q1 | 0.54 | higher |
 | Household sector | Household debt to GDP | 🟦 70.8 | 🟦 71.4 | 🟦 71.2 | 🟦 67.8 | 🟦 68.4 | 🟦 69.2 | 🟦 69.9 | 🟦 66.6 | ▇▇█▅▅▆▆▂▃▄▄▁ | 66.6 | 2026-Q1 | 0.00 | higher |
 
 Source: International Monetary Fund, Financial Soundness Indicators (FSI) database (dataset IMF.STA:FSIC). https://data.imf.org
@@ -1964,13 +1902,11 @@ Uruguay: banking-sector Financial Soundness Indicators, percent, last 8 quarters
 | Concentration | Residential real estate loans to total gross loans | 🟥 14.6 | 🟧 14.6 | 🟥 15.1 | 🟨 12.9 | 🟩 12.8 | 🟦 12.3 | 🟦 12.7 | 🟨 13.0 | ▇▇█▃▂▁▂▃ | 13.0 | 2025-Q2 | 0.57 | higher |
 | Earnings | Return on assets | 🟩 3.0 | 🟩 3.0 | 🟩 3.1 | 🟦 3.1 | 🟦 3.3 | 🟦 3.7 | 🟦 3.6 | 🟦 3.1 | ▁▁▃▅▅▅▆▆▆█▇▆ | 3.1 | 2025-Q2 | 0.17 | lower |
 | Earnings | Return on equity | 🟩 20.3 | 🟦 22.7 | 🟦 22.1 | 🟩 21.7 | 🟦 23.7 | 🟦 26.8 | 🟦 25.6 | 🟩 20.9 | ▁▁▃▅▅▆▆▆▇█▇▅ | 20.9 | 2025-Q2 | 0.30 | lower |
-| Earnings | Interest margin to gross income | 🟥 56.6 | 🟥 57.0 | 🟧 61.2 | 🟥 58.0 | 🟥 55.6 | 🟥 54.1 | 🟨 63.7 | 🟨 64.9 | ██▃▃▂▂▄▃▂▁▅▆ | 64.9 | 2025-Q2 | 0.48 | lower |
-| Earnings | Noninterest expenses to gross income | 🟩 49.4 | 🟩 52.2 | 🟩 56.0 | 🟦 48.2 | 🟦 47.7 | 🟦 48.2 | 🟩 52.0 | 🟩 54.9 | ██▁▁▂▄▆▂▁▂▄▆ | 54.9 | 2025-Q2 | 0.35 | higher |
 | Funding and liquidity | Liquid assets to short-term liabilities | 🟧 76.1 | 🟦 81.4 | 🟦 83.4 | 🟧 76.2 | 🟨 76.3 | 🟥 74.1 | 🟨 76.6 | 🟩 77.7 | ▄▂▃▂▃▇█▃▃▁▃▄ | 77.7 | 2025-Q2 | 0.35 | lower |
 | Funding and liquidity | Liquid assets to total assets | 🟧 54.3 | 🟩 58.8 | 🟩 59.5 | 🟧 54.0 | 🟧 53.5 | 🟥 52.0 | 🟧 53.2 | 🟥 52.9 | ▇▅▅▄▃▇█▃▂▁▂▂ | 52.9 | 2025-Q2 | 0.83 | lower |
 | Funding and liquidity | Liquidity coverage ratio | 🟩 678.7 | 🟨 640.4 | 🟧 630.7 | 🟩 686.2 | 🟦 723.5 | 🟦 689.1 | 🟨 643.9 | 🟩 660.9 | ▄▁▅▄▆▅▅▇█▇▅▆ | 660.9 | 2025-Q2 | 0.36 | lower |
 | Funding and liquidity | Net stable funding ratio | 🟨 140.8 | 🟥 132.0 | 🟧 134.1 | 🟧 136.2 | 🟧 135.4 | 🟨 140.2 | 🟨 142.1 | 🟨 142.5 | ▁▁█▇▃▁▁▂▂▃▃▃ | 142.5 | 2025-Q2 | 0.42 | lower |
-| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟧 170.6 | 🟥 159.5 | 🟥 162.5 | 🟧 169.2 | 🟧 169.0 | 🟥 161.9 | 🟥 164.5 | 🟥 162.6 | █▄▅▃▃▁▂▃▃▁▂▂ | 162.6 | 2025-Q2 | 0.87 | lower |
+| Funding and liquidity | Customer deposits to total (noninterbank) loans | 🟩 170.6 | 🟦 159.5 | 🟦 162.5 | 🟩 169.2 | 🟩 169.0 | 🟦 161.9 | 🟦 164.5 | 🟦 162.6 | █▄▅▃▃▁▂▃▃▁▂▂ | 162.6 | 2025-Q2 | 0.13 | higher |
 | FX exposure | Net open position in foreign exchange to capital | 🟥 39.3 | 🟨 35.1 | 🟥 40.6 | 🟥 41.7 | 🟥 37.5 | 🟨 35.3 | 🟧 36.5 | 🟧 36.4 | ▁▁▄▄▆▄▇█▅▄▅▅ | 36.4 | 2025-Q2 | 0.74 | higher |
 | FX exposure | Foreign currency denominated loans to total loans | 🟩 52.0 | 🟦 50.6 | 🟦 49.9 | 🟩 52.5 | 🟨 53.3 | 🟨 53.0 | 🟩 51.7 | 🟦 50.8 | █▃▅▄▅▂▁▆█▇▄▃ | 50.8 | 2025-Q2 | 0.09 | higher |
 | FX exposure | Foreign currency denominated liabilities to total liabilities | 🟨 70.8 | 🟦 68.7 | 🟦 68.7 | 🟦 69.6 | 🟩 70.0 | 🟦 69.4 | 🟩 70.0 | 🟦 69.0 | █▄▄▄▄▁▁▂▃▂▃▁ | 69.0 | 2025-Q2 | 0.09 | higher |
