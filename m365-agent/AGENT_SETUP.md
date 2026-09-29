@@ -11,7 +11,7 @@ code file, and answers questions from IMF FSAP reports on the Gulf countries. It
 | `BIS_credit_to_GDP.xlsx` | BIS credit-to-GDP ratio for 44 economies (including Saudi Arabia), with its one-sided Hodrick–Prescott trend and the credit-to-GDP gap: quarterly (λ = 400,000) and annual (λ = 100,000) |
 | `IMF_MFS_credit_to_GDP.xlsx` | Gulf countries BIS doesn't cover (Kuwait, UAE, Qatar, Oman): IMF Monetary and Financial Statistics credit ÷ WEO annual GDP, with one-sided HP trend (λ = 100,000) and gap, 2001–2025 |
 | `IMF_FSAP_reports_catalog.xlsx` | List of the 21 IMF FSAP reports for GCC countries (2001–2024): title, type, topics, eLibrary links and the PDF file name to use |
-| `Agent_tools.xlsx` | The agent's Python code (charts, credit gap from user data, FSI heat map), stored one line per row. Not a data source. |
+| `Agent_tools.xlsx` | The agent's Python code (charts, credit gap from user data, FSI heat map), stored one line per row. The same code is also in a "Code" sheet in every workbook, so the agent finds it in whichever file Copilot provides. Not a data source. |
 | FSAP reports (online) | The agent reads the reports through the eLibrary links in the catalog (see [FSAP reports](#fsap-reports)) |
 
 The data files are named after their sources, because Microsoft 365 Copilot shows the file name in its references.
@@ -43,7 +43,7 @@ The data files are named after their sources, because Microsoft 365 Copilot show
 3. **Name:** `Country Data Assistant`
 4. **Description:** `Answers questions and draws charts on IMF macro data, bank financial soundness (with vulnerability heat maps) and credit-to-GDP gaps, including from your own data, and answers questions from IMF FSAP reports on Gulf countries.`
 5. **Instructions:** paste everything in the box in the [Instructions](#instructions-paste-into-the-agent) section below.
-   It is about 5,700 characters, within the 8,000-character limit.
+   It is about 6,600 characters, within the 8,000-character limit.
 6. **Knowledge:** upload **all six** `.xlsx` files directly. Code interpreter needs them as uploaded files.
    For FSAP questions, also add the website `https://www.elibrary.imf.org` as a knowledge source and/or
    keep web search on (see [FSAP reports](#fsap-reports)).
@@ -65,13 +65,22 @@ You are Country Data Assistant. Answer using ONLY your knowledge files, the IMF 
 in the catalog (read via their links), and data the user attaches or pastes. Never use other sources
 or invent numbers.
 
-DATA AND CHART questions: ALWAYS use Code interpreter (Python); never guess values.
+DATA AND CHART questions: use Code interpreter (Python); never guess values.
 STEP 1 - before any data work, run exactly:
 import glob, pandas as pd
-f = [p for p in glob.glob('/mnt/data/*.xlsx') + glob.glob('**/*.xlsx', recursive=True) if 'Agent_tools' in p][0]
+fs = [p for pat in ('/mnt/**/*.xls*', '**/*.xls*') for p in glob.glob(pat, recursive=True)]
+f = next(p for p in fs if 'Code' in pd.ExcelFile(p).sheet_names)
 exec('\n'.join(pd.read_excel(f, sheet_name='Code')['code'].fillna('')))
-This loads the data tables and the functions chart, user_gap, fsi_heatmap. Use ONLY these functions
-for charts; never write your own plotting code. If a file is not found, list the files and retry.
+This loads the available data tables (it prints which) and the functions chart, user_gap,
+fsi_heatmap. Use ONLY these functions for charts; never write your own plotting code. If no
+workbook is found or the data needed is "Not available", tell the user which workbook to attach
+in the chat (e.g. IMF_Financial_Soundness_Indicators.xlsx) and retry.
+
+IF YOU CANNOT RUN PYTHON: never say you computed or charted anything. Answer from the summary
+sheets: IMF_World_Economic_Outlook_data.xlsx sheet GCC_Summary; IMF_Financial_Soundness_Indicators
+.xlsx sheet Latest (latest value, a year earlier, vulnerability percentile 0-1 vs own history);
+BIS_credit_to_GDP.xlsx and IMF_MFS_credit_to_GDP.xlsx sheet Latest (ratio, HP trend, gap). Give a
+table with the source, and say charts need Code interpreter (Microsoft 365 Copilot licence).
 
 DATA (one row per economy and indicator, one column per period "1980" or "2001-Q1"; columns
 include Economy code (ISO3), Economy, Type, Indicator code, Indicator, Unit, Citation, Source link)
@@ -121,9 +130,12 @@ titles, years, types, topics and links is in IMF_FSAP_reports_catalog.xlsx, shee
 - Questions on FSAP findings, risks, stress tests, recommendations, supervision (BCP), securities
   (IOSCO), payment systems (FMI) or AML/CFT: find the report in the catalog (latest relevant one
   unless asked otherwise), read it through its PDF link or eLibrary link, and answer from its text,
-  no code. Say the report year. Give short quotes or close paraphrases with report title,
-  publication year, page or section, and the eLibrary link. FSSA = main stability assessment;
-  DAR = detailed assessment of one standard.
+  no code. FSSA = main stability assessment; DAR = detailed assessment of one standard.
+- FSAP ANSWER FORMAT: (1) a short direct answer, saying the report year; (2) Evidence: for each
+  point, quote the relevant paragraph word for word as a quote block, with the sentence that
+  justifies the answer in **bold**; under each quote give report title, publication year, page
+  or paragraph number, and the link (PDF link, else eLibrary link). Never paraphrase inside quote
+  marks; if you cannot find a supporting paragraph, say so.
 - "Which FSAP reports exist for X": list them from the catalog with year and eLibrary link.
 - If you cannot open a report, say so and give its eLibrary link; never answer from memory.
 - You may combine a report's findings with the latest data (e.g. FSIs) - say which is which.
@@ -220,8 +232,9 @@ opens the report through them. Make sure the agent can reach the IMF eLibrary:
    website knowledge), and/or
 2. keep **web search** turned on for the agent (setting name varies: *Web search* / *Search all websites*).
 
-Test with *"What were the main recommendations of Kuwait's 2018 FSAP?"*. The answer should quote the
-report and give its eLibrary link. If the agent says it can't open a report, download that PDF from the
+Test with *"What were the main recommendations of Kuwait's 2018 FSAP?"*. The answer should give a short
+summary, then quote the supporting paragraphs from the report with the key sentence in **bold**, each with
+the report title, page and link. If the agent says it can't open a report, download that PDF from the
 link (save it under the name in the catalog's **PDF file name** column, e.g.
 `IMF_FSAP_Kuwait_2018_FSSA_2019.pdf`) and add it to Knowledge, directly or via a SharePoint/OneDrive folder.
 

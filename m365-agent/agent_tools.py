@@ -1,15 +1,29 @@
 # Country Data Assistant - tools for the Microsoft 365 Copilot agent's Code interpreter.
-# build_data_file.py stores this file, one line per row, in Agent_tools.xlsx (sheet "Code");
-# the agent runs it with exec(). Keep it self-contained (pandas, numpy, matplotlib only).
-import glob, re, textwrap, numpy as np, pandas as pd, matplotlib.pyplot as plt
+# build_data_file.py stores this file, one line per row, in a sheet "Code" of every workbook
+# (and in Agent_tools.xlsx); the agent runs it with exec(). Keep it self-contained
+# (pandas, numpy, matplotlib only).
+import glob, os, re, textwrap, numpy as np, pandas as pd, matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
-fs = glob.glob('/mnt/data/*.xlsx') + glob.glob('**/*.xlsx', recursive=True)
-xl = lambda k, sh: pd.read_excel(next(p for p in fs if k in p), sheet_name=sh)
+fs = sorted({os.path.abspath(p) for pat in ('/mnt/**/*.xls*', '/home/**/*.xls*', '**/*.xls*')
+             for p in glob.glob(pat, recursive=True)})
+
+
+def xl(key, sheet):
+    """Load a sheet from the first workbook whose name contains `key`; None if not available."""
+    p = next((p for p in fs if key in os.path.basename(p)), None)
+    return pd.read_excel(p, sheet_name=sheet) if p else None
+
+
 D, G = xl('World_Economic_Outlook', 'Data'), xl('World_Economic_Outlook', 'Groups')
 F = xl('Financial_Soundness', 'FSI_Quarterly')
 CQ, CA = xl('BIS_credit', 'Credit_GDP_Quarterly'), xl('BIS_credit', 'Credit_GDP_Annual')
 M = xl('IMF_MFS_credit', 'Credit_GDP_Annual')
+_loaded = {'D (IMF WEO)': D, 'G (groups)': G, 'F (FSI)': F, 'CQ/CA (BIS credit)': CQ, 'M (Gulf MFS credit)': M}
+print('Loaded:', ', '.join(k for k, v in _loaded.items() if v is not None) or 'no data workbooks')
+if any(v is None for v in _loaded.values()):
+    print('Not available:', ', '.join(k for k, v in _loaded.items() if v is None),
+          '| workbooks found:', [os.path.basename(p) for p in fs])
 BLUE, RED = '#4B82AD', '#c0392b'
 PERIOD = re.compile(r'\d{4}(-Q\d)?')
 

@@ -133,6 +133,62 @@ def mfs_sheet():
     return out[[c for c in out.columns if c not in periods] + periods]
 
 
+GCC_KEY_WEO = ["NGDP_RPCH", "PCPIPCH", "NGDPD", "NGDPDPC", "GGXCNL_NGDP", "GGXWDG_NGDP",
+               "BCA_NGDPD", "LUR", "LP"]
+
+
+def weo_gcc_summary(data):
+    """Key WEO indicators for GCC countries, 2019 to the last projection year (readable without Python)."""
+    yrs = [c for c in data.columns if c.isdigit() and int(c) >= 2019]
+    s = data[data["Economy code"].isin(GCC) & data["Indicator code"].isin(GCC_KEY_WEO)]
+    s = s.assign(_o=s["Indicator code"].map({c: i for i, c in enumerate(GCC_KEY_WEO)}))
+    s = s.sort_values(["Economy", "_o"])
+    return s[["Economy", "Indicator", "Unit", "First projection year"] + yrs].round(1)
+
+
+def fsi_latest(fsi):
+    """Per economy and FSI: latest quarter, value, value a year earlier, and vulnerability percentile
+    (percent rank in own history, Excel PERCENTRANK.INC, flipped where lower = more vulnerable)."""
+    per = [c for c in fsi.columns if re.fullmatch(r"\d{4}-Q\d", str(c))]
+    out = []
+    for _, r in fsi.iterrows():
+        v = pd.to_numeric(r[per], errors="coerce").dropna()
+        if len(v) < 2:
+            continue
+        pr = (v.rank(method="min") - 1) / (len(v) - 1)
+        pct = pr.iloc[-1] if r["More vulnerable when"] == "higher" else 1 - pr.iloc[-1]
+        last = v.index[-1]
+        year_ago = f"{int(last[:4]) - 1}{last[4:]}"
+        out.append({"Economy": r["Economy"], "Group": r["Group"], "Indicator": r["Indicator"],
+                    "More vulnerable when": r["More vulnerable when"], "Latest quarter": last,
+                    "Latest value": round(v.iloc[-1], 2),
+                    "Value a year earlier": round(v[year_ago], 2) if year_ago in v else None,
+                    "Vulnerability percentile (0 = least, 1 = most vulnerable vs own history)": round(pct, 2),
+                    "History from": v.index[0]})
+    return pd.DataFrame(out)
+
+
+def credit_latest(sheet):
+    """Per economy: latest period, ratio, trend, gap, gap a year earlier, peak gap."""
+    per = [c for c in sheet.columns if re.fullmatch(r"\d{4}(-Q\d)?", str(c))]
+    out = []
+    for econ, g in sheet.groupby("Economy", sort=True):
+        g = g.set_index("Indicator code")
+        gap = pd.to_numeric(g.loc["CREDIT_GDP_GAP", per], errors="coerce").dropna()
+        if gap.empty:
+            continue
+        last = gap.index[-1]
+        year_ago = f"{int(last[:4]) - 1}{last[4:]}"
+        out.append({"Economy": econ, "Latest period": last,
+                    "Credit-to-GDP ratio (% of GDP)": round(float(g.at["CREDIT_GDP", last]), 1),
+                    "HP trend (% of GDP)": round(float(g.at["CREDIT_GDP_TREND", last]), 1),
+                    "Gap (pp of GDP)": round(gap.iloc[-1], 1),
+                    "Gap a year earlier (pp)": round(gap[year_ago], 1) if year_ago in gap else None,
+                    "Largest gap (pp)": round(gap.max(), 1), "Largest gap period": gap.idxmax(),
+                    "Method": g["Method"].iloc[0]})
+    return pd.DataFrame(out)
+
+
 def credit_sheet(annual):
     """BIS credit-to-GDP ratio with our one-sided HP trend and gap."""
     lamb = fd.LAMBDA["A" if annual else "Q"]
@@ -231,10 +287,11 @@ def main():
             "Sheet 'Groups': which countries belong to G7, G20, euro area, advanced economies, emerging "
             "markets, etc. (ISO3 codes, also valid for the FSI and BIS files).",
             "Sheet 'Indicators': definitions and units.",
+            "Sheet 'GCC_Summary': key indicators for the GCC countries, 2019 onward (readable without Python).",
             "Units: 'Annual percent change' = growth rate in %; 'Percent of GDP' = ratio to GDP in %; "
             "GDP in billions of US dollars; population in millions.",
             refresh],
-        "Data": data, "Groups": groups, "Indicators": indicators})
+        "GCC_Summary": weo_gcc_summary(data), "Data": data, "Groups": groups, "Indicators": indicators})
 
     # 2. IMF Financial Soundness Indicators (quarterly)
     fsi = fsi_sheet(countries)
@@ -254,9 +311,11 @@ def main():
             "(open position, FX loans and liabilities), household sector.",
             "Column 'More vulnerable when' gives the direction from a financial-sector vulnerability "
             "perspective (e.g. NPL ratio: higher; capital ratios and deposits to loans: lower).",
+            "Sheet 'Latest': for every economy and indicator, the latest quarter, value, value a year "
+            "earlier and vulnerability percentile vs own history (0 = least, 1 = most vulnerable).",
             "Cite the 'Citation' column (the IMF FSI database), not this workbook.",
             refresh],
-        "FSI_Quarterly": fsi, "Indicators": fsi_ind})
+        "Latest": fsi_latest(fsi), "FSI_Quarterly": fsi, "Indicators": fsi_ind})
 
     write_fsap_catalog(built)
 
@@ -274,9 +333,10 @@ def main():
             "Gap = ratio - trend, in percentage points of GDP. Basel III countercyclical buffer guide: "
             "a gap above 2 pp may signal a buffer build-up; above 10 pp the maximum buffer.",
             "Rows: 3 per economy (CREDIT_GDP, CREDIT_GDP_TREND, CREDIT_GDP_GAP); one column per period.",
+            "Sheet 'Latest': latest quarterly ratio, trend and gap for each economy.",
             "Cite the 'Citation' column (BIS; trend and gap are own calculations), not this workbook.",
             refresh],
-        "Credit_GDP_Quarterly": credit_q, "Credit_GDP_Annual": credit_a})
+        "Latest": credit_latest(credit_q), "Credit_GDP_Quarterly": credit_q, "Credit_GDP_Annual": credit_a})
 
     # 4. Gulf credit-to-GDP from IMF MFS (countries BIS does not cover)
     write_book(HERE / MFS_FILE, {
@@ -293,9 +353,10 @@ def main():
             "Trend: one-sided Hodrick-Prescott filter, lambda 100,000 (annual data), reported from 10 years "
             "after the series start. Gap = ratio - trend, percentage points of GDP.",
             "Oil-price swings move GDP, so the ratio jumps when oil prices fall (e.g. 2009, 2015, 2020).",
+            "Sheet 'Latest': latest ratio, trend and gap for each economy.",
             "Cite the 'Citation' column (IMF; trend and gap are own calculations), not this workbook.",
             refresh],
-        "Credit_GDP_Annual": mfs_sheet()})
+        "Latest": credit_latest(mfs := mfs_sheet()), "Credit_GDP_Annual": mfs})
 
 
 def write_book(path, sheets):
@@ -352,10 +413,25 @@ def write_tools():
             "user data, FSI heat map). Not a data source - do not cite it.",
             "Source: m365-agent/agent_tools.py in github.com/Aknarik/country-data."]}).to_excel(
             xw, sheet_name="README", index=False)
-    back = "\n".join(pd.read_excel(path, sheet_name="Code")["code"].fillna(""))
-    if back != "\n".join(lines):
-        raise ValueError("Agent_tools.xlsx does not round-trip the code exactly")
-    print(f"{path.name}: {len(lines)} lines of code", file=sys.stderr)
+    # Also put the code in every workbook: Copilot may pass only some knowledge files to Code
+    # interpreter, so the agent finds the code in whichever workbook it has.
+    from openpyxl import load_workbook
+    books = [path] + [HERE / n for n in (OUT.name, FSI_FILE, BIS_FILE, MFS_FILE, FSAP_FILE)
+                      if (HERE / n).exists()]
+    for book in books[1:]:
+        wb = load_workbook(book)
+        if "Code" in wb.sheetnames:
+            del wb["Code"]
+        ws = wb.create_sheet("Code")
+        ws.append(["code"])
+        for ln in lines:
+            ws.append([ln if ln else None])
+        wb.save(book)
+    for book in books:
+        back = "\n".join(pd.read_excel(book, sheet_name="Code")["code"].fillna(""))
+        if back != "\n".join(lines):
+            raise ValueError(f"{book.name} does not round-trip the code exactly")
+    print(f"Code sheet ({len(lines)} lines) in: {', '.join(b.name for b in books)}", file=sys.stderr)
 
 
 if __name__ == "__main__":
