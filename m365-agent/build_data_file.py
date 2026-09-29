@@ -171,7 +171,7 @@ def fsi_latest(fsi):
 HEAT_SQUARES = [(0.2, "\U0001F7E6"), (0.4, "\U0001F7E9"), (0.6, "\U0001F7E8"), (0.8, "\U0001F7E7"), (1.01, "\U0001F7E5")]
 HEAT_LEGEND = ("\U0001F7E6 least vulnerable (0-0.2), \U0001F7E9 0.2-0.4, \U0001F7E8 0.4-0.6, "
                "\U0001F7E7 0.6-0.8, \U0001F7E5 most vulnerable (0.8-1) - percent rank vs own history")
-HEAT_FILE = "GCC_FSI_heatmaps.xlsx"
+HEAT_FILE = "IMF_FSI_heatmaps.xlsx"
 
 
 def vulnerability_percentiles(row, per):
@@ -185,9 +185,10 @@ def vulnerability_percentiles(row, per):
 
 
 def fsi_heat_tables(fsi, economies=None, quarters=8):
-    """Text heat map (coloured squares + value) for the last quarters, readable without Python."""
+    """Text heat map (coloured squares + value) for the last quarters, readable without Python.
+    All economies unless `economies` (ISO3 list) is given."""
     per = [c for c in fsi.columns if re.fullmatch(r"\d{4}-Q\d", str(c))]
-    rows = fsi[fsi["Economy code"].isin(economies or GCC)]
+    rows = fsi if economies is None else fsi[fsi["Economy code"].isin(economies)]
     out = []
     for econ, g in rows.groupby("Economy", sort=True):
         cols = [c for c in per if g[c].notna().any()][-quarters:]
@@ -204,25 +205,38 @@ def fsi_heat_tables(fsi, economies=None, quarters=8):
 
 
 def write_heatmap_workbook(fsi, built, economies=None, quarters=12):
-    """Excel heat maps with cell fills in the same colours as the agent's chart (RdBu_r)."""
+    """Excel heat maps, one sheet per economy (all unless `economies` is given), with cell fills in
+    the same colours as the agent's chart (RdBu_r), and an index sheet linking to each country."""
     from matplotlib import colormaps
     from matplotlib.colors import to_hex
     from openpyxl import Workbook
     from openpyxl.styles import Alignment, Font, PatternFill, Border, Side
+    from openpyxl.worksheet.hyperlink import Hyperlink
     cmap = colormaps["RdBu_r"]
     per = [c for c in fsi.columns if re.fullmatch(r"\d{4}-Q\d", str(c))]
     wb = Workbook(); info = wb.active; info.title = "README"
-    for line in [f"FSI vulnerability heat maps for GCC countries - built {built}",
+    for line in [f"IMF Financial Soundness Indicators - vulnerability heat maps by country - built {built}",
                  "Colour = percent rank of each quarter in the country's own history (Excel PERCENTRANK.INC), "
                  "flipped where a lower value means more vulnerability: dark blue = least vulnerable, "
                  "white = median, dark red = most vulnerable. Cells show the actual values (percent).",
                  FSI_CITATION + ". Groups and directions: see IMF_Financial_Soundness_Indicators.xlsx, sheet Indicators."]:
         info.append([line])
     info.column_dimensions["A"].width = 140
+    info.append([]); info.append(["Country index (click to open)", "Latest quarter", "Indicators"])
+    for c in info[info.max_row]:
+        c.font = Font(bold=True)
     thin = Side(style="thin", color="999999")
-    for econ, g in fsi[fsi["Economy code"].isin(economies or GCC)].groupby("Economy", sort=True):
+    used = set()
+    rows_all = fsi if economies is None else fsi[fsi["Economy code"].isin(economies)]
+    for econ, g in rows_all.groupby("Economy", sort=True):
+        if not any(vulnerability_percentiles(r, per)[1] is not None for _, r in g.iterrows()):
+            continue
         cols = [c for c in per if g[c].notna().any()][-quarters:]
-        ws = wb.create_sheet(econ[:31])
+        name = re.sub(r"[\[\]:*?/\\']", "", str(econ))[:31]
+        while name in used:
+            name = name[:29] + str(len(used) % 100)
+        used.add(name)
+        ws = wb.create_sheet(name)
         ws.append([f"{econ}: financial soundness heat map (percent rank vs own history)"])
         ws["A1"].font = Font(bold=True, color="4B82AD", size=12)
         ws.append(["Group", "Indicator"] + cols)
@@ -255,6 +269,14 @@ def write_heatmap_workbook(fsi, built, economies=None, quarters=12):
             ws.column_dimensions[ws.cell(2, j).column_letter].width = 9
         ws.freeze_panes = "C3"
         ws.append([]); ws.append(["Source: " + FSI_CITATION + ". Dark red = most vulnerable vs own history, dark blue = least."])
+        ws.append(["Back to index"]); ws.cell(ws.max_row, 1).hyperlink = Hyperlink(
+            ref=f"A{ws.max_row}", location="'README'!A1")
+        ws.cell(ws.max_row, 1).font = Font(color="0563C1", underline="single")
+        info.append([econ, cols[-1], ws.max_row]); link = info.cell(info.max_row, 1)
+        link.hyperlink = Hyperlink(ref=link.coordinate, location=f"'{name}'!A1"); link.font = Font(color="0563C1", underline="single")
+        info.cell(info.max_row, 3).value = sum(1 for _, r in g.iterrows()
+                                               if vulnerability_percentiles(r, per)[1] is not None)
+    info.column_dimensions["B"].width = 16
     wb.save(HERE / HEAT_FILE)
     print(f"{HEAT_FILE}: {len(wb.sheetnames) - 1} country sheets", file=sys.stderr)
 
@@ -404,10 +426,10 @@ def main():
             "perspective (e.g. NPL ratio: higher; capital ratios and deposits to loans: lower).",
             "Sheet 'Latest': for every economy and indicator, the latest quarter, value, value a year "
             "earlier and vulnerability percentile vs own history (0 = least, 1 = most vulnerable).",
-            "Sheet 'Heatmap_GCC': text heat map for GCC countries, last 8 quarters: " + HEAT_LEGEND + ".",
+            "Sheet 'Heatmap': text heat map for every economy, last 8 quarters: " + HEAT_LEGEND + ".",
             "Cite the 'Citation' column (the IMF FSI database), not this workbook.",
             refresh],
-        "Heatmap_GCC": fsi_heat_tables(fsi), "Latest": fsi_latest(fsi), "FSI_Quarterly": fsi,
+        "Heatmap": fsi_heat_tables(fsi), "Latest": fsi_latest(fsi), "FSI_Quarterly": fsi,
         "Indicators": fsi_ind})
     write_heatmap_workbook(fsi, built)
 
