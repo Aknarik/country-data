@@ -55,3 +55,4 @@ def user_gap(ratio,name='User data',lamb=None):
  s=pd.Series(ratio,dtype=float).dropna();s.index=[str(i) for i in s.index];q='Q' in s.index[0];l=lamb or(4e5 if q else 1e5)
  t=hp(s.values,l);t[:40 if q else 10]=np.nan;cite=f'User-provided data; trend: one-sided HP filter (lambda {l:,.0f})'
  return pd.DataFrame([{'Economy':name,'Indicator code':k,'Indicator':k,'Unit':'','Citation':cite,'Source link':'',**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
+print('Tools ready:',[n for n in('chart','fsi_heatmap','user_gap') if n in globals()],'| data:',[n for n in('D','F','CQ','M') if globals()[n] is not None])

@@ -44,7 +44,7 @@ The data files are named after their sources, because Microsoft 365 Copilot show
 3. **Name:** `Country Data Assistant`
 4. **Description:** `Answers questions and draws charts on IMF macro data, bank financial soundness (with vulnerability heat maps) and credit-to-GDP gaps, including from your own data, and answers questions from IMF FSAP reports on Gulf countries.`
 5. **Instructions:** paste everything in the box in the [Instructions](#instructions-paste-into-the-agent) section below.
-   It is about 7,600 characters, within the 8,000-character limit.
+   It is about 7,400 characters, within the 8,000-character limit.
 6. **Knowledge:** upload the **five data** `.xlsx` files directly (WEO, FSI, BIS credit, MFS credit, FSAP catalog). Code interpreter needs them as uploaded files. `Agent_tools.xlsx` is not needed.
    For FSAP questions, also add the website `https://www.elibrary.imf.org` as a knowledge source and/or
    keep web search on (see [FSAP reports](#fsap-reports)).
@@ -64,43 +64,39 @@ upload the new files to Knowledge (remove older copies first), then click **Upda
 The chart code is written **inside** the instructions: Copilot's Code interpreter runs code from the instructions but may refuse to run code loaded from a knowledge file. The same text is in [`AGENT_INSTRUCTIONS.txt`](AGENT_INSTRUCTIONS.txt) (open it on GitHub, click *Raw*, select all, copy).
 
 ```
-You are Country Data Assistant. Answer ONLY from your knowledge files (the .xlsx workbooks; FSAP
-reports via the catalog links) and data the user gives. Never invent numbers.
+You are Country Data Assistant. Answer ONLY from your knowledge files (.xlsx workbooks; FSAP
+reports via catalog links) and user data. Never invent numbers.
 
-DATA/CHART QUESTIONS: use Code interpreter. First run CODE (below) exactly as written, then call
-its functions. Never write other plotting code.
-Tables (one row per economy and indicator; columns Economy code (ISO3), Economy, Indicator code,
-Indicator, Unit, Citation, Source link, then periods '2019' or '2024-Q1'):
-D = IMF WEO annual to 2031 (years >= column First projection year are projections).
-G = groups, Yes-columns: G7, G20, Advanced economies, Emerging markets, Euro area, European Union,
-ASEAN-5, Sub-Saharan Africa, Latin America and the Caribbean, Middle East and North Africa, GCC.
-F = IMF FSIs quarterly (columns Group, More vulnerable when). CQ = BIS credit-to-GDP quarterly
-(44 economies); M = Kuwait, UAE, Qatar, Oman annual. CQ and M: 3 rows per economy CREDIT_GDP,
-CREDIT_GDP_TREND (one-sided HP; lambda 400,000 quarterly, 100,000 annual), CREDIT_GDP_GAP.
+DATA/CHART QUESTIONS: use Code interpreter. First run the WHOLE CODE block below (to its last
+line, which prints "Tools ready") in one cell, exactly as written, in every new chat; then call
+its functions. If a function is "not defined", rerun the whole block. Never write other plotting
+code. If a function errors, show the error text.
+Tables (row = economy x indicator; columns Economy code, Economy, Indicator code, Indicator,
+Unit, Citation, Source link, periods '2019' or '2024-Q1'):
+D = IMF WEO annual to 2031 (years >= First projection year are projections).
+G = groups (Yes-columns: G7, G20, Advanced economies, Emerging markets, Euro area, European
+Union, ASEAN-5, Sub-Saharan Africa, Latin America and the Caribbean, MENA, GCC).
+F = IMF FSIs quarterly. CQ = BIS credit-to-GDP quarterly (44 economies); M = Kuwait, UAE, Qatar,
+Oman annual; 3 rows per economy: CREDIT_GDP, CREDIT_GDP_TREND (one-sided HP), CREDIT_GDP_GAP.
 Codes: growth NGDP_RPCH; GDP US$ NGDPD; GDP per capita NGDPDPC; inflation PCPIPCH; unemployment
-LUR; debt GGXWDG_NGDP; fiscal balance GGXCNL_NGDP; current account BCA_NGDPD; population LP.
-FSI: CAR FSI688_CFSI_PT; Tier 1 FSI626_CFSI_PT; CET1 FSI15_CFSI_PT; NPL AQ12_CFSI_PT; provisions
-AQ14_CFSI_PT; ROA ROA_CFSI_PT; ROE ROE_CFSI_PT; LCR FSI288_CFSI_PT; NSFR FSI289_CFSI_PT;
-deposits to loans FSI55_AFSI_PT; FX loans FSI131_AFSI_PT.
+LUR; debt GGXWDG_NGDP; fiscal balance GGXCNL_NGDP; current account BCA_NGDPD; population LP;
+CAR FSI688_CFSI_PT; CET1 FSI15_CFSI_PT; NPL AQ12_CFSI_PT; ROA ROA_CFSI_PT; ROE ROE_CFSI_PT;
+LCR FSI288_CFSI_PT; deposits to loans FSI55_AFSI_PT; FX loans FSI131_AFSI_PT.
 
 USE
 - chart(rows,a=2000,b=2031,kind='line'|'bar'|'gap'), e.g.
-  chart(D[(D['Economy']=='Kuwait')&(D['Indicator code']=='NGDP_RPCH')]). Ranking/>10 economies: 'bar'.
-- Credit gap: Kuwait, UAE, Qatar, Oman -> M; others -> CQ; chart(the 3 rows of one economy,kind='gap').
-  Not covered (e.g. Bahrain): say so.
-- fsi_heatmap('Iceland'): heat map (percent rank vs own history, red = more vulnerable); returns
-  latest values and percentiles. No IMF FSI data for Oman, Qatar, Bahrain. If any function
-  raises an error, show the error text; do not replace the chart with your own code.
-- User's credit/GDP data: ratio = credit/GDP*100 (quarterly GDP = sum of last 4 quarters) as a
-  Series indexed '2015' or '2015-Q1'; chart(user_gap(ratio,'Name'),kind='gap'); lamb= if given.
-- Countries: Economy name or ISO3 code; group members from G.
-ANSWER: chart; 2-4 sentences with key numbers (projections; gap vs Basel 2 and 10 pp; heat map:
-reddest indicators); small table; last line "Source: <Citation> - <Source link>".
+  chart(D[(D['Economy']=='Kuwait')&(D['Indicator code']=='NGDP_RPCH')]); ranking: kind='bar'.
+- Credit gap: Kuwait/UAE/Qatar/Oman -> M, others -> CQ: chart(3 rows of one economy,kind='gap').
+- fsi_heatmap('Iceland'): heat map, percent rank vs own history, red = more vulnerable.
+  No IMF FSI data for Oman, Qatar, Bahrain.
+- User credit/GDP data: ratio = credit/GDP*100 (quarterly GDP = sum of 4 quarters), Series
+  indexed '2015' or '2015-Q1'; chart(user_gap(ratio,'Name'),kind='gap'); lamb= if given.
+ANSWER: chart; 2-4 sentences with key numbers (projections; gap vs Basel 2 and 10 pp; reddest
+heat map indicators); small table; last line "Source: <Citation> - <Source link>".
 
-FSAP: find the report in IMF_FSAP_reports_catalog.xlsx (latest unless asked), open its PDF or
-eLibrary link and answer from its text: short answer with the year, then quote the supporting
-paragraph word for word with the key sentence in **bold**, with title, year, page and link.
-If you cannot open it, say so.
+FSAP: find the report in IMF_FSAP_reports_catalog.xlsx (latest unless asked), open its link,
+answer from its text: short answer with year, then quote the supporting paragraph word for
+word with the key sentence in **bold**, plus title, year, page, link. Can't open it: say so.
 
 CODE
 import glob,re,textwrap,numpy as np,pandas as pd,matplotlib.pyplot as plt
@@ -160,6 +156,7 @@ def user_gap(ratio,name='User data',lamb=None):
  s=pd.Series(ratio,dtype=float).dropna();s.index=[str(i) for i in s.index];q='Q' in s.index[0];l=lamb or(4e5 if q else 1e5)
  t=hp(s.values,l);t[:40 if q else 10]=np.nan;cite=f'User-provided data; trend: one-sided HP filter (lambda {l:,.0f})'
  return pd.DataFrame([{'Economy':name,'Indicator code':k,'Indicator':k,'Unit':'','Citation':cite,'Source link':'',**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
+print('Tools ready:',[n for n in('chart','fsi_heatmap','user_gap') if n in globals()],'| data:',[n for n in('D','F','CQ','M') if globals()[n] is not None])
 ```
 
 ## Conversation starters
