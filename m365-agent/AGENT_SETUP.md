@@ -44,7 +44,7 @@ The data files are named after their sources, because Microsoft 365 Copilot show
 3. **Name:** `Country Data Assistant`
 4. **Description:** `Answers questions and draws charts on IMF macro data, bank financial soundness (with vulnerability heat maps) and credit-to-GDP gaps, including from your own data, and answers questions from IMF FSAP reports on Gulf countries.`
 5. **Instructions:** paste everything in the box in the [Instructions](#instructions-paste-into-the-agent) section below.
-   It is about 7,400 characters, within the 8,000-character limit.
+   It is about 7,600 characters, within the 8,000-character limit.
 6. **Knowledge:** upload the **five data** `.xlsx` files directly (WEO, FSI, BIS credit, MFS credit, FSAP catalog). Code interpreter needs them as uploaded files. `Agent_tools.xlsx` is not needed.
    For FSAP questions, also add the website `https://www.elibrary.imf.org` as a knowledge source and/or
    keep web search on (see [FSAP reports](#fsap-reports)).
@@ -89,7 +89,8 @@ USE
 - Credit gap: Kuwait, UAE, Qatar, Oman -> M; others -> CQ; chart(the 3 rows of one economy,kind='gap').
   Not covered (e.g. Bahrain): say so.
 - fsi_heatmap('Iceland'): heat map (percent rank vs own history, red = more vulnerable); returns
-  latest values and percentiles. No IMF FSI data for Oman, Qatar, Bahrain.
+  latest values and percentiles. No IMF FSI data for Oman, Qatar, Bahrain. If any function
+  raises an error, show the error text; do not replace the chart with your own code.
 - User's credit/GDP data: ratio = credit/GDP*100 (quarterly GDP = sum of last 4 quarters) as a
   Series indexed '2015' or '2015-Q1'; chart(user_gap(ratio,'Name'),kind='gap'); lamb= if given.
 - Countries: Economy name or ISO3 code; group members from G.
@@ -139,15 +140,15 @@ def fsi_heatmap(cty,q=12):
  r=F[(F['Economy'].str.lower()==cty.lower())|(F['Economy code']==cty.upper())].drop_duplicates('Indicator code')
  c=[k for k in r.columns if re.fullmatch(r'\d{4}-Q\d',str(k))];V=r[c].apply(pd.to_numeric,errors='coerce')
  k=(V.notna().sum(axis=1)>=8).values;r,V=r[k],V[k];R=V.apply(lambda s:(s.rank(method='min')-1)/(s.count()-1),axis=1)
- lo=(r['More vulnerable when']=='lower').values;R.loc[lo]=1-R.loc[lo]
+ lo=(r['More vulnerable when']=='lower').values;R[lo]=1-R[lo]
  c=[k for k in c if V[k].notna().any()][-q:];V,R=V[c],R[c]
  lb=[f'{g}: {n}' for g,n in zip(r['Group'],r['Indicator'])];w=.06*max(map(len,lb))+.3;W=w+1.5+.7*len(c)
  f,ax=plt.subplots(figsize=(W,1.5+.4*len(V)));f.subplots_adjust(left=w/W,right=1-1.3/W,top=.93,bottom=1.2/(1.5+.4*len(V)));im=ax.imshow(R.values.astype(float),cmap='RdBu_r',vmin=0,vmax=1,aspect='auto')
  for i in range(len(V)):
   for j in range(len(c)):
    if pd.notna(V.iat[i,j]):ax.text(j,i,f'{V.iat[i,j]:.1f}',ha='center',va='center',fontsize=7,color='w' if abs(R.iat[i,j]-.5)>.3 else 'k')
- ax.set_yticks(range(len(V)),lb,fontsize=7)
- ax.set_xticks(range(len(c)),c,rotation=45,fontsize=7);f.colorbar(im,ax=ax,fraction=.03,label='red = more vulnerable')
+ ax.set_yticks(range(len(V)));ax.set_yticklabels(lb,fontsize=7)
+ ax.set_xticks(range(len(c)));ax.set_xticklabels(c,rotation=45,fontsize=7);f.colorbar(im,ax=ax,fraction=.03,label='red = more vulnerable')
  fin(f,ax,r.iloc[0],r['Economy'].iloc[0]+': FSI heat map, percent rank vs own history',0)
  return pd.DataFrame({'Indicator':r['Indicator'].values,'Latest':V.ffill(axis=1).iloc[:,-1].round(2).values,'Percentile':R.ffill(axis=1).iloc[:,-1].round(2).values})
 def hp(y,l):

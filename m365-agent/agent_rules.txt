@@ -23,7 +23,8 @@ USE
 - Credit gap: Kuwait, UAE, Qatar, Oman -> M; others -> CQ; chart(the 3 rows of one economy,kind='gap').
   Not covered (e.g. Bahrain): say so.
 - fsi_heatmap('Iceland'): heat map (percent rank vs own history, red = more vulnerable); returns
-  latest values and percentiles. No IMF FSI data for Oman, Qatar, Bahrain.
+  latest values and percentiles. No IMF FSI data for Oman, Qatar, Bahrain. If any function
+  raises an error, show the error text; do not replace the chart with your own code.
 - User's credit/GDP data: ratio = credit/GDP*100 (quarterly GDP = sum of last 4 quarters) as a
   Series indexed '2015' or '2015-Q1'; chart(user_gap(ratio,'Name'),kind='gap'); lamb= if given.
 - Countries: Economy name or ISO3 code; group members from G.

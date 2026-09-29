@@ -35,15 +35,15 @@ def fsi_heatmap(cty,q=12):
  r=F[(F['Economy'].str.lower()==cty.lower())|(F['Economy code']==cty.upper())].drop_duplicates('Indicator code')
  c=[k for k in r.columns if re.fullmatch(r'\d{4}-Q\d',str(k))];V=r[c].apply(pd.to_numeric,errors='coerce')
  k=(V.notna().sum(axis=1)>=8).values;r,V=r[k],V[k];R=V.apply(lambda s:(s.rank(method='min')-1)/(s.count()-1),axis=1)
- lo=(r['More vulnerable when']=='lower').values;R.loc[lo]=1-R.loc[lo]
+ lo=(r['More vulnerable when']=='lower').values;R[lo]=1-R[lo]
  c=[k for k in c if V[k].notna().any()][-q:];V,R=V[c],R[c]
  lb=[f'{g}: {n}' for g,n in zip(r['Group'],r['Indicator'])];w=.06*max(map(len,lb))+.3;W=w+1.5+.7*len(c)
  f,ax=plt.subplots(figsize=(W,1.5+.4*len(V)));f.subplots_adjust(left=w/W,right=1-1.3/W,top=.93,bottom=1.2/(1.5+.4*len(V)));im=ax.imshow(R.values.astype(float),cmap='RdBu_r',vmin=0,vmax=1,aspect='auto')
  for i in range(len(V)):
   for j in range(len(c)):
    if pd.notna(V.iat[i,j]):ax.text(j,i,f'{V.iat[i,j]:.1f}',ha='center',va='center',fontsize=7,color='w' if abs(R.iat[i,j]-.5)>.3 else 'k')
- ax.set_yticks(range(len(V)),lb,fontsize=7)
- ax.set_xticks(range(len(c)),c,rotation=45,fontsize=7);f.colorbar(im,ax=ax,fraction=.03,label='red = more vulnerable')
+ ax.set_yticks(range(len(V)));ax.set_yticklabels(lb,fontsize=7)
+ ax.set_xticks(range(len(c)));ax.set_xticklabels(c,rotation=45,fontsize=7);f.colorbar(im,ax=ax,fraction=.03,label='red = more vulnerable')
  fin(f,ax,r.iloc[0],r['Economy'].iloc[0]+': FSI heat map, percent rank vs own history',0)
  return pd.DataFrame({'Indicator':r['Indicator'].values,'Latest':V.ffill(axis=1).iloc[:,-1].round(2).values,'Percentile':R.ffill(axis=1).iloc[:,-1].round(2).values})
 def hp(y,l):
