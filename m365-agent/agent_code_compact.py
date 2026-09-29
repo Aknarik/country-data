@@ -1,8 +1,8 @@
 import glob,re,textwrap,numpy as np,pandas as pd,matplotlib.pyplot as plt
 fs=glob.glob('/mnt/**/*.xls*',recursive=True)+glob.glob('**/*.xls*',recursive=True)
 def xl(k,s):
- p=[f for f in fs if k in f];return pd.read_excel(p[0],sheet_name=s) if p else None
-D,G,F=xl('World_Economic','Data'),xl('World_Economic','Groups'),xl('Financial_Sound','FSI_Quarterly')
+ p=[f for f in fs if k.lower() in f.lower().replace(' ','_')];return pd.read_excel(p[0],sheet_name=s) if p else None
+D,G,F=xl('World_Economic','Data'),xl('World_Economic','Groups'),xl('Soundness','FSI_Quarterly')
 CQ,M=xl('BIS_credit','Credit_GDP_Quarterly'),xl('IMF_MFS','Credit_GDP_Annual');B='#4B82AD'
 def P(r,a,b):return[c for c in r.columns if re.fullmatch(r'\d{4}(-Q\d)?',str(c)) and a<=int(str(c)[:4])<=b]
 def X(c):return[int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k) for k in c]
@@ -32,6 +32,7 @@ def chart(r,a=2000,b=2031,kind='line',year=None):
  if np.nanmin(V.values)<0<np.nanmax(V.values):ax.axhline(0,color='k',lw=.8)
  ax.set_ylabel(r0['Unit']);ax.legend(frameon=False);fin(f,ax,r0,r0['Indicator'])
 def fsi_heatmap(cty,q=12):
+ if F is None:raise ValueError('FSI workbook not available to Python. Attach IMF_Financial_Soundness_Indicators.xlsx in this chat. Files seen: '+str([f.split('/')[-1] for f in fs]))
  r=F[(F['Economy'].str.lower()==cty.lower())|(F['Economy code']==cty.upper())].drop_duplicates('Indicator code')
  c=[k for k in r.columns if re.fullmatch(r'\d{4}-Q\d',str(k))];V=r[c].apply(pd.to_numeric,errors='coerce')
  k=(V.notna().sum(axis=1)>=8).values;r,V=r[k],V[k];R=V.apply(lambda s:(s.rank(method='min')-1)/(s.count()-1),axis=1)

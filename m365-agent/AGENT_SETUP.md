@@ -44,7 +44,7 @@ The data files are named after their sources, because Microsoft 365 Copilot show
 3. **Name:** `Country Data Assistant`
 4. **Description:** `Answers questions and draws charts on IMF macro data, bank financial soundness (with vulnerability heat maps) and credit-to-GDP gaps, including from your own data, and answers questions from IMF FSAP reports on Gulf countries.`
 5. **Instructions:** paste everything in the box in the [Instructions](#instructions-paste-into-the-agent) section below.
-   It is about 7,500 characters, within the 8,000-character limit.
+   It is about 7,800 characters, within the 8,000-character limit.
 6. **Knowledge:** upload the **five data** `.xlsx` files directly (WEO, FSI, BIS credit, MFS credit, FSAP catalog). Code interpreter needs them as uploaded files. `Agent_tools.xlsx` is not needed.
    For FSAP questions, also add the website `https://www.elibrary.imf.org` as a knowledge source and/or
    keep web search on (see [FSAP reports](#fsap-reports)).
@@ -71,7 +71,8 @@ DATA/CHART QUESTIONS: use Code interpreter. Python state is NOT kept between run
 code run must be: the WHOLE CODE block below (to its last line, "Tools ready"), exactly as
 written, followed in the SAME cell by your function calls, e.g. <CODE> + fsi_heatmap('Iceland').
 Never run the code and the call in separate runs; never run only part of the code. Never write
-other plotting code. If a function errors, show the error text.
+other plotting code. If a function errors, show the error text. If "Tools ready" lists a
+table as missing, ask the user to attach that workbook in the chat, then rerun.
 Tables (row = economy x indicator; columns Economy code, Economy, Indicator code, Indicator,
 Unit, Citation, Source link, periods '2019' or '2024-Q1'):
 D = IMF WEO annual to 2031 (years >= First projection year are projections).
@@ -103,8 +104,8 @@ CODE
 import glob,re,textwrap,numpy as np,pandas as pd,matplotlib.pyplot as plt
 fs=glob.glob('/mnt/**/*.xls*',recursive=True)+glob.glob('**/*.xls*',recursive=True)
 def xl(k,s):
- p=[f for f in fs if k in f];return pd.read_excel(p[0],sheet_name=s) if p else None
-D,G,F=xl('World_Economic','Data'),xl('World_Economic','Groups'),xl('Financial_Sound','FSI_Quarterly')
+ p=[f for f in fs if k.lower() in f.lower().replace(' ','_')];return pd.read_excel(p[0],sheet_name=s) if p else None
+D,G,F=xl('World_Economic','Data'),xl('World_Economic','Groups'),xl('Soundness','FSI_Quarterly')
 CQ,M=xl('BIS_credit','Credit_GDP_Quarterly'),xl('IMF_MFS','Credit_GDP_Annual');B='#4B82AD'
 def P(r,a,b):return[c for c in r.columns if re.fullmatch(r'\d{4}(-Q\d)?',str(c)) and a<=int(str(c)[:4])<=b]
 def X(c):return[int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k) for k in c]
@@ -134,6 +135,7 @@ def chart(r,a=2000,b=2031,kind='line',year=None):
  if np.nanmin(V.values)<0<np.nanmax(V.values):ax.axhline(0,color='k',lw=.8)
  ax.set_ylabel(r0['Unit']);ax.legend(frameon=False);fin(f,ax,r0,r0['Indicator'])
 def fsi_heatmap(cty,q=12):
+ if F is None:raise ValueError('FSI workbook not available to Python. Attach IMF_Financial_Soundness_Indicators.xlsx in this chat. Files seen: '+str([f.split('/')[-1] for f in fs]))
  r=F[(F['Economy'].str.lower()==cty.lower())|(F['Economy code']==cty.upper())].drop_duplicates('Indicator code')
  c=[k for k in r.columns if re.fullmatch(r'\d{4}-Q\d',str(k))];V=r[c].apply(pd.to_numeric,errors='coerce')
  k=(V.notna().sum(axis=1)>=8).values;r,V=r[k],V[k];R=V.apply(lambda s:(s.rank(method='min')-1)/(s.count()-1),axis=1)
