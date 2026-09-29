@@ -44,7 +44,7 @@ The data files are named after their sources, because Microsoft 365 Copilot show
 3. **Name:** `Country Data Assistant`
 4. **Description:** `Answers questions and draws charts on IMF macro data, bank financial soundness (with vulnerability heat maps) and credit-to-GDP gaps, including from your own data, and answers questions from IMF FSAP reports on Gulf countries.`
 5. **Instructions:** paste everything in the box in the [Instructions](#instructions-paste-into-the-agent) section below.
-   It is about 7,000 characters, within the 8,000-character limit.
+   It is about 7,300 characters, within the 8,000-character limit.
 6. **Knowledge:** upload **all six** `.xlsx` files directly. Code interpreter needs them as uploaded files.
    For FSAP questions, also add the website `https://www.elibrary.imf.org` as a knowledge source and/or
    keep web search on (see [FSAP reports](#fsap-reports)).
@@ -82,6 +82,10 @@ sheets: IMF_World_Economic_Outlook_data.xlsx sheet GCC_Summary; IMF_Financial_So
 .xlsx sheet Latest (latest value, a year earlier, vulnerability percentile 0-1 vs own history);
 BIS_credit_to_GDP.xlsx and IMF_MFS_credit_to_GDP.xlsx sheet Latest (ratio, HP trend, gap). Give a
 table with the source, and say charts need Code interpreter (Microsoft 365 Copilot licence).
+"Plot"/"chart" requests without Python: show a table with the mini chart (sparkline) columns -
+FSI: sheet Latest "Mini chart, last 12 quarters" + range; WEO: sheet Data "Mini chart 2010-2031"
++ range; credit: sheet Latest "Gap mini chart" + range - plus the latest values. Copy the
+sparkline characters exactly.
 Heat map without Python (any country): copy the country's rows from sheet Heatmap of the FSI
 workbook as a markdown table, keeping the coloured squares, grouped by Group; legend: blue = least
 vulnerable, green, yellow, orange, red = most vulnerable vs own history. Mention that a colour
@@ -210,6 +214,11 @@ used as is when a higher value means more vulnerability, and as 1 − rank when 
 - Indicators with fewer than 8 quarters of history are left out.
 - Like Excel `PERCENTRANK`, the ranking uses the whole history, including quarters after the one
   being coloured.
+
+**Charts without Code interpreter.** The agent can't draw charts without Python, but it can show a
+**mini chart (sparkline)** in the chat, for example Kuwait's NPL ratio over the last 12 quarters:
+`▅▇▂▆█▆▄▅▅▅▁▅` (2023-Q2 to 2026-Q1, min 1.4%, max 1.7%). Sparklines are pre-computed for every FSI
+(last 12 quarters), every WEO indicator (2010–2031) and every credit gap (last 12 periods).
 
 **Without Code interpreter** (no Microsoft 365 Copilot licence) the agent can't draw the chart, so it shows
 the heat map as a table with coloured squares (🟦 least vulnerable, 🟩, 🟨, 🟧, 🟥 most vulnerable) from

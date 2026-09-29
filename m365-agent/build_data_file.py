@@ -133,6 +133,32 @@ def mfs_sheet():
     return out[[c for c in out.columns if c not in periods] + periods]
 
 
+SPARK = "\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
+
+
+def sparkline(values):
+    """Text mini-chart: one block character per period, scaled between the series min and max."""
+    v = pd.to_numeric(pd.Series(values), errors="coerce")
+    lo, hi = v.min(), v.max()
+    if pd.isna(lo):
+        return ""
+    if hi == lo:
+        return "".join(" " if pd.isna(x) else SPARK[3] for x in v)
+    return "".join(" " if pd.isna(x) else SPARK[int(round((x - lo) / (hi - lo) * 7))] for x in v)
+
+
+def add_sparklines(df, first, last, label):
+    """Add a sparkline column plus its period range and min-max, for period columns first..last."""
+    cols = [c for c in df.columns if re.fullmatch(r"\d{4}(-Q\d)?", str(c)) and first <= str(c) <= last]
+    vals = df[cols].apply(pd.to_numeric, errors="coerce")
+    df.insert(df.columns.get_loc(cols[0]) if cols else len(df.columns), label,
+              [sparkline(r) for r in vals.values])
+    df.insert(df.columns.get_loc(label) + 1, f"{label} range",
+              [f"{cols[0]} to {cols[-1]}: min {r.min():.1f}, max {r.max():.1f}" if r.notna().any() else ""
+               for _, r in vals.iterrows()])
+    return df
+
+
 GCC_KEY_WEO = ["NGDP_RPCH", "PCPIPCH", "NGDPD", "NGDPDPC", "GGXCNL_NGDP", "GGXWDG_NGDP",
                "BCA_NGDPD", "LUR", "LP"]
 
@@ -143,7 +169,8 @@ def weo_gcc_summary(data):
     s = data[data["Economy code"].isin(GCC) & data["Indicator code"].isin(GCC_KEY_WEO)]
     s = s.assign(_o=s["Indicator code"].map({c: i for i, c in enumerate(GCC_KEY_WEO)}))
     s = s.sort_values(["Economy", "_o"])
-    return s[["Economy", "Indicator", "Unit", "First projection year"] + yrs].round(1)
+    return s[["Economy", "Indicator", "Unit", "First projection year", "Mini chart 2010-2031",
+              "Mini chart 2010-2031 range"] + yrs].round(1)
 
 
 def fsi_latest(fsi):
@@ -159,7 +186,11 @@ def fsi_latest(fsi):
         pct = pr.iloc[-1] if r["More vulnerable when"] == "higher" else 1 - pr.iloc[-1]
         last = v.index[-1]
         year_ago = f"{int(last[:4]) - 1}{last[4:]}"
+        last12 = v.iloc[-12:]
         out.append({"Economy": r["Economy"], "Group": r["Group"], "Indicator": r["Indicator"],
+                    "Mini chart, last 12 quarters": sparkline(last12),
+                    "Mini chart range": f"{last12.index[0]} to {last12.index[-1]}: min {last12.min():.1f}, "
+                                        f"max {last12.max():.1f}",
                     "More vulnerable when": r["More vulnerable when"], "Latest quarter": last,
                     "Latest value": round(v.iloc[-1], 2),
                     "Value a year earlier": round(v[year_ago], 2) if year_ago in v else None,
@@ -292,7 +323,10 @@ def credit_latest(sheet):
             continue
         last = gap.index[-1]
         year_ago = f"{int(last[:4]) - 1}{last[4:]}"
+        g12 = gap.iloc[-12:]
         out.append({"Economy": econ, "Latest period": last,
+                    "Gap mini chart, last 12 periods": sparkline(g12),
+                    "Gap mini chart range": f"{g12.index[0]} to {g12.index[-1]}: min {g12.min():.1f}, max {g12.max():.1f}",
                     "Credit-to-GDP ratio (% of GDP)": round(float(g.at["CREDIT_GDP", last]), 1),
                     "HP trend (% of GDP)": round(float(g.at["CREDIT_GDP_TREND", last]), 1),
                     "Gap (pp of GDP)": round(gap.iloc[-1], 1),
@@ -367,6 +401,7 @@ def main():
     data = data.dropna(subset=years, how="all")
     data = data.sort_values(["Type", "Economy", "Indicator"], ascending=[False, True, True])
     data.columns = [str(c) for c in data.columns]
+    data = add_sparklines(data, "2010", "2031", "Mini chart 2010-2031")
 
     # Groups sheet
     g = cd._groups_table()
