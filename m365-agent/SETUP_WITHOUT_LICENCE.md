@@ -45,7 +45,7 @@ the same seven files as `.txt`.
    - **Upload the 7 files** above.
    - Add the website `https://www.elibrary.imf.org` if website knowledge is offered (for FSAP reports).
    - Turn on **Only use specified sources** if the option exists.
-3. **Instructions:** delete everything and paste the box below (about 3,100 characters).
+3. **Instructions:** delete everything and paste the box below (about 2,500 characters).
 4. **Conversation starters** (optional):
    - *Kuwait economy*: `Show Kuwait's key macroeconomic indicators`
    - *Kuwait heat map*: `Show the financial soundness heat map for Kuwait`
