@@ -1,0 +1,57 @@
+import glob,re,textwrap,numpy as np,pandas as pd,matplotlib.pyplot as plt
+fs=glob.glob('/mnt/**/*.xls*',recursive=True)+glob.glob('**/*.xls*',recursive=True)
+def xl(k,s):
+ p=[f for f in fs if k in f];return pd.read_excel(p[0],sheet_name=s) if p else None
+D,G,F=xl('World_Economic','Data'),xl('World_Economic','Groups'),xl('Financial_Sound','FSI_Quarterly')
+CQ,M=xl('BIS_credit','Credit_GDP_Quarterly'),xl('IMF_MFS','Credit_GDP_Annual');B='#4B82AD'
+def P(r,a,b):return[c for c in r.columns if re.fullmatch(r'\d{4}(-Q\d)?',str(c)) and a<=int(str(c)[:4])<=b]
+def X(c):return[int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k) for k in c]
+def fin(f,ax,r,t,tl=1):
+ ax.set_title(t,loc='left',weight='bold',color=B);ax.grid(alpha=.3);L=str(r['Source link'])
+ f.text(.01,.01,textwrap.fill('Source: '+str(r['Citation'])+'. '+(L.rsplit('/',1)[0] if '@' in L else L),170),fontsize=7,color='gray')
+ tl and f.tight_layout(rect=(0,.05,1,1));plt.show()
+def chart(r,a=2000,b=2031,kind='line',year=None):
+ r0=r.iloc[-1];c=P(r,a,b);x=X(c);V=r[c].apply(pd.to_numeric,errors='coerce')
+ Pj=int(r0['First projection year']) if 'First projection year' in r else None
+ if kind=='gap':
+  f,(ax,a2)=plt.subplots(2,1,figsize=(10,7),sharex=True,gridspec_kw={'height_ratios':[2,1]});I=list(r['Indicator code'])
+  ax.plot(x,V.values[I.index('CREDIT_GDP')],lw=2,label='Credit-to-GDP ratio')
+  ax.plot(x,V.values[I.index('CREDIT_GDP_TREND')],'--',lw=2,label='Hodrick-Prescott trend')
+  g=V.values[I.index('CREDIT_GDP_GAP')];a2.bar(x,g,width=.22 if '-Q' in c[0] else .8,color=['#c0392b' if v>=0 else B for v in g])
+  for h in(2,10):a2.axhline(h,color='gray',ls=':',lw=1)
+  a2.axhline(0,color='k',lw=.8);a2.set_ylabel('Gap, pp of GDP');a2.grid(alpha=.3);ax.set_ylabel('% of GDP');ax.legend(frameon=False)
+  return fin(f,ax,r0,r0['Economy']+': credit-to-GDP ratio, trend and gap')
+ f,ax=plt.subplots(figsize=(10,5.5))
+ if kind=='bar':
+  n=V.notna().sum();y=str(year) if year else(str(Pj-1) if Pj else n[n>=.8*n.max()].index[-1])
+  s=r.set_index('Economy')[y].dropna().sort_values();ax.barh(s.index,s.values,color=B);ax.set_xlabel(r0['Unit'])
+  return fin(f,ax,r0,f"{r0['Indicator']}, {y}")
+ for lab,v in zip(r['Economy'] if r['Indicator'].nunique()==1 else r['Indicator'],V.values):ax.plot(x,v,lw=2,label=lab)
+ if Pj and x[-1]>=Pj:
+  ax.axvspan(Pj-.5,x[-1]+.5,color='gray',alpha=.15);ax.text(Pj,.97,' IMF projections',transform=ax.get_xaxis_transform(),va='top',fontsize=9,color='gray')
+ if np.nanmin(V.values)<0<np.nanmax(V.values):ax.axhline(0,color='k',lw=.8)
+ ax.set_ylabel(r0['Unit']);ax.legend(frameon=False);fin(f,ax,r0,r0['Indicator'])
+def fsi_heatmap(cty,q=12):
+ r=F[(F['Economy'].str.lower()==cty.lower())|(F['Economy code']==cty.upper())].drop_duplicates('Indicator code')
+ c=[k for k in r.columns if re.fullmatch(r'\d{4}-Q\d',str(k))];V=r[c].apply(pd.to_numeric,errors='coerce')
+ k=(V.notna().sum(axis=1)>=8).values;r,V=r[k],V[k];R=V.apply(lambda s:(s.rank(method='min')-1)/(s.count()-1),axis=1)
+ lo=(r['More vulnerable when']=='lower').values;R.loc[lo]=1-R.loc[lo]
+ c=[k for k in c if V[k].notna().any()][-q:];V,R=V[c],R[c]
+ lb=[f'{g}: {n}' for g,n in zip(r['Group'],r['Indicator'])];w=.06*max(map(len,lb))+.3;W=w+1.5+.7*len(c)
+ f,ax=plt.subplots(figsize=(W,1.5+.4*len(V)));f.subplots_adjust(left=w/W,right=1-1.3/W,top=.93,bottom=1.2/(1.5+.4*len(V)));im=ax.imshow(R.values.astype(float),cmap='RdBu_r',vmin=0,vmax=1,aspect='auto')
+ for i in range(len(V)):
+  for j in range(len(c)):
+   if pd.notna(V.iat[i,j]):ax.text(j,i,f'{V.iat[i,j]:.1f}',ha='center',va='center',fontsize=7,color='w' if abs(R.iat[i,j]-.5)>.3 else 'k')
+ ax.set_yticks(range(len(V)),lb,fontsize=7)
+ ax.set_xticks(range(len(c)),c,rotation=45,fontsize=7);f.colorbar(im,ax=ax,fraction=.03,label='red = more vulnerable')
+ fin(f,ax,r.iloc[0],r['Economy'].iloc[0]+': FSI heat map, percent rank vs own history',0)
+ return pd.DataFrame({'Indicator':r['Indicator'].values,'Latest':V.ffill(axis=1).iloc[:,-1].round(2).values,'Percentile':R.ffill(axis=1).iloc[:,-1].round(2).values})
+def hp(y,l):
+ o=[]
+ for t in range(1,len(y)+1):
+  d=np.diff(np.eye(t),2,axis=0);o.append(y[t-1] if t<3 else np.linalg.solve(np.eye(t)+l*d.T@d,y[:t])[-1])
+ return np.array(o)
+def user_gap(ratio,name='User data',lamb=None):
+ s=pd.Series(ratio,dtype=float).dropna();s.index=[str(i) for i in s.index];q='Q' in s.index[0];l=lamb or(4e5 if q else 1e5)
+ t=hp(s.values,l);t[:40 if q else 10]=np.nan;cite=f'User-provided data; trend: one-sided HP filter (lambda {l:,.0f})'
+ return pd.DataFrame([{'Economy':name,'Indicator code':k,'Indicator':k,'Unit':'','Citation':cite,'Source link':'',**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
