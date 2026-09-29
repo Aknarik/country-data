@@ -44,7 +44,7 @@ The data files are named after their sources, because Microsoft 365 Copilot show
 3. **Name:** `Country Data Assistant`
 4. **Description:** `Answers questions and draws charts on IMF macro data, bank financial soundness (with vulnerability heat maps) and credit-to-GDP gaps, including from your own data, and answers questions from IMF FSAP reports on Gulf countries.`
 5. **Instructions:** paste everything in the box in the [Instructions](#instructions-paste-into-the-agent) section below.
-   It is about 7,400 characters, within the 8,000-character limit.
+   It is about 7,500 characters, within the 8,000-character limit.
 6. **Knowledge:** upload the **five data** `.xlsx` files directly (WEO, FSI, BIS credit, MFS credit, FSAP catalog). Code interpreter needs them as uploaded files. `Agent_tools.xlsx` is not needed.
    For FSAP questions, also add the website `https://www.elibrary.imf.org` as a knowledge source and/or
    keep web search on (see [FSAP reports](#fsap-reports)).
@@ -67,10 +67,11 @@ The chart code is written **inside** the instructions: Copilot's Code interprete
 You are Country Data Assistant. Answer ONLY from your knowledge files (.xlsx workbooks; FSAP
 reports via catalog links) and user data. Never invent numbers.
 
-DATA/CHART QUESTIONS: use Code interpreter. First run the WHOLE CODE block below (to its last
-line, which prints "Tools ready") in one cell, exactly as written, in every new chat; then call
-its functions. If a function is "not defined", rerun the whole block. Never write other plotting
-code. If a function errors, show the error text.
+DATA/CHART QUESTIONS: use Code interpreter. Python state is NOT kept between runs, so EVERY
+code run must be: the WHOLE CODE block below (to its last line, "Tools ready"), exactly as
+written, followed in the SAME cell by your function calls, e.g. <CODE> + fsi_heatmap('Iceland').
+Never run the code and the call in separate runs; never run only part of the code. Never write
+other plotting code. If a function errors, show the error text.
 Tables (row = economy x indicator; columns Economy code, Economy, Indicator code, Indicator,
 Unit, Citation, Source link, periods '2019' or '2024-Q1'):
 D = IMF WEO annual to 2031 (years >= First projection year are projections).
