@@ -32,6 +32,13 @@ python -m pip install -r .github/skills/country-data/scripts/requirements.txt
 
 ## Microsoft 365 Copilot agent (no code)
 
+**No Microsoft 365 Copilot licence (no Code interpreter)?** Use
+[`m365-agent/SETUP_WITHOUT_LICENCE.md`](m365-agent/SETUP_WITHOUT_LICENCE.md): seven Markdown
+knowledge files ([`knowledge_md.zip`](m365-agent/knowledge_md.zip)) with country profiles (macro table,
+FSI heat map with coloured squares, credit-to-GDP gap, text mini charts) and FSAP reports.
+
+**With the licence** (charts and calculations):
+
 The [`m365-agent/`](m365-agent/) folder has ready-made data files and step-by-step instructions to build
 a Microsoft 365 Copilot agent that charts them with Code interpreter. See
 [`m365-agent/AGENT_SETUP.md`](m365-agent/AGENT_SETUP.md).
