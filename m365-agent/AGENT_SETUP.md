@@ -10,7 +10,7 @@ code file, and answers questions from IMF FSAP reports on the Gulf countries. It
 | `IMF_Financial_Soundness_Indicators.xlsx` | IMF Financial Soundness Indicators, core and selected additional (capital, asset quality, concentration, earnings, funding and liquidity incl. deposits to loans, FX exposure incl. FX loans), quarterly, 157 countries, 2001 onward; each indicator's group and vulnerability direction |
 | `BIS_credit_to_GDP.xlsx` | BIS credit-to-GDP ratio for 44 economies (including Saudi Arabia), with its one-sided Hodrick–Prescott trend and the credit-to-GDP gap: quarterly (λ = 400,000) and annual (λ = 100,000) |
 | `IMF_MFS_credit_to_GDP.xlsx` | Gulf countries BIS doesn't cover (Kuwait, UAE, Qatar, Oman): IMF Monetary and Financial Statistics credit ÷ WEO annual GDP, with one-sided HP trend (λ = 100,000) and gap, 2001–2025 |
-| `GCC_FSI_heatmaps.xlsx` *(optional, for people)* | Colour-filled Excel heat maps for Kuwait, Saudi Arabia and the UAE, same colours as the chart version. Open or share it directly; the agent doesn't need it |
+| `IMF_FSI_heatmaps.xlsx` *(optional, for people)* | Colour-filled Excel heat maps for all 157 countries in the IMF FSI database (one sheet per country, index with links), same colours as the chart version. Open or share it directly; the agent doesn't need it |
 | `IMF_FSAP_reports_catalog.xlsx` | List of the 21 IMF FSAP reports for GCC countries (2001–2024): title, type, topics, eLibrary links and the PDF file name to use |
 | `Agent_tools.xlsx` | The agent's Python code (charts, credit gap from user data, FSI heat map), stored one line per row. The same code is also in a "Code" sheet in every workbook, so the agent finds it in whichever file Copilot provides. Not a data source. |
 | FSAP reports (online) | The agent reads the reports through the eLibrary links in the catalog (see [FSAP reports](#fsap-reports)) |
@@ -82,10 +82,10 @@ sheets: IMF_World_Economic_Outlook_data.xlsx sheet GCC_Summary; IMF_Financial_So
 .xlsx sheet Latest (latest value, a year earlier, vulnerability percentile 0-1 vs own history);
 BIS_credit_to_GDP.xlsx and IMF_MFS_credit_to_GDP.xlsx sheet Latest (ratio, HP trend, gap). Give a
 table with the source, and say charts need Code interpreter (Microsoft 365 Copilot licence).
-Heat map without Python (Kuwait, Saudi Arabia, UAE): copy the country's rows from sheet Heatmap_GCC
-as a markdown table, keeping the coloured squares, grouped by Group; legend: blue = least
-vulnerable, green, yellow, orange, red = most vulnerable vs own history. Other countries: use
-sheet Latest and add the same square to each percentile (<0.2 blue ... >=0.8 red).
+Heat map without Python (any country): copy the country's rows from sheet Heatmap of the FSI
+workbook as a markdown table, keeping the coloured squares, grouped by Group; legend: blue = least
+vulnerable, green, yellow, orange, red = most vulnerable vs own history. Mention that a colour
+version is in IMF_FSI_heatmaps.xlsx (one sheet per country).
 
 DATA (one row per economy and indicator, one column per period "1980" or "2001-Q1"; columns
 include Economy code (ISO3), Economy, Type, Indicator code, Indicator, Unit, Citation, Source link)
@@ -213,9 +213,9 @@ used as is when a higher value means more vulnerability, and as 1 − rank when 
 
 **Without Code interpreter** (no Microsoft 365 Copilot licence) the agent can't draw the chart, so it shows
 the heat map as a table with coloured squares (🟦 least vulnerable, 🟩, 🟨, 🟧, 🟥 most vulnerable) from
-the FSI workbook's `Heatmap_GCC` sheet. For a full-colour version, open `GCC_FSI_heatmaps.xlsx`, which has
-one sheet per country with the same colours as the chart. The IMF FSI database covers Kuwait, Saudi Arabia
-and the UAE among the GCC countries.
+the FSI workbook's `Heatmap` sheet, for any of the 157 countries. For a full-colour version, open
+`IMF_FSI_heatmaps.xlsx`: one sheet per country with the same colours as the chart, and an index sheet
+with a link to each country.
 
 The groups and directions are set in `FSI_SERIES` in
 [`financial_data.py`](../.github/skills/country-data/scripts/financial_data.py) (the last field: `True` =
