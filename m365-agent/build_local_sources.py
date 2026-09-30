@@ -134,6 +134,18 @@ def build_imapp(path):
                            "Latest description": re.sub(r"\s+", " ", text)[:600],
                            "Citation": IMAPP_CITATION})
     summary = pd.DataFrame(s_rows)
+    # Official tool definitions from the iMaPP table of contents (C1.CCB ... C17.Other, A1.LTV_average)
+    toc = xl.parse("TOC", header=None)
+    defs = []
+    for _, r in toc.iterrows():
+        cells = [str(v).strip() for v in r if pd.notna(v) and str(v).strip()]
+        m = re.fullmatch(r"([AC]\d+)\.(\w+)", cells[0]) if cells else None
+        if m and len(cells) > 1:
+            code = {"Other": "OT"}.get(m.group(2), m.group(2))
+            defs.append({"Tool code": code, "Tool": TOOLS.get(code, "Average LTV limit" if code == "LTV_average" else code),
+                         "Definition (IMF iMaPP)": re.sub(r"\s+", " ", " ".join(cells[1:])),
+                         "Citation": IMAPP_CITATION})
+    definitions = pd.DataFrame(defs)
     last_date = f"{int(mapp['Year'].max())}"
     b.write_book(IMAPP_OUT, {
         "README": [
@@ -143,11 +155,12 @@ def build_imapp(path):
             "Sheet 'Summary': per economy and tool - number of tightenings and loosenings (all years and since "
             "2020), first and latest action, direction and the IMF's text description of the latest action.",
             "Sheet 'Actions': net actions per economy, tool and year (tightenings minus loosenings).",
+            "Sheet 'Definitions': the IMF's official definition of each tool (e.g. LTV, DSTI, CCB).",
             "Tools: " + "; ".join(f"{k} = {v}" for k, v in TOOLS.items()) + ".",
             "iMaPP records policy actions (changes), not whether a tool is currently in force; a tool with "
             "tightenings and no later full loosening is likely still in use - check the description.",
             "Cite: " + IMAPP_CITATION + ". " + IMAPP_LINK],
-        "Summary": summary, "Actions": actions})
+        "Definitions": definitions, "Summary": summary, "Actions": actions})
     print(f"iMaPP: {len(names)} economies, {len(summary)} economy-tool records, {time.time() - t0:.0f}s",
           file=sys.stderr)
 

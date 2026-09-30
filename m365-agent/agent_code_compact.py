@@ -5,7 +5,7 @@ def xl(k,s):
 D,G,F=xl('World_Economic','Data'),xl('World_Economic','Groups'),xl('Soundness','FSI_Quarterly')
 CQ,M=xl('BIS_credit','Credit_GDP_Quarterly'),xl('IMF_MFS_credit','Credit_GDP_Annual');B='#4B82AD'
 Bk,CS,Lp=xl('banking_sector','Banking'),xl('BIS_credit','Credit_by_sector'),xl('Soundness','Loan_portfolio')
-Mp,Ma,H=xl('iMaPP','Summary'),xl('iMaPP','Actions'),xl('HEAT','HEAT_country')
+Mp,Ma,H,Df=xl('iMaPP','Summary'),xl('iMaPP','Actions'),xl('HEAT','HEAT_country'),xl('iMaPP','Definitions')
 def P(r,a,b):return[c for c in r.columns if re.fullmatch(r'\d{4}(-Q\d)?',str(c)) and a<=int(str(c)[:4])<=b]
 def X(c):return[int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k) for k in c]
 def fin(f,ax,r,t,tl=1):
