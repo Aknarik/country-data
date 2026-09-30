@@ -272,13 +272,19 @@ To add more reports (other countries or newer FSAPs), add rows to `fsap_reports.
 | Country | Added | Source |
 |---|---|---|
 | Kuwait | Loan portfolio by sector (trade, industry, construction, real estate, household consumer and housing loans…), year-ends 2021–24 and quarterly since 2025 | CBK Monthly Monetary Statistical Bulletin, Table 13 |
-| Saudi Arabia | Bank credit by economic activity, quarterly 1996–2022 | SAMA Monthly Statistical Bulletin, Table 12d (via KAPSARC data portal; ends 2022) |
-| Bahrain | Financial soundness indicators (capital, NPLs, provisions, ROA, ROE, liquid assets), 2015–2026 → heat map | CBB Statistical Bulletin, Table 37 |
+| Saudi Arabia | Bank credit by economic activity (ISIC), quarterly 2021-Q3 onwards plus the latest month | [SAMA Monthly Statistical Bulletin](https://www.sama.gov.sa/en-US/Statistics/Pages/MonthlyStatistics.aspx), Table 12d (official Excel file; sectors checked against the total) |
+| Oman | Loan portfolio by sector (15 sectors incl. personal loans), quarterly 2021–2026 | [Central Bank of Oman, Quarterly Statistical Bulletin](https://cbo.gov.om/Pages/QuarterlyBulletins.aspx), Table 17 (PDF; each bulletin kept only if the computed shares match the published % within 0.3 pp) |
+| Oman | FX loans to total loans and deposits to loans (conventional banks) → FSI table and heat map | CBO Quarterly Statistical Bulletin, Table 10 (deposits to loans = 100 / credit-to-deposits ratio) |
+| Bahrain | Financial soundness indicators (capital, NPLs, provisions, ROA, ROE, liquid assets), 2015–2026 → heat map | [CBB Statistical Bulletin](https://www.cbb.gov.bh/statistical-bulletin/), Table 37 |
 | Bahrain | Bank asset structure and sovereign-bank nexus, 2016–2025 | CBB Statistical Bulletin, Table 17 (retail banks) |
 
-Not yet covered: **Oman** and **Qatar** (their bulletins are PDF only), and a **Bahrain credit gap** (the CBB
+Every row carries its citation (bulletin, edition, table) and source link, and the agent prints them under each chart.
+
+**Qatar:** central bank loan-portfolio and FSI data are not available (QCB bulletins can't be retrieved
+automatically). Qatar's credit gap still comes from IMF MFS. A **Bahrain credit gap** isn't possible either (the CBB
 monetary survey starts in 2016, too short for the 10-year HP filter start).
-Rerun the script after each new bulletin; it downloads the latest CBB Excel file automatically.
+Rerun the script after each new bulletin; it downloads the latest CBB, SAMA and CBO files automatically
+(`--cbb` / `--sama` take a local file instead). Downloads go to `local_data/`, which is not committed.
 
 ## About the "source" shown by Copilot
 
