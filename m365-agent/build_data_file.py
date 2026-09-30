@@ -46,6 +46,10 @@ OUT = HERE / "IMF_World_Economic_Outlook_data.xlsx"
 FSI_FILE = "IMF_Financial_Soundness_Indicators.xlsx"
 BIS_FILE = "BIS_credit_to_GDP.xlsx"
 MFS_FILE = "IMF_MFS_credit_to_GDP.xlsx"
+BANK_FILE = "IMF_MFS_banking_sector.xlsx"
+BANK_CITATION = ("International Monetary Fund, Monetary and Financial Statistics (dataset IMF.STA:MFS_ODC, "
+                 "other depository corporations survey); GDP: IMF World Economic Outlook")
+TC_CITATION = "Bank for International Settlements, total credit statistics (dataset WS_TC), adjusted for breaks"
 GCC = ["BHR", "KWT", "OMN", "QAT", "SAU", "ARE"]
 SOURCES = ("World Economic Outlook", "Fiscal Monitor")
 # Groups exposed as Yes/blank columns (short name -> WEO group column in country_group.csv)
@@ -336,6 +340,46 @@ def credit_latest(sheet):
     return pd.DataFrame(out)
 
 
+def bank_sheet(names):
+    """Banking-sector balance-sheet ratios (IMF MFS ODC), one row per economy x indicator, annual."""
+    df = fd.bank_balance_sheet("all", 2000)
+    est = df.groupby("country")["assets_estimated"].any()
+    rows = []
+    for cty, g in df.groupby("country"):
+        g = g.set_index("year")
+        method = ("Total assets estimated as the sum of financial claims (nonresidents, central bank, central "
+                  "government, other sectors); excludes nonfinancial assets" if est.get(cty) else
+                  "Total assets as reported")
+        for code, (name, unit, _) in fd.BANK_INDICATORS.items():
+            v = g[code].dropna()
+            if v.empty:
+                continue
+            rows.append({"Economy code": cty, "Economy": names.get(cty, cty), "Type": "Country",
+                         "Indicator code": code, "Indicator": name, "Unit": unit, "Method": method,
+                         "Citation": BANK_CITATION, "Source link": "https://data.imf.org",
+                         **{str(int(y)): round(float(x), 2) for y, x in v.items()}})
+    out = pd.DataFrame(rows)
+    yrs = sorted(c for c in out.columns if c.isdigit())
+    print(f"  Banking: {out['Economy code'].nunique()} economies", file=sys.stderr)
+    return out[[c for c in out.columns if c not in yrs] + yrs].sort_values(["Economy", "Indicator code"])
+
+
+def credit_by_sector_sheet():
+    """BIS credit to households, NFCs, private sector, government (% of GDP), quarterly."""
+    d = fd.bis_credit_by_sector("all")
+    bis_names, iso3 = fd.bis_country_names(), fd.iso2_to_iso3()
+    w = d.pivot_table(index=["country", "code", "name"], columns="period", values="value").reset_index()
+    per = sorted(c for c in w.columns if "-Q" in str(c))
+    out = pd.DataFrame({"Economy code": w["country"].map(lambda c: iso3.get(c, c)),
+                        "Economy": w["country"].map(lambda c: bis_names.get(c, c)),
+                        "Type": w["country"].map(lambda c: "Country" if c in iso3 else "Aggregate"),
+                        "Indicator code": w["code"], "Indicator": w["name"], "Unit": "Percent of GDP",
+                        "Citation": TC_CITATION, "Source link": "https://data.bis.org/topics/TOTAL_CREDIT"})
+    out = pd.concat([out, w[per].round(2)], axis=1)
+    print(f"  Credit by sector: {out['Economy code'].nunique()} economies", file=sys.stderr)
+    return out.sort_values(["Economy", "Indicator code"])
+
+
 def credit_sheet(annual):
     """BIS credit-to-GDP ratio with our one-sided HP trend and gap."""
     lamb = fd.LAMBDA["A" if annual else "Q"]
@@ -485,9 +529,30 @@ def main():
             "a gap above 2 pp may signal a buffer build-up; above 10 pp the maximum buffer.",
             "Rows: 3 per economy (CREDIT_GDP, CREDIT_GDP_TREND, CREDIT_GDP_GAP); one column per period.",
             "Sheet 'Latest': latest quarterly ratio, trend and gap for each economy.",
+            "Sheet 'Credit_by_sector': BIS total credit to households, non-financial corporations, the "
+            "private non-financial sector (all lenders and banks) and general government, % of GDP, quarterly.",
             "Cite the 'Citation' column (BIS; trend and gap are own calculations), not this workbook.",
             refresh],
-        "Latest": credit_latest(credit_q), "Credit_GDP_Quarterly": credit_q, "Credit_GDP_Annual": credit_a})
+        "Latest": credit_latest(credit_q), "Credit_GDP_Quarterly": credit_q, "Credit_GDP_Annual": credit_a,
+        "Credit_by_sector": credit_by_sector_sheet()})
+
+    # 5. Banking sector balance sheet (IMF MFS, other depository corporations)
+    write_book(HERE / BANK_FILE, {
+        "README": [
+            "Banking sector (other depository corporations) balance-sheet indicators, annual, from the IMF "
+            "Monetary and Financial Statistics (dataset IMF.STA:MFS_ODC); GDP from the IMF World Economic Outlook.",
+            f"Built on {built}. Sheet 'Banking': one row per economy and indicator, one column per year.",
+            "Indicators: total assets (level and % of GDP); equity to assets; sovereign-bank nexus = claims on "
+            "central government to total assets (and % of GDP); credit to the economy = claims on other sectors "
+            "(% of GDP and of assets); claims on the private sector (% of GDP); foreign assets and liabilities, "
+            "claims on the central bank and deposits, each to total assets.",
+            "Column 'Method': where total assets are not reported they are estimated as the sum of financial "
+            "claims (so ratios to assets are slightly overstated).",
+            "Claims on the private sector have reclassification breaks for some countries (e.g. Kuwait); prefer "
+            "'Credit to the economy: bank claims on other sectors'.",
+            "Cite the 'Citation' column (IMF MFS), not this workbook.",
+            refresh],
+        "Banking": bank_sheet(countries)})
 
     # 4. Gulf credit-to-GDP from IMF MFS (countries BIS does not cover)
     write_book(HERE / MFS_FILE, {

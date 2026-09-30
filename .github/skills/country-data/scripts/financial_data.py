@@ -284,6 +284,92 @@ def mfs_credit_to_gdp_with_gap(countries=GULF_MFS, lamb=None, min_obs=None, non_
 
 
 # --------------------------------------------------------------------------- #
+# Banking sector balance sheet (IMF MFS, other depository corporations)
+# --------------------------------------------------------------------------- #
+ODC = {  # IMF.STA:MFS_ODC indicator -> short key
+    "ODCORP_A_T_ASEC_ODC2SR": "assets", "ODCORP_L_F51KOE_ODCS": "equity",
+    "ODCORP_A_ACO_S1311MIXED_ODCS": "claims_gov", "ODCORP_A_ACO_S1_Z_ODCS": "claims_other_sectors",
+    "ODCORP_A_ACO_PS_ODCS": "claims_private", "ODCORP_A_ACO_NRES_ODCS": "claims_nonres",
+    "ODCORP_A_ACO_S121_ODCS": "claims_cb", "ODCORP_L_F22_IBM_ODCS": "dep_transferable",
+    "ODCORP_L_F29_IBM_ODCS": "dep_other", "ODCORP_L_F2M_XBM_ODCS": "dep_excluded",
+    "ODCORP_L_LT_NRES_ODCS": "liab_nonres",
+}
+# output indicator -> (name, unit, formula on the keys above; gdp = nominal GDP)
+BANK_INDICATORS = {
+    "BANK_ASSETS": ("Banking sector total assets", "Billions of domestic currency", lambda d: d.assets / 1e9),
+    "BANK_ASSETS_GDP": ("Banking sector total assets", "Percent of GDP", lambda d: 100 * d.assets / d.gdp),
+    "BANK_EQUITY_TA": ("Equity (shares and other equity) to total assets", "Percent of total assets",
+                       lambda d: 100 * d.equity / d.assets),
+    "BANK_GOV_TA": ("Sovereign-bank nexus: claims on central government to total assets", "Percent of total assets",
+                    lambda d: 100 * d.claims_gov / d.assets),
+    "BANK_GOV_GDP": ("Bank claims on central government", "Percent of GDP", lambda d: 100 * d.claims_gov / d.gdp),
+    "BANK_CREDIT_GDP": ("Credit to the economy: bank claims on other sectors", "Percent of GDP",
+                        lambda d: 100 * d.claims_other_sectors / d.gdp),
+    "BANK_CREDIT_TA": ("Claims on other sectors (loans and securities) to total assets", "Percent of total assets",
+                       lambda d: 100 * d.claims_other_sectors / d.assets),
+    "BANK_PRIVATE_GDP": ("Bank claims on the private sector", "Percent of GDP",
+                         lambda d: 100 * d.claims_private / d.gdp),
+    "BANK_NRES_TA": ("Claims on nonresidents (foreign assets) to total assets", "Percent of total assets",
+                     lambda d: 100 * d.claims_nonres / d.assets),
+    "BANK_CB_TA": ("Claims on the central bank (reserves) to total assets", "Percent of total assets",
+                   lambda d: 100 * d.claims_cb / d.assets),
+    "BANK_DEPOSITS_TA": ("Deposits to total assets", "Percent of total assets",
+                         lambda d: 100 * (d.dep_transferable.fillna(0) + d.dep_other.fillna(0)
+                                          + d.dep_excluded.fillna(0)).replace(0, np.nan) / d.assets),
+    "BANK_FOREIGN_LIAB_TA": ("Liabilities to nonresidents to total assets", "Percent of total assets",
+                             lambda d: 100 * d.liab_nonres / d.assets),
+}
+
+
+def bank_balance_sheet(countries="all", start=2000):
+    """Banking sector (other depository corporations) balance-sheet ratios, annual:
+    DataFrame with country, year and one column per BANK_INDICATORS key."""
+    raw = _imf_csv("IMF.STA/MFS_ODC", f"{_codes(countries)}.{'+'.join(ODC)}.XDC.A")
+    if raw.empty:
+        raise RuntimeError(f"No IMF MFS banking data for {countries}")
+    raw = raw[raw["TIME_PERIOD"] >= start]
+    w = raw.pivot_table(index=["COUNTRY", "TIME_PERIOD"], columns="INDICATOR", values="OBS_VALUE")
+    w = w.rename(columns=ODC).reindex(columns=list(dict.fromkeys(ODC.values())))
+    w = w.join(fetch_weo_gdp(countries), how="left")
+    # Where total assets are not reported, estimate them as the sum of financial claims
+    # (nonresidents, central bank, central government, other sectors): excludes nonfinancial assets.
+    est = w[["claims_nonres", "claims_cb", "claims_gov", "claims_other_sectors"]].sum(axis=1, min_count=3)
+    w["assets_estimated"] = w["assets"].isna() & est.notna()
+    w["assets"] = w["assets"].fillna(est)
+    out = pd.DataFrame({k: f(w) for k, (_, _, f) in BANK_INDICATORS.items()}, index=w.index)
+    out["assets_estimated"] = w["assets_estimated"]
+    return out.replace([np.inf, -np.inf], np.nan).rename_axis(["country", "year"]).reset_index()
+
+
+# --------------------------------------------------------------------------- #
+# BIS total credit by borrowing sector (% of GDP)
+# --------------------------------------------------------------------------- #
+BIS_SECTORS = {("H", "A"): ("CREDIT_HH_GDP", "Credit to households (all lenders)"),
+               ("N", "A"): ("CREDIT_NFC_GDP", "Credit to non-financial corporations (all lenders)"),
+               ("P", "A"): ("CREDIT_PNFS_GDP", "Credit to the private non-financial sector (all lenders)"),
+               ("P", "B"): ("CREDIT_PNFS_BANK_GDP", "Bank credit to the private non-financial sector"),
+               ("G", "A"): ("CREDIT_GOV_GDP", "Credit to general government (all lenders)")}
+
+
+def bis_credit_by_sector(countries="all", start=None):
+    """BIS total credit (WS_TC), % of GDP, quarterly, adjusted for breaks.
+    Long DataFrame: country, code, name, period, value."""
+    params = {"format": "csv"}
+    if start:
+        params["startPeriod"] = str(start)
+    text = _get(f"{BIS_SDMX}/data/dataflow/BIS/WS_TC/2.0/Q.{_codes(countries)}.H+N+P+G.A+B.M.770.A", params)
+    if not text:
+        raise RuntimeError(f"No BIS total credit data for {countries}")
+    d = pd.read_csv(StringIO(text))
+    key = list(zip(d["TC_BORROWERS"], d["TC_LENDERS"]))
+    d = d[[k in BIS_SECTORS for k in key]]
+    key = list(zip(d["TC_BORROWERS"], d["TC_LENDERS"]))
+    return pd.DataFrame({"country": d["BORROWERS_CTY"].values,
+                         "code": [BIS_SECTORS[k][0] for k in key], "name": [BIS_SECTORS[k][1] for k in key],
+                         "period": d["TIME_PERIOD"].values, "value": d["OBS_VALUE"].values})
+
+
+# --------------------------------------------------------------------------- #
 # IMF Financial Soundness Indicators
 # --------------------------------------------------------------------------- #
 def fetch_fsi(countries="all", indicators=None, freq="Q", start=None):

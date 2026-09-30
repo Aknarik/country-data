@@ -3,7 +3,8 @@ fs=glob.glob('/mnt/**/*.xls*',recursive=True)+glob.glob('**/*.xls*',recursive=Tr
 def xl(k,s):
  p=[f for f in fs if k.lower() in f.lower().replace(' ','_')];return pd.read_excel(p[0],sheet_name=s) if p else None
 D,G,F=xl('World_Economic','Data'),xl('World_Economic','Groups'),xl('Soundness','FSI_Quarterly')
-CQ,M=xl('BIS_credit','Credit_GDP_Quarterly'),xl('IMF_MFS','Credit_GDP_Annual');B='#4B82AD'
+CQ,M=xl('BIS_credit','Credit_GDP_Quarterly'),xl('IMF_MFS_credit','Credit_GDP_Annual');B='#4B82AD'
+Bk,CS=xl('banking_sector','Banking'),xl('BIS_credit','Credit_by_sector')
 def P(r,a,b):return[c for c in r.columns if re.fullmatch(r'\d{4}(-Q\d)?',str(c)) and a<=int(str(c)[:4])<=b]
 def X(c):return[int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k) for k in c]
 def fin(f,ax,r,t,tl=1):
@@ -30,7 +31,7 @@ def chart(r,a=2000,b=2031,kind='line',year=None):
  if Pj and x[-1]>=Pj:
   ax.axvspan(Pj-.5,x[-1]+.5,color='gray',alpha=.15);ax.text(Pj,.97,' IMF projections',transform=ax.get_xaxis_transform(),va='top',fontsize=9,color='gray')
  if np.nanmin(V.values)<0<np.nanmax(V.values):ax.axhline(0,color='k',lw=.8)
- ax.set_ylabel(r0['Unit']);ax.legend(frameon=False);fin(f,ax,r0,r0['Indicator'])
+ ax.set_ylabel(r0['Unit']);ax.legend(frameon=False);fin(f,ax,r0,r0['Indicator'] if r['Indicator'].nunique()==1 else r0['Economy'])
 def fsi_heatmap(cty,q=12):
  if F is None:raise ValueError('FSI workbook not available to Python. Attach IMF_Financial_Soundness_Indicators.xlsx in this chat. Files seen: '+str([f.split('/')[-1] for f in fs]))
  r=F[(F['Economy'].str.lower()==cty.lower())|(F['Economy code']==cty.upper())].drop_duplicates('Indicator code')
@@ -56,4 +57,4 @@ def user_gap(ratio,name='User data',lamb=None):
  s=pd.Series(ratio,dtype=float).dropna();s.index=[str(i) for i in s.index];q='Q' in s.index[0];l=lamb or(4e5 if q else 1e5)
  t=hp(s.values,l);t[:40 if q else 10]=np.nan;cite=f'User-provided data; trend: one-sided HP filter (lambda {l:,.0f})'
  return pd.DataFrame([{'Economy':name,'Indicator code':k,'Indicator':k,'Unit':'','Citation':cite,'Source link':'',**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
-print('Tools ready:',[n for n in('chart','fsi_heatmap','user_gap') if n in globals()],'| data:',[n for n in('D','F','CQ','M') if globals()[n] is not None])
+print('Tools ready:',[n for n in('chart','fsi_heatmap','user_gap') if n in globals()],'| data:',[n for n in('D','F','CQ','M','Bk','CS') if globals()[n] is not None])
