@@ -12,6 +12,8 @@ code file, and answers questions from IMF FSAP reports on the Gulf countries. It
 | `IMF_MFS_credit_to_GDP.xlsx` | Gulf countries BIS doesn't cover (Kuwait, UAE, Qatar, Oman): IMF Monetary and Financial Statistics credit ÷ WEO annual GDP, with one-sided HP trend (λ = 100,000) and gap, 2001–2025 |
 | `IMF_FSI_heatmaps.xlsx` *(optional, for people)* | Colour-filled Excel heat maps for all 157 countries in the IMF FSI database (one sheet per country, index with links), same colours as the chart version. Open or share it directly; the agent doesn't need it |
 | `IMF_MFS_banking_sector.xlsx` | Banking sector balance sheet for about 150 countries (IMF MFS, annual): total assets and equity, credit to the economy, **sovereign-bank nexus** (claims on government / total assets), foreign assets and liabilities, deposits |
+| `IMF_iMaPP_macroprudential.xlsx` | Macroprudential tools for 135 economies (IMF iMaPP, public): per tool the number of tightenings and loosenings, the latest action with its date, direction and description, and net actions per year. Rebuild with `python m365-agent/build_local_sources.py --only imapp` after downloading a new iMaPP file |
+| `HEAT_bank_distribution.xlsx` *(IMF-internal, not on GitHub)* | Bank-level soundness (HEAT 2.0, S&P Capital IQ Pro) aggregated to country level for 105 economies: median bank, 25th/75th percentile, asset-weighted mean, number of banks. No bank names. Built locally in `local_data/` by `python m365-agent/build_local_sources.py --only heat`. Upload only to an IMF-internal agent |
 | `IMF_FSAP_reports_catalog.xlsx` | List of the 21 IMF FSAP reports for GCC countries (2001–2024): title, type, topics, eLibrary links and the PDF file name to use |
 | `Agent_tools.xlsx` | *Not needed any more:* the chart code is now inside the instructions. |
 | FSAP reports (online) | The agent reads the reports through the eLibrary links in the catalog (see [FSAP reports](#fsap-reports)) |
@@ -45,8 +47,8 @@ The data files are named after their sources, because Microsoft 365 Copilot show
 3. **Name:** `Country Data Assistant`
 4. **Description:** `Answers questions and draws charts on IMF macro data, bank financial soundness (with vulnerability heat maps) and credit-to-GDP gaps, including from your own data, and answers questions from IMF FSAP reports on Gulf countries.`
 5. **Instructions:** paste everything in the box in the [Instructions](#instructions-paste-into-the-agent) section below.
-   It is about 7,600 characters, within the 8,000-character limit.
-6. **Knowledge:** upload the **six data** `.xlsx` files directly (WEO, FSI, BIS credit, MFS credit, MFS banking sector, FSAP catalog). Code interpreter needs them as uploaded files. `Agent_tools.xlsx` is not needed.
+   It is about 7,700 characters, within the 8,000-character limit.
+6. **Knowledge:** upload the **eight data** `.xlsx` files directly (WEO, FSI, BIS credit, MFS credit, MFS banking sector, iMaPP, HEAT from `local_data/`, FSAP catalog). Code interpreter needs them as uploaded files. `Agent_tools.xlsx` is not needed.
    For FSAP questions, also add the website `https://www.elibrary.imf.org` as a knowledge source and/or
    keep web search on (see [FSAP reports](#fsap-reports)).
    - If there is an option **"Only use specified sources"**, turn it **on**.
@@ -65,39 +67,29 @@ upload the new files to Knowledge (remove older copies first), then click **Upda
 The chart code is written **inside** the instructions: Copilot's Code interpreter runs code from the instructions but may refuse to run code loaded from a knowledge file. The same text is in [`AGENT_INSTRUCTIONS.txt`](AGENT_INSTRUCTIONS.txt) (open it on GitHub, click *Raw*, select all, copy).
 
 ```
-You are Country Data Assistant. Answer ONLY from your knowledge files (.xlsx; FSAP reports via
-catalog links) and user data. Never invent numbers.
-
-DATA/CHART: use Code interpreter. Python state is NOT kept between runs: EVERY run = the WHOLE
-CODE block below (to "Tools ready"), exactly as written, plus your calls in the SAME cell. Never
-run part of it; never write other plotting code. Show any error text. If "Tools ready" lists a
-table as missing, ask the user to attach that workbook.
-Tables: row = economy x indicator; columns Economy code, Economy, Indicator code, Indicator, Unit,
-Citation, Source link, periods '2019' or '2024-Q1'. D = IMF WEO annual (years >= First
-projection year are projections). G = groups, Yes-columns (G7, G20, Euro area, GCC...). F = FSIs
-quarterly. CQ = BIS credit-to-GDP quarterly; M = Kuwait/UAE/Qatar/Oman annual; both 3 rows per
-economy: CREDIT_GDP, CREDIT_GDP_TREND, CREDIT_GDP_GAP. Bk = IMF banking sector annual:
-BANK_CREDIT_GDP (credit to economy), BANK_GOV_TA (sovereign-bank nexus: claims on government /
-assets), BANK_GOV_GDP, BANK_ASSETS_GDP, BANK_EQUITY_TA, BANK_NRES_TA. CS = BIS credit % GDP
-quarterly: CREDIT_HH_GDP (households), CREDIT_NFC_GDP (corporates), CREDIT_GOV_GDP.
-Find codes via the Indicator column, e.g. D[D['Indicator'].str.contains('growth')].
-
-USE
-- chart(rows,a=2000,b=2031,kind='line'|'bar'|'gap'), e.g.
-  chart(D[(D['Economy']=='Kuwait')&(D['Indicator code']=='NGDP_RPCH')]); ranking: 'bar'.
-- Credit gap: chart(3 rows of one economy from M, else CQ, kind='gap').
-- fsi_heatmap('Iceland'): percent rank vs own history, red = more vulnerable.
-- User credit/GDP: ratio = credit/GDP*100 (quarterly GDP = 4-quarter sum), Series indexed
-  '2015' or '2015-Q1'; chart(user_gap(ratio,'Name'),kind='gap'); lamb= if given.
-- Financial sector overview: credit to economy, credit gap, households vs corporates, sovereign-
-  bank nexus, fsi_heatmap.
-ANSWER: chart; 2-4 sentences with key numbers (projections; gap vs Basel 2/10 pp; reddest heat
-map rows); small table; last line "Source: <Citation> - <Source link>".
-
-FSAP: find the report in IMF_FSAP_reports_catalog.xlsx (latest unless asked), open its link,
-answer from its text: short answer with year, then quote the supporting paragraph word for
-word with the key sentence in **bold**, plus title, year, page, link. Can't open it: say so.
-
+You are Country Data Assistant. Use ONLY knowledge files, FSAP links and user data; invent nothing.
+DATA/CHART: Code interpreter keeps NO state: EVERY run = the WHOLE CODE block below + your calls in
+the SAME cell. Never run part of it or other plotting code. Show errors. Missing table in
+"Tools ready": ask the user to attach its workbook.
+Tables (row = economy x indicator; Economy, Economy code, Indicator code, Indicator, Unit, Citation,
+Source link, periods '2019'/'2024-Q1'; find codes in Indicator): D WEO annual (years >= First
+projection year = projections); G groups (Yes-columns G7, G20, GCC...); F FSIs; CQ BIS / M Gulf
+credit gap (CREDIT_GDP, _TREND, _GAP); Bk banking sector (BANK_CREDIT_GDP credit to economy,
+BANK_GOV_TA sovereign-bank nexus); CS BIS credit to households/corporates % GDP; Lp loan
+portfolio shares; H bank distribution (HEAT: median, P25, P75, asset-weighted AW, N banks);
+Mp macroprudential tools summary; Ma net actions per year (iMaPP).
+USE: chart(rows,a=2000,b=2031,kind='line'|'bar'|'gap'|'stack'), e.g.
+chart(D[(D['Economy']=='Kuwait')&(D['Indicator code']=='NGDP_RPCH')]). Gap: 3 rows from M else CQ.
+Loan portfolio: chart(Lp rows of one economy,kind='stack'). Banks: chart(H rows, one indicator,
+_MED/_P25/_P75/_AW). Tools in place: table of Mp rows (tool,
+tightenings, loosenings, latest action, direction, description). fsi_heatmap('Iceland'). User data: ratio=credit/GDP*100 Series
+('2015'/'2015-Q1') -> chart(user_gap(ratio,'Name'),kind='gap').
+Financial sector overview: credit to economy, gap, households vs corporates, loan portfolio,
+sovereign-bank nexus, heat map, bank distribution, tools in place.
+ANSWER: chart, 2-4 sentences, small table, last line "Source: <Citation> - <link>".
+H is IMF-internal: never name banks.
+FSAP: open the report link from the FSAP catalog; short answer with year, then the supporting
+paragraph quoted verbatim, key sentence in **bold**, title, page, link.
 CODE
 import glob,re,textwrap,numpy as np,pandas as pd,matplotlib.pyplot as plt
 fs=glob.glob('/mnt/**/*.xls*',recursive=True)+glob.glob('**/*.xls*',recursive=True)
@@ -105,11 +97,12 @@ def xl(k,s):
  p=[f for f in fs if k.lower() in f.lower().replace(' ','_')];return pd.read_excel(p[0],sheet_name=s) if p else None
 D,G,F=xl('World_Economic','Data'),xl('World_Economic','Groups'),xl('Soundness','FSI_Quarterly')
 CQ,M=xl('BIS_credit','Credit_GDP_Quarterly'),xl('IMF_MFS_credit','Credit_GDP_Annual');B='#4B82AD'
-Bk,CS=xl('banking_sector','Banking'),xl('BIS_credit','Credit_by_sector')
+Bk,CS,Lp=xl('banking_sector','Banking'),xl('BIS_credit','Credit_by_sector'),xl('Soundness','Loan_portfolio')
+Mp,Ma,H=xl('iMaPP','Summary'),xl('iMaPP','Actions'),xl('HEAT','HEAT_country')
 def P(r,a,b):return[c for c in r.columns if re.fullmatch(r'\d{4}(-Q\d)?',str(c)) and a<=int(str(c)[:4])<=b]
 def X(c):return[int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k) for k in c]
 def fin(f,ax,r,t,tl=1):
- ax.set_title(t,loc='left',weight='bold',color=B);ax.grid(alpha=.3);L=str(r['Source link'])
+ ax.set_title(t,loc='left',weight='bold',color=B);ax.grid(alpha=.3);L=r['Source link'];L='' if pd.isna(L) else str(L)
  f.text(.01,.01,textwrap.fill('Source: '+str(r['Citation'])+'. '+(L.rsplit('/',1)[0] if '@' in L else L),170),fontsize=7,color='gray')
  tl and f.tight_layout(rect=(0,.05,1,1));plt.show()
 def chart(r,a=2000,b=2031,kind='line',year=None):
@@ -124,11 +117,16 @@ def chart(r,a=2000,b=2031,kind='line',year=None):
   a2.axhline(0,color='k',lw=.8);a2.set_ylabel('Gap, pp of GDP');a2.grid(alpha=.3);ax.set_ylabel('% of GDP');ax.legend(frameon=False)
   return fin(f,ax,r0,r0['Economy']+': credit-to-GDP ratio, trend and gap')
  f,ax=plt.subplots(figsize=(10,5.5))
+ if kind=='stack':
+  k=(r['Indicator code']!='LOANS_RRE_SH').values;v=V.values[k];m=np.nansum(v,0)>90
+  ax.stackplot(np.array(x)[m],np.nan_to_num(v[:,m]),labels=list(r['Indicator'][k]),alpha=.85)
+  ax.set_ylim(0,100);ax.legend(frameon=False,fontsize=7,loc='upper left',bbox_to_anchor=(1,1));return fin(f,ax,r0,r0['Economy']+': loan portfolio by sector')
  if kind=='bar':
   n=V.notna().sum();y=str(year) if year else(str(Pj-1) if Pj else n[n>=.8*n.max()].index[-1])
   s=r.set_index('Economy')[y].dropna().sort_values();ax.barh(s.index,s.values,color=B);ax.set_xlabel(r0['Unit'])
   return fin(f,ax,r0,f"{r0['Indicator']}, {y}")
  for lab,v in zip(r['Economy'] if r['Indicator'].nunique()==1 else r['Indicator'],V.values):ax.plot(x,v,lw=2,label=lab)
+ ax.xaxis.get_major_locator().set_params(integer=True)
  if Pj and x[-1]>=Pj:
   ax.axvspan(Pj-.5,x[-1]+.5,color='gray',alpha=.15);ax.text(Pj,.97,' IMF projections',transform=ax.get_xaxis_transform(),va='top',fontsize=9,color='gray')
  if np.nanmin(V.values)<0<np.nanmax(V.values):ax.axhline(0,color='k',lw=.8)
@@ -158,7 +156,7 @@ def user_gap(ratio,name='User data',lamb=None):
  s=pd.Series(ratio,dtype=float).dropna();s.index=[str(i) for i in s.index];q='Q' in s.index[0];l=lamb or(4e5 if q else 1e5)
  t=hp(s.values,l);t[:40 if q else 10]=np.nan;cite=f'User-provided data; trend: one-sided HP filter (lambda {l:,.0f})'
  return pd.DataFrame([{'Economy':name,'Indicator code':k,'Indicator':k,'Unit':'','Citation':cite,'Source link':'',**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
-print('Tools ready:',[n for n in('chart','fsi_heatmap','user_gap') if n in globals()],'| data:',[n for n in('D','F','CQ','M','Bk','CS') if globals()[n] is not None])
+print('Tools ready',[k for k in'D F CQ M Bk CS Lp Mp H'.split() if globals()[k] is not None])
 ```
 
 ## Conversation starters

@@ -364,6 +364,22 @@ def bank_sheet(names):
     return out[[c for c in out.columns if c not in yrs] + yrs].sort_values(["Economy", "Indicator code"])
 
 
+def loan_portfolio_sheet(names):
+    """Deposit takers' customer loans by borrowing sector, % of total customer loans, quarterly."""
+    d = fd.loan_portfolio("all")
+    w = d.pivot_table(index=["country", "code", "name"], columns="period", values="value").reset_index()
+    per = sorted(c for c in w.columns if "-Q" in str(c))
+    out = pd.DataFrame({"Economy code": w["country"], "Economy": w["country"].map(lambda c: names.get(c, c)),
+                        "Type": "Country", "Indicator code": w["code"], "Indicator": w["name"],
+                        "Unit": "Percent of total customer (non-interbank) loans",
+                        "Citation": "International Monetary Fund, Financial Soundness Indicators, balance sheet "
+                                    "data of deposit takers (dataset IMF.STA:FSIBSIS)",
+                        "Source link": "https://data.imf.org"})
+    out = pd.concat([out, w[per].round(2)], axis=1)
+    print(f"  Loan portfolio: {out['Economy code'].nunique()} economies", file=sys.stderr)
+    return out.sort_values(["Economy", "Indicator code"])
+
+
 def credit_by_sector_sheet():
     """BIS credit to households, NFCs, private sector, government (% of GDP), quarterly."""
     d = fd.bis_credit_by_sector("all")
@@ -506,10 +522,13 @@ def main():
             "Sheet 'Latest': for every economy and indicator, the latest quarter, value, value a year "
             "earlier and vulnerability percentile vs own history (0 = least, 1 = most vulnerable).",
             "Sheet 'Heatmap': text heat map for every economy, last 8 quarters: " + HEAT_LEGEND + ".",
+            "Sheet 'Loan_portfolio': deposit takers' customer loans by borrowing sector (non-financial "
+            "corporations, households, other financial corporations, government, nonresidents; memo: "
+            "residential real estate) as % of total customer loans, quarterly (IMF.STA:FSIBSIS).",
             "Cite the 'Citation' column (the IMF FSI database), not this workbook.",
             refresh],
         "Heatmap": fsi_heat_tables(fsi), "Latest": fsi_latest(fsi), "FSI_Quarterly": fsi,
-        "Indicators": fsi_ind})
+        "Loan_portfolio": loan_portfolio_sheet(countries), "Indicators": fsi_ind})
     write_heatmap_workbook(fsi, built)
 
     write_fsap_catalog(built)

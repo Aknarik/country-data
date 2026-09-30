@@ -2,3 +2,9 @@ __pycache__/
 *.pyc
 country_data_output/
 *.lnk
+
+# Local source data - never commit (licensed / confidential / large)
+*.xlsm
+iMaPP_database*.xlsx
+HEAT*
+local_data/

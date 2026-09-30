@@ -4,11 +4,12 @@ def xl(k,s):
  p=[f for f in fs if k.lower() in f.lower().replace(' ','_')];return pd.read_excel(p[0],sheet_name=s) if p else None
 D,G,F=xl('World_Economic','Data'),xl('World_Economic','Groups'),xl('Soundness','FSI_Quarterly')
 CQ,M=xl('BIS_credit','Credit_GDP_Quarterly'),xl('IMF_MFS_credit','Credit_GDP_Annual');B='#4B82AD'
-Bk,CS=xl('banking_sector','Banking'),xl('BIS_credit','Credit_by_sector')
+Bk,CS,Lp=xl('banking_sector','Banking'),xl('BIS_credit','Credit_by_sector'),xl('Soundness','Loan_portfolio')
+Mp,Ma,H=xl('iMaPP','Summary'),xl('iMaPP','Actions'),xl('HEAT','HEAT_country')
 def P(r,a,b):return[c for c in r.columns if re.fullmatch(r'\d{4}(-Q\d)?',str(c)) and a<=int(str(c)[:4])<=b]
 def X(c):return[int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k) for k in c]
 def fin(f,ax,r,t,tl=1):
- ax.set_title(t,loc='left',weight='bold',color=B);ax.grid(alpha=.3);L=str(r['Source link'])
+ ax.set_title(t,loc='left',weight='bold',color=B);ax.grid(alpha=.3);L=r['Source link'];L='' if pd.isna(L) else str(L)
  f.text(.01,.01,textwrap.fill('Source: '+str(r['Citation'])+'. '+(L.rsplit('/',1)[0] if '@' in L else L),170),fontsize=7,color='gray')
  tl and f.tight_layout(rect=(0,.05,1,1));plt.show()
 def chart(r,a=2000,b=2031,kind='line',year=None):
@@ -23,11 +24,16 @@ def chart(r,a=2000,b=2031,kind='line',year=None):
   a2.axhline(0,color='k',lw=.8);a2.set_ylabel('Gap, pp of GDP');a2.grid(alpha=.3);ax.set_ylabel('% of GDP');ax.legend(frameon=False)
   return fin(f,ax,r0,r0['Economy']+': credit-to-GDP ratio, trend and gap')
  f,ax=plt.subplots(figsize=(10,5.5))
+ if kind=='stack':
+  k=(r['Indicator code']!='LOANS_RRE_SH').values;v=V.values[k];m=np.nansum(v,0)>90
+  ax.stackplot(np.array(x)[m],np.nan_to_num(v[:,m]),labels=list(r['Indicator'][k]),alpha=.85)
+  ax.set_ylim(0,100);ax.legend(frameon=False,fontsize=7,loc='upper left',bbox_to_anchor=(1,1));return fin(f,ax,r0,r0['Economy']+': loan portfolio by sector')
  if kind=='bar':
   n=V.notna().sum();y=str(year) if year else(str(Pj-1) if Pj else n[n>=.8*n.max()].index[-1])
   s=r.set_index('Economy')[y].dropna().sort_values();ax.barh(s.index,s.values,color=B);ax.set_xlabel(r0['Unit'])
   return fin(f,ax,r0,f"{r0['Indicator']}, {y}")
  for lab,v in zip(r['Economy'] if r['Indicator'].nunique()==1 else r['Indicator'],V.values):ax.plot(x,v,lw=2,label=lab)
+ ax.xaxis.get_major_locator().set_params(integer=True)
  if Pj and x[-1]>=Pj:
   ax.axvspan(Pj-.5,x[-1]+.5,color='gray',alpha=.15);ax.text(Pj,.97,' IMF projections',transform=ax.get_xaxis_transform(),va='top',fontsize=9,color='gray')
  if np.nanmin(V.values)<0<np.nanmax(V.values):ax.axhline(0,color='k',lw=.8)
@@ -57,4 +63,4 @@ def user_gap(ratio,name='User data',lamb=None):
  s=pd.Series(ratio,dtype=float).dropna();s.index=[str(i) for i in s.index];q='Q' in s.index[0];l=lamb or(4e5 if q else 1e5)
  t=hp(s.values,l);t[:40 if q else 10]=np.nan;cite=f'User-provided data; trend: one-sided HP filter (lambda {l:,.0f})'
  return pd.DataFrame([{'Economy':name,'Indicator code':k,'Indicator':k,'Unit':'','Citation':cite,'Source link':'',**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
-print('Tools ready:',[n for n in('chart','fsi_heatmap','user_gap') if n in globals()],'| data:',[n for n in('D','F','CQ','M','Bk','CS') if globals()[n] is not None])
+print('Tools ready',[k for k in'D F CQ M Bk CS Lp Mp H'.split() if globals()[k] is not None])

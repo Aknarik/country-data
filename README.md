@@ -50,6 +50,9 @@ a Microsoft 365 Copilot agent that charts them with Code interpreter. See
   (λ = 400,000 quarterly, 100,000 annual) and the credit-to-GDP gap, 44 economies
 - `IMF_MFS_credit_to_GDP.xlsx`: the same for Gulf countries BIS doesn't cover (Kuwait, UAE, Qatar, Oman),
   from IMF Monetary and Financial Statistics credit ÷ WEO annual GDP (λ = 100,000)
+- `IMF_MFS_banking_sector.xlsx`: banking sector balance sheet (151 economies): credit to the economy, sovereign-bank nexus, equity, foreign assets
+- `IMF_iMaPP_macroprudential.xlsx`: macroprudential tools in place and actions (IMF iMaPP, 135 economies)
+- Loan portfolio by sector (106 economies) in the FSI workbook; BIS credit to households and corporates in the BIS workbook
 - `IMF_FSI_heatmaps.xlsx`: colour-filled Excel FSI vulnerability heat maps for all 157 countries (one sheet each, with an index)
 - `IMF_FSAP_reports_catalog.xlsx`: the 21 IMF FSAP reports for GCC countries (2001–2024) with links; with
   the report PDFs added as knowledge, the agent answers questions on FSAP findings and recommendations

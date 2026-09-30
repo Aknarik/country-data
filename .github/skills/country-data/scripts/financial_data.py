@@ -342,6 +342,40 @@ def bank_balance_sheet(countries="all", start=2000):
 
 
 # --------------------------------------------------------------------------- #
+# Loan portfolio by borrowing sector (IMF FSI balance sheet, deposit takers)
+# --------------------------------------------------------------------------- #
+LOAN_SECTORS = {"NINTBKF4_T_S11_A_XDC": ("LOANS_NFC_SH", "Non-financial corporations"),
+                "NINTBKF4_T_ODS_A_XDC": ("LOANS_HH_SH", "Households and other domestic sectors"),
+                "NINTBKF4_T_S12R_A_XDC": ("LOANS_OFC_SH", "Other financial corporations"),
+                "NINTBKF4_S13_A_XDC": ("LOANS_GOV_SH", "General government"),
+                "NINTBKF4_T_S13_A_XDC": ("LOANS_GOV_SH", "General government"),
+                "NINTBKF4_T_NRES_A_XDC": ("LOANS_NRES_SH", "Nonresidents")}
+LOAN_RRE = ("RREF4_XDC", "LOANS_RRE_SH", "Residential real estate loans (memo: part of the sectors above)")
+
+
+def loan_portfolio(countries="all", freq="Q"):
+    """Deposit takers' customer (non-interbank) loans by borrowing sector, as % of total customer
+    loans, from the IMF FSI balance-sheet data (IMF.STA:FSIBSIS). Long DataFrame:
+    country, period, code, name, value."""
+    codes = list(LOAN_SECTORS) + [LOAN_RRE[0]]
+    raw = _imf_csv("IMF.STA/FSIBSIS", f"{_codes(countries)}.S12CFSI.{'+'.join(codes)}.{freq}")
+    if raw.empty:
+        raise RuntimeError(f"No IMF FSI loan data for {countries}")
+    raw["key"] = raw["INDICATOR"].map(lambda c: LOAN_SECTORS[c][0] if c in LOAN_SECTORS else LOAN_RRE[1])
+    w = raw.pivot_table(index=["COUNTRY", "TIME_PERIOD"], columns="key", values="OBS_VALUE", aggfunc="first")
+    sectors = [k for k in dict.fromkeys(v[0] for v in LOAN_SECTORS.values()) if k in w]
+    total = w[sectors].sum(axis=1, min_count=2)
+    names = {**{v[0]: v[1] for v in LOAN_SECTORS.values()}, LOAN_RRE[1]: LOAN_RRE[2]}
+    out = []
+    for k in sectors + ([LOAN_RRE[1]] if LOAN_RRE[1] in w else []):
+        share = (100 * w[k] / total).dropna()
+        out.append(pd.DataFrame({"country": share.index.get_level_values(0),
+                                 "period": share.index.get_level_values(1),
+                                 "code": k, "name": names[k], "value": share.values}))
+    return pd.concat(out, ignore_index=True)
+
+
+# --------------------------------------------------------------------------- #
 # BIS total credit by borrowing sector (% of GDP)
 # --------------------------------------------------------------------------- #
 BIS_SECTORS = {("H", "A"): ("CREDIT_HH_GDP", "Credit to households (all lenders)"),
