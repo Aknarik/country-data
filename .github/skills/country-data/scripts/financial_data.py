@@ -319,17 +319,17 @@ BANK_INDICATORS = {
     "BANK_FOREIGN_LIAB_TA": ("Liabilities to nonresidents to total assets", "Percent of total assets",
                              lambda d: 100 * d.liab_nonres / d.assets),
     # Asset structure (shares add up to 100): for stacked bar / pie charts
-    "BANK_STR_PRIV": ("Asset structure: private sector and other financial corporations", "Percent of total assets",
+    "BANK_STR_PRIV": ("Asset structure: Private sector and other financial corporations", "Percent of total assets",
                       lambda d: 100 * (d.claims_other_sectors - d.claims_pubnfc.fillna(0)) / d.assets),
-    "BANK_STR_PUBNFC": ("Asset structure: public non-financial corporations", "Percent of total assets",
+    "BANK_STR_PUBNFC": ("Asset structure: Public non-financial corporations", "Percent of total assets",
                         lambda d: 100 * d.claims_pubnfc / d.assets),
-    "BANK_STR_GOV": ("Asset structure: central government", "Percent of total assets",
+    "BANK_STR_GOV": ("Asset structure: Central government", "Percent of total assets",
                      lambda d: 100 * d.claims_gov / d.assets),
-    "BANK_STR_NRES": ("Asset structure: nonresidents (foreign assets)", "Percent of total assets",
+    "BANK_STR_NRES": ("Asset structure: Nonresidents (foreign assets)", "Percent of total assets",
                       lambda d: 100 * d.claims_nonres / d.assets),
-    "BANK_STR_CB": ("Asset structure: central bank", "Percent of total assets",
+    "BANK_STR_CB": ("Asset structure: Central bank", "Percent of total assets",
                     lambda d: 100 * d.claims_cb / d.assets),
-    "BANK_STR_OTHER": ("Asset structure: other assets", "Percent of total assets",
+    "BANK_STR_OTHER": ("Asset structure: Other assets", "Percent of total assets",
                        lambda d: 100 - 100 * (d.claims_other_sectors + d.claims_gov.fillna(0) + d.claims_nonres.fillna(0)
                                               + d.claims_cb.fillna(0)) / d.assets),
 }

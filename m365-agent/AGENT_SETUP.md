@@ -113,11 +113,11 @@ def chart(r,a=2000,b=2031,kind='line',year=None):
   g=V.values[I.index('CREDIT_GDP_GAP')];a2.bar(x,g,width=.22 if '-Q' in c[0] else .8,color=['#c0392b' if v>=0 else B for v in g])
   for h in(2,10):a2.axhline(h,color='gray',ls=':',lw=1)
   a2.axhline(0,color='k',lw=.8);a2.set_ylabel('Gap, pp of GDP');a2.grid(alpha=.3);ax.set_ylabel('% of GDP');ax.legend(frameon=False)
-  return fin(f,ax,r0,r0['Economy']+': credit-to-GDP ratio, trend and gap')
+  return fin(f,ax,r0,r0['Economy']+': Credit-to-GDP ratio, trend and gap')
  f,ax=plt.subplots(figsize=(10,5.5))
  if kind in('stack','pie'):
   k=(r['Indicator code']!='LOANS_RRE_SH').values;v=np.nan_to_num(V.values[k]);L=np.array([re.sub('.*: ','',i) for i in r['Indicator'][k]]);m=v.sum(0)>90
-  t=r0['Economy']+(': loan portfolio' if 'LOANS' in r0['Indicator code'] else ': bank asset structure')+' (% of total)'
+  t=r0['Economy']+(': Loan portfolio' if 'LOANS' in r0['Indicator code'] else ': Bank asset structure')+' (% of total)'
   if kind=='pie':
    j=[i for i in range(len(c)) if m[i] and(year is None or c[i][:4]==str(year))][-1];p=v[:,j]>0
    ax.pie(v[p,j],labels=L[p],autopct='%1.0f%%');return fin(f,ax,r0,t+', '+c[j])
