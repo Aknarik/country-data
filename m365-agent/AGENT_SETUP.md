@@ -264,6 +264,22 @@ link (save it under the name in the catalog's **PDF file name** column, e.g.
 To add more reports (other countries or newer FSAPs), add rows to `fsap_reports.csv`, run
 `python m365-agent/build_data_file.py --tools-only` and re-upload the catalog.
 
+## GCC central bank data (filling IMF gaps)
+
+`python m365-agent/build_gcc_central_banks.py` adds central bank statistics where IMF data is missing
+(written into the existing workbooks, so the agent needs no changes):
+
+| Country | Added | Source |
+|---|---|---|
+| Kuwait | Loan portfolio by sector (trade, industry, construction, real estate, household consumer and housing loans…), year-ends 2021–24 and quarterly since 2025 | CBK Monthly Monetary Statistical Bulletin, Table 13 |
+| Saudi Arabia | Bank credit by economic activity, quarterly 1996–2022 | SAMA Monthly Statistical Bulletin, Table 12d (via KAPSARC data portal; ends 2022) |
+| Bahrain | Financial soundness indicators (capital, NPLs, provisions, ROA, ROE, liquid assets), 2015–2026 → heat map | CBB Statistical Bulletin, Table 37 |
+| Bahrain | Bank asset structure and sovereign-bank nexus, 2016–2025 | CBB Statistical Bulletin, Table 17 (retail banks) |
+
+Not yet covered: **Oman** and **Qatar** (their bulletins are PDF only), and a **Bahrain credit gap** (the CBB
+monetary survey starts in 2016, too short for the 10-year HP filter start).
+Rerun the script after each new bulletin; it downloads the latest CBB Excel file automatically.
+
 ## About the "source" shown by Copilot
 
 The agent's answers and charts cite the original source, for example
