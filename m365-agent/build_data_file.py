@@ -117,7 +117,8 @@ def mfs_sheet():
     df = fd.mfs_credit_to_gdp_with_gap(fd.GULF_MFS)
     method = (f"Credit = depository corporations' claims on other sectors, incl. public non-financial "
               f"corporations (end of year); ratio = credit / nominal GDP x 100; trend: one-sided HP filter, "
-              f"lambda = {lamb:,}, from 10 years after the series start")
+              f"lambda = {lamb:,}, from the series start (first 10 years = start-up period); no gap for series "
+              f"under 20 years")
     rows = []
     for cty, g in df.groupby("country"):
         g = g.set_index("period")
@@ -400,7 +401,8 @@ def credit_sheet(annual):
     lamb = fd.LAMBDA["A" if annual else "Q"]
     df = fd.credit_to_gdp_with_gap("all", annual=annual)
     bis_names, iso3 = fd.bis_country_names(), fd.iso2_to_iso3()
-    method = (f"One-sided HP filter, lambda = {lamb:,}; trend from 10 years after the series start"
+    method = (f"One-sided HP filter, lambda = {lamb:,}; trend from the series start (first 10 years = "
+              f"start-up period, not published by BIS); no gap for series under 20 years"
               + ("; calendar-year averages of quarterly data" if annual else ""))
     rows = []
     for cty, g in df.groupby("country"):
@@ -533,6 +535,13 @@ def main():
     write_fsap_catalog(built)
 
     # 3. BIS credit-to-GDP with one-sided HP trend and gap
+    write_bis_book(built, refresh)
+
+    # 5. Banking sector balance sheet (IMF MFS, other depository corporations)
+    write_banking_book(countries, built, refresh)
+
+
+def write_bis_book(built, refresh):
     credit_q, credit_a = credit_sheet(annual=False), credit_sheet(annual=True)
     write_book(HERE / BIS_FILE, {
         "README": [
@@ -541,8 +550,11 @@ def main():
             "Ratio: credit to the private non-financial sector from all sectors, % of GDP, adjusted for breaks.",
             "Trend: one-sided Hodrick-Prescott filter (at each quarter the filter uses only data up to that "
             "quarter). Sheet 'Credit_GDP_Quarterly': lambda 400,000. Sheet 'Credit_GDP_Annual': calendar-"
-            "year averages (complete years only), lambda 100,000. Trend starts 10 years after the series "
-            "starts, as in the BIS statistics; the quarterly trend and gap match BIS's published figures.",
+            "year averages (complete years only), lambda 100,000. The filter starts at the first observation and "
+            "the trend is shown from there; the first 10 years are a start-up period (less reliable; BIS does "
+            "not publish them). From year 11 on, the quarterly trend and gap match BIS's published figures "
+            "exactly (checked for Saudi Arabia, UK, US, China, Germany, Turkey). No trend or gap is computed "
+            "for series shorter than 20 years.",
             "Gap = ratio - trend, in percentage points of GDP. Basel III countercyclical buffer guide: "
             "a gap above 2 pp may signal a buffer build-up; above 10 pp the maximum buffer.",
             "Rows: 3 per economy (CREDIT_GDP, CREDIT_GDP_TREND, CREDIT_GDP_GAP); one column per period.",
@@ -554,14 +566,15 @@ def main():
         "Latest": credit_latest(credit_q), "Credit_GDP_Quarterly": credit_q, "Credit_GDP_Annual": credit_a,
         "Credit_by_sector": credit_by_sector_sheet()})
 
-    # 5. Banking sector balance sheet (IMF MFS, other depository corporations)
-    write_banking_book(countries, built, refresh)
-
 
 GAP_GUIDANCE = [
-    "USER-BUILT GAPS: RECOMMENDED DATA LENGTH. Use at least 20 years (80 quarters) of credit-to-GDP data where "
-    "possible, and never less than 10 years. The first 10 years only start the one-sided HP trend and are not "
-    "reported, so with 10-20 years of data the gap covers fewer than 10 years and should be read with caution.",
+    "DATA LENGTH RULE (this tool): a gap is computed only when at least 20 years (80 quarters) of "
+    "credit-to-GDP data are available. The one-sided HP filter starts at the first observation and the "
+    "trend is shown from there, but the first 10 years are a start-up period: the trend is still settling "
+    "and is sensitive to the starting year (charts shade it). BIS publishes the gap only from year 11.",
+    "Basel guidance: BCBS (2010, Annex 1, p. 19) defines the trend as 'a one sided Hodrick-Prescott filter "
+    "with a high smoothing parameter' where 'only information available at each point in time is used', "
+    "lambda 400,000 on quarterly data; it sets no minimum data length.",
     "Why: Drehmann and Tsatsaronis (2014, p. 14 of the article PDF) 'validate the practical rule of thumb that "
     "suggests using the credit gap only when at least 10 years of data for the credit-to-GDP ratio are already "
     "available', but note that at the start of a series 'it can take 20 years for measurement differences to "
@@ -626,8 +639,8 @@ def write_banking_book(countries, built, refresh):
             "The narrower 'claims on private sector' series is not used because it has a reclassification "
             "break for Kuwait.",
             "Ratio = credit / annual nominal GDP x 100. The latest year's GDP may be an IMF estimate.",
-            "Trend: one-sided Hodrick-Prescott filter, lambda 100,000 (annual data), reported from 10 years "
-            "after the series start. Gap = ratio - trend, percentage points of GDP.",
+            "Trend: one-sided Hodrick-Prescott filter, lambda 100,000 (annual data), from the series start; the "
+            "first 10 years are a start-up period (less reliable). Gap = ratio - trend, percentage points of GDP.",
             "Oil-price swings move GDP, so the ratio jumps when oil prices fall (e.g. 2009, 2015, 2020).",
             "Sheet 'Latest': latest ratio, trend and gap for each economy.",
             *GAP_GUIDANCE,
@@ -722,7 +735,11 @@ def write_tools():
 
 
 if __name__ == "__main__":
-    if "--banking-only" in sys.argv:
+    if "--credit-only" in sys.argv:  # BIS + IMF MFS credit (and banking) workbooks
+        stamp, note = time.strftime("%Y-%m-%d"), "To refresh: run m365-agent/build_data_file.py and re-upload."
+        write_bis_book(stamp, note)
+        write_banking_book(cd.country_names(), stamp, note)
+    elif "--banking-only" in sys.argv:
         write_banking_book(cd.country_names(), time.strftime("%Y-%m-%d"),
                            "To refresh: run m365-agent/build_data_file.py and re-upload.")
     elif "--tools-only" in sys.argv:

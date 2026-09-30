@@ -62,7 +62,10 @@ BIS_SDMX = "https://stats.bis.org/api/v2"
 HEADERS = {"User-Agent": "python-requests/2.34 country_data.py"}
 LAMBDA = {"Q": 400_000, "A": 100_000}
 PERIODS_PER_YEAR = {"Q": 4, "A": 1}
-MIN_YEARS = 10  # BIS publishes a trend only after 10 years of data
+MIN_YEARS = 0  # trend shown from the first observation (BIS shows it only after 10 years; values after
+#               that are identical, since the one-sided filter always uses all data from the start)
+START_UP_YEARS = 10  # first years of the trend: start-up period, flagged as less reliable
+MIN_SPAN_YEARS = 20  # no trend or gap for series shorter than this (project rule, conservative)
 GULF_MFS = ["KWT", "ARE", "QAT", "OMN"]  # Saudi Arabia: use BIS (longer); Bahrain: no MFS data
 GULF_NAMES = {"KWT": "Kuwait", "ARE": "United Arab Emirates", "QAT": "Qatar", "OMN": "Oman",
               "SAU": "Saudi Arabia", "BHR": "Bahrain"}
@@ -134,8 +137,9 @@ def hp_one_sided(series, lamb=None, freq=None, min_obs=None):
 
     trend[t] = last value of the two-sided HP trend fitted on observations up to t.
     lamb defaults to 400,000 for quarterly and 100,000 for annual data.
-    Missing values are dropped first. min_obs (default: 10 years + 1 period) is the
-    number of observations needed before a trend is reported; use 1 for all periods."""
+    Missing values are dropped first. The filter always starts at the first observation.
+    min_obs (default: from the first period) is the number of observations before a trend is
+    reported. Series shorter than MIN_SPAN_YEARS get no trend (all NaN)."""
     s = pd.Series(series).dropna().astype(float)
     freq = freq or _infer_freq(s.index)
     if lamb is None:
@@ -144,6 +148,8 @@ def hp_one_sided(series, lamb=None, freq=None, min_obs=None):
         min_obs = MIN_YEARS * PERIODS_PER_YEAR[freq] + 1
     y = s.to_numpy()
     trend = np.full(len(y), np.nan)
+    if len(y) < MIN_SPAN_YEARS * PERIODS_PER_YEAR[freq]:
+        return pd.Series(trend, index=s.index, name="trend")
     for t in range(max(min_obs, 1), len(y) + 1):
         trend[t - 1] = hp_two_sided(y[:t], lamb)[-1]
     return pd.Series(trend, index=s.index, name="trend")

@@ -8,7 +8,7 @@ def _s(s):s=pd.Series(s,dtype=float).dropna();s.index=[re.sub(r'^(\d{4})\D*Q(\d)
 def user_gap(credit,gdp=None,name='User data',lam=None):
  s=_s(credit);q='-Q' in s.index[0]
  if gdp is not None:g=_s(gdp);g=g.rolling(4).sum() if q else g;s=(100*s/g.reindex(s.index)).dropna()
- assert len(s)>(40 if q else 10),'Need over 10 years; 20+ recommended';len(s)<(80 if q else 20) and print('Caution: under 20 years, gap less reliable');l=lam or(4e5 if q else 1e5);t=hp(s.values,l);t[:40 if q else 10]=np.nan
+ assert len(s)>=(80 if q else 20),'Need 20+ years of data';l=lam or(4e5 if q else 1e5);t=hp(s.values,l)
  c=f'{name}: user data; one-sided HP filter, lambda {l:,.0f} (BCBS 2010)'
  return pd.DataFrame([{'Economy':name,'Economy code':name,'Indicator code':k,'Citation':c,**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
 def buffer(g):return 0 if g<2 else 2.5 if g>10 else round((g-2)/8*2.5,2)
@@ -20,6 +20,8 @@ def gap(r,a=2000,mpp=True):
  g=v('CREDIT_GDP_GAP');a2.bar(x,g,width=.22 if '-Q' in c[0] else .8,color=['#c0392b' if z>=0 else BLUE for z in g]);last(a2,x,g)
  a2.axhspan(2,10,color='#c0392b',alpha=.07);a2.text(x[0],10,' Basel range 2-10 pp',fontsize=7,color='#c0392b',va='bottom')
  a2.xaxis.get_major_locator().set_params(integer=True);a2.axhline(0,color='k',lw=.8);a2.set_ylabel('Gap, pp of GDP');ax.set_ylabel('Percent of GDP');a2.grid(alpha=.3);ax.grid(alpha=.3)
+ s0=num([k for k in per(r) if pd.notna(I.loc['CREDIT_GDP',k])])[0]+10
+ if s0>x[0]:[z.axvspan(x[0]-.5,s0-.5,color='gray',alpha=.12) for z in(ax,a2)];ax.text(x[0],.98,' Start-up (first 10 years)',transform=ax.get_xaxis_transform(),va='top',fontsize=7,color='dimgray')
  leg(a2,ax,-.2);gv=g[~np.isnan(g)][-1];lg=np.array(c)[~np.isnan(g)][-1]
  title(ax,f"{r['Economy'].iloc[0]}: Credit-to-GDP ratio, trend and gap",f"Latest {lg}: gap {gv:.1f} pp, Basel guide buffer {buffer(gv)} percent");source(f,r)
  e=r['Economy code'].iloc[0]
@@ -32,7 +34,7 @@ N='A tool introduced is in place unless later removed; No = no action since 1990
 def mpp_table(cty):
  t=pick(MP,cty)
  if t.empty:return print(cty,'is not in the IMF iMaPP Database.')
- o=t.iloc[:,2:7].fillna('');o['Latest measure']=o['Latest measure'].str[:170];print(o.to_string(index=False),N,sep='\n');return o
+ o=t.iloc[:,2:7].fillna('');print(o.to_string(index=False),N,sep='\n');return o
 def mpp_compare(ctys,tools=None):
  t=MP[MP['Tool'].str.contains('|'.join(tools),case=False)] if tools else pick(MP,ctys)
  t=t.assign(c=[f'Yes, since {a[:4]}, latest {b[:4]}'+(', '+l if l==l and l else '') for a,b,l in t.iloc[:,3:6].values])
