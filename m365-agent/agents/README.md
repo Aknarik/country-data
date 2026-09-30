@@ -13,6 +13,12 @@ loads only its own data (faster, fewer time-outs). They can be combined later.
 
 The instructions for each agent are in `<agent folder>/INSTRUCTIONS.txt` (all under 8,000 characters).
 
+## Ready-to-upload package
+
+Run `python m365-agent/agents/build_package.py`. It creates `copilot_agents_package/` (git-ignored, contains
+confidential HEAT data) with one folder per agent: `INSTRUCTIONS.txt` (paste), `SETUP.txt` (name, description,
+starter prompts, test question) and `knowledge/` (exactly the files to upload). Rerun after every update.
+
 ## Create each agent (repeat 4 times)
 
 1. Microsoft 365 Copilot → **Agents → Create agent** → **Configure** tab.
