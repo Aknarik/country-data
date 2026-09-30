@@ -218,7 +218,8 @@ def build_imapp(path):
         "Economy code": in_place["Economy code"], "Economy": in_place["Economy"], "Tool": in_place["Tool"],
         "In place since": in_place["First action"],
         "Latest change": in_place["Latest action"] + ", " + in_place["Latest direction"],
-        "Level change (percent)": in_place["Level change (percent)"],
+        "Level change (percent)": [lv or (m.replace("%", " percent") if str(m).startswith("average LTV") else "")
+                                   for lv, m in zip(in_place["Level change (percent)"], in_place["Magnitude note"].fillna(""))],
         "Latest measure": in_place["Latest description"].str.replace("%", " percent").str.slice(0, 400),
         "Citation": IMAPP_CITATION})
     # Official tool definitions from the iMaPP table of contents (C1.CCB ... C17.Other, A1.LTV_average)
