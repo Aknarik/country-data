@@ -1,5 +1,5 @@
 CQ=T('BIS_credit','Credit_GDP_Quarterly');M=T('IMF_MFS_credit','Credit_GDP_Annual');CS=T('BIS_credit','Credit_by_sector')
-MP=T('iMaPP','Summary')
+MP=T('iMaPP','Tools_in_place')
 def hp(y,lam):
  o=[]
  for t in range(1,len(y)+1):d=np.diff(np.eye(t),2,axis=0);o.append(y[t-1] if t<3 else np.linalg.solve(np.eye(t)+lam*d.T@d,y[:t])[-1])
@@ -29,9 +29,7 @@ def sectors(cty,a=2000):
  for lab,z in zip(r['Indicator'],vals(r,c)):l,=ax.plot(num(c),z,lw=2,label=lab);last(ax,num(c),z,l.get_color())
  ax.grid(alpha=.3);leg(ax);title(ax,f"{r['Economy'].iloc[0]}: Credit by borrower sector",'Percent of GDP');source(f,r)
 def mpp_table(cty):
- t=pick(MP,cty);c=t['Tool code'];t=t[[not(k in('Capital','LCG','LoanR') and c.str.startswith(k+'_').any()) for k in c]].sort_values('Latest action',ascending=False)
- P=lambda z:z.replace('%',' percent') if isinstance(z,str) else ''
- o=pd.DataFrame({'Tool':t['Tool'],'In place since':t['First action'],'Latest change':t['Latest action']+', '+t['Latest direction'],
-  'Level, percent':[(f'{a:g} to {b:g}' if a==a else f'{b:g}') if b==b else P(m) for a,b,m in zip(t['Previous level (%)'],t['New level (%)'],t['Magnitude note'])],
-  'Latest measure':t['Latest description'].map(P).str.slice(0,170)})
+ t=pick(MP,cty)
+ if t.empty:return print(f'{cty} is not in the IMF iMaPP Database.')
+ o=t.iloc[:,2:7].fillna('');o['Latest measure']=o['Latest measure'].str.slice(0,170)
  print(o.to_string(index=False));print('iMaPP records changes: a tool introduced once counts as in place unless the latest measure removed it. Source: IMF iMaPP Database (Alam et al., 2019).');return o

@@ -90,6 +90,31 @@ def magnitude(text):
     return None, None, None, (f"{m.group(1)}% stated" if m else "")
 
 
+LABEL = re.compile(r"\b([A-Z][A-Z0-9-]{1,6}(?=s?\b)|(?i:advances to stable resources|debt-to-income|"
+                   r"loan-to-value|loan-to-deposit|reserve requirements?|cash reserve|capital conservation "
+                   r"buffer|countercyclical (?:capital )?buffer|liquidity coverage|net stable funding|"
+                   r"leverage ratio|risk weights?|provisions?|capital adequacy))")
+PAIR = re.compile(r"from " + NUM + r" to " + NUM + r"|to " + NUM + r"[^.;]{0,40}?from " + NUM, re.I)
+SKIP = {"THE", "AND", "FOR", "ALL", "NEW", "IFRS", "IFRS9", "SAR", "USD", "US", "KD", "QR", "AED", "DATE", "COVID",
+        "COVID-19", "GDP", "IMF", "BIS", "SME", "CBK", "CBUAE", "SAMA", "CBB", "CBO", "QCB", "BCBS", "EU", "ECB"}
+
+
+def level_changes(text):
+    """All 'from X% to Y%' changes in an iMaPP description, each labelled with the nearest ratio name
+    before it in the same sentence, e.g. 'LAR 7 to 10; advances to stable resources 110 to 100'."""
+    t = re.sub(r"\s+", " ", str(text or ""))
+    out = []
+    for m in PAIR.finditer(t):
+        old, new = (m.group(1), m.group(2)) if m.group(1) else (m.group(4), m.group(3))
+        start = max(t.rfind(".", 0, m.start()), t.rfind(";", 0, m.start())) + 1
+        names = [x for x in LABEL.findall(t[start:m.start()]) if x.upper() not in SKIP]
+        lab = names[-1] if names else ""
+        item = f"{lab} {float(old):g} to {float(new):g}".strip()
+        if item not in out:
+            out.append(item)
+    return "; ".join(out)
+
+
 def latest_ltv(xl):
     """Latest average LTV limit per country (iMaPP LTV_average sheet: months x countries)."""
     try:
@@ -181,10 +206,21 @@ def build_imapp(path):
                            "Latest action": f"{int(last['Year'])}-{int(last['Month']):02d}",
                            "Latest direction": "tightening" if lt and not ll else "loosening" if ll and not lt else "both",
                            "Previous level (%)": mag[0], "New level (%)": mag[1], "Change (pp)": mag[2],
-                           "Magnitude note": mag[3],
+                           "Magnitude note": mag[3], "Level change (percent)": level_changes(text),
                            "Latest description": re.sub(r"\s+", " ", text)[:600],
                            "Citation": IMAPP_CITATION})
     summary = pd.DataFrame(s_rows)
+    agg = {"Capital", "LCG", "LoanR"}  # '(all)' rows, dropped when the sub-tools are listed
+    keep = [not (t in agg and ((summary["Economy code"] == e) & summary["Tool code"].str.startswith(t + "_")).any())
+            for e, t in zip(summary["Economy code"], summary["Tool code"])]
+    in_place = summary[keep].sort_values(["Economy", "Latest action"], ascending=[True, False])
+    in_place = pd.DataFrame({
+        "Economy code": in_place["Economy code"], "Economy": in_place["Economy"], "Tool": in_place["Tool"],
+        "In place since": in_place["First action"],
+        "Latest change": in_place["Latest action"] + ", " + in_place["Latest direction"],
+        "Level change (percent)": in_place["Level change (percent)"],
+        "Latest measure": in_place["Latest description"].str.replace("%", " percent").str.slice(0, 400),
+        "Citation": IMAPP_CITATION})
     # Official tool definitions from the iMaPP table of contents (C1.CCB ... C17.Other, A1.LTV_average)
     toc = xl.parse("TOC", header=None)
     defs = []
@@ -207,11 +243,15 @@ def build_imapp(path):
             "2020), first and latest action, direction and the IMF's text description of the latest action.",
             "Sheet 'Actions': net actions per economy, tool and year (tightenings minus loosenings).",
             "Sheet 'Definitions': the IMF's official definition of each tool (e.g. LTV, DSTI, CCB).",
+            "Sheet 'Tools_in_place': one table per economy - every tool introduced (in place unless the latest "
+            "measure removed it), since when, latest change, level changes (each 'from X to Y' in the text, "
+            "labelled with its ratio, e.g. LAR 7 to 10) and the latest measure. Aggregate '(all)' tools are left "
+            "out when their sub-tools are listed. Economies not in iMaPP (e.g. Qatar) have no rows.",
             "Tools: " + "; ".join(f"{k} = {v}" for k, v in TOOLS.items()) + ".",
             "iMaPP records policy actions (changes), not whether a tool is currently in force; a tool with "
             "tightenings and no later full loosening is likely still in use - check the description.",
             "Cite: " + IMAPP_CITATION + ". " + IMAPP_LINK],
-        "Definitions": definitions, "Summary": summary, "Actions": actions})
+        "Definitions": definitions, "Tools_in_place": in_place, "Summary": summary, "Actions": actions})
     print(f"iMaPP: {len(names)} economies, {len(summary)} economy-tool records, {time.time() - t0:.0f}s",
           file=sys.stderr)
 

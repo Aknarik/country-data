@@ -15,7 +15,7 @@ FUNCTIONS (country = ISO3 code or name, e.g. 'KWT')
   (indexed '2010' or '2010-Q1'); then gap(user_gap(...)) (mpp=False if not a country).
   First tell the user: 20+ years (80 quarters) recommended, over 10 years minimum. Non-oil GDP = user data.
 - sectors('GBR'): household vs corporate credit (BIS economies only).
-- mpp_table('KWT'): tools in place: since, latest change, level (previous to new), latest measure.
+- mpp_table('KWT'): tools in place: since, latest change, level changes, latest measure (sheet Tools_in_place).
 
 INTERPRETATION
 - Gap = ratio minus trend (pp of GDP); buffer guide 0 percent below 2 pp, rising to 2.5 percent at 10 pp.
