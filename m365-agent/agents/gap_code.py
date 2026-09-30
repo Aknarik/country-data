@@ -8,7 +8,7 @@ def _s(s):s=pd.Series(s,dtype=float).dropna();s.index=[re.sub(r'^(\d{4})\D*Q(\d)
 def user_gap(credit,gdp=None,name='User data',lam=None):
  s=_s(credit);q='-Q' in s.index[0]
  if gdp is not None:g=_s(gdp);g=g.rolling(4).sum() if q else g;s=(100*s/g.reindex(s.index)).dropna()
- l=lam or(4e5 if q else 1e5);t=hp(s.values,l);t[:40 if q else 10]=np.nan
+ assert len(s)>(40 if q else 10),'Need more than 10 years of data for a Basel gap';l=lam or(4e5 if q else 1e5);t=hp(s.values,l);t[:40 if q else 10]=np.nan
  c=f'{name}: user data; own calculation, one-sided HP filter (lambda {l:,.0f}), Basel III method (BCBS 2010)'
  return pd.DataFrame([{'Economy':name,'Economy code':name,'Indicator code':k,'Citation':c,**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
 def buffer(g):return 0 if g<2 else 2.5 if g>10 else round((g-2)/8*2.5,2)
@@ -19,7 +19,7 @@ def gap(r,a=2000,mpp=True):
  ax.plot(x,v('CREDIT_GDP'),lw=2.2,color=BLUE,label='Credit-to-GDP ratio');ax.plot(x,v('CREDIT_GDP_TREND'),'--',lw=2,color='#e67e22',label='One-sided HP trend')
  g=v('CREDIT_GDP_GAP');a2.bar(x,g,width=.22 if '-Q' in c[0] else .8,color=['#c0392b' if z>=0 else BLUE for z in g])
  a2.axhspan(2,10,color='#c0392b',alpha=.07);a2.text(x[0],10,' Basel buffer range 2-10 pp',fontsize=7,color='#c0392b',va='bottom')
- a2.axhline(0,color='k',lw=.8);a2.set_ylabel('Gap, pp of GDP');ax.set_ylabel('% of GDP');a2.grid(alpha=.3);ax.grid(alpha=.3)
+ a2.xaxis.get_major_locator().set_params(integer=True);a2.axhline(0,color='k',lw=.8);a2.set_ylabel('Gap, pp of GDP');ax.set_ylabel('% of GDP');a2.grid(alpha=.3);ax.grid(alpha=.3)
  m=MA[(MA['Economy code']==r['Economy code'].iloc[0])&MA['Indicator code'].isin(TOOLS)] if mpp else MA[:0]
  if len(m):
   n=m[per(m)].apply(pd.to_numeric,errors='coerce').sum();n=n[(n!=0)&(n.index.astype(int)>=x[0])]
@@ -28,7 +28,7 @@ def gap(r,a=2000,mpp=True):
  ax.legend(frameon=False,fontsize=8);gv=g[~np.isnan(g)][-1];lg=np.array(c)[~np.isnan(g)][-1]
  title(ax,f"{r['Economy'].iloc[0]}: credit-to-GDP ratio, trend and gap",f"Latest {lg}: gap {gv:.1f} pp, Basel guide buffer {buffer(gv)}%");source(f,r,m)
 def sectors(cty,a=2000):
- r=pick(CS,cty);c=[k for k in per(r,a) if r[k].notna().any()];f,ax=plt.subplots(figsize=(10.5,5.5))
+ r=pick(CS,cty);assert len(r),'No BIS sector data for '+cty;c=[k for k in per(r,a) if r[k].notna().any()];f,ax=plt.subplots(figsize=(10.5,5.5))
  for lab,z in zip(r['Indicator'],vals(r,c)):ax.plot(num(c),z,lw=2,label=lab)
  ax.grid(alpha=.3);ax.legend(frameon=False,fontsize=8);title(ax,f"{r['Economy'].iloc[0]}: credit by borrower sector",'% of GDP');source(f,r)
 def mpp_table(cty):

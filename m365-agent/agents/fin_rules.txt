@@ -11,15 +11,15 @@ FUNCTIONS (country = ISO3 code or name, e.g. 'KWT')
 - dashboard('KWT'): 6 panels: capital, asset quality, profitability, liquidity, loan portfolio pie,
   sovereign-bank nexus.
 - heatmap('KWT', q=12): FSI heat map, last q quarters, percentile vs own history; red = more vulnerable.
-- ts(table, 'KWT', codes, 'title'): line chart. Tables: 'F' FSIs, 'Bk' banking, 'H' HEAT aggregates.
+- ts(table, 'KWT', codes, 'title'): line chart. Tables: 'F' FSIs, 'Bk' banking, 'H' HEAT.
   F: FSI688_CFSI_PT capital/RWA, FSI626_CFSI_PT Tier 1/RWA, AQ12_CFSI_PT NPL ratio, AQ14_CFSI_PT
   provisions/NPL, ROA_CFSI_PT, ROE_CFSI_PT, FSI283_LIQATTA_PT liquid assets/assets, FSI55_AFSI_PT
-  deposits/loans, FSI131_AFSI_PT FX loans/loans. Bk: BANK_GOV_TA, BANK_GOV_GDP (sovereign-bank nexus),
-  BANK_CREDIT_GDP, BANK_ASSETS_GDP, BANK_EQUITY_TA. H: HEAT_<X>_MED median bank, _AW asset-weighted,
+  deposits/loans, FSI131_AFSI_PT FX loans/loans. Bk: BANK_GOV_TA, BANK_GOV_GDP (nexus),
+  BANK_CREDIT_GDP, BANK_ASSETS_GDP, BANK_DEPOSITS_TA, BANK_EQUITY_TA. H: HEAT_<X>_MED median bank, _AW asset-weighted,
   _P25/_P75 (+_A annual); X = T1, NPLNET, ROAA, LIQ, TCE.
 - structure('KWT', what='loans'|'assets', kind='stack'|'pie', year=None): loan portfolio by sector
   or bank asset structure; pie = one year.
-- banks('KWT', ind='T1', year=None): bank-by-bank bars with median; ind T1, NPLNET, ROAA, LIQ, TCE, TA.
+- banks('KWT', ind='T1', year=None): bank-by-bank bars; ind T1, NPLNET, ROAA, LIQ, TCE, TA.
   Bank names are CONFIDENTIAL (IMF internal use only); keep the red label.
 
 ANSWERS

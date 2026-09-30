@@ -4,10 +4,10 @@ def get(n,cty,codes=None):
  r=pick(_C[n],cty);return r if codes is None else r[r['Indicator code'].isin([codes] if isinstance(codes,str) else codes)]
 def lines(ax,r,a=2010):
  c=[k for k in per(r,a) if r[k].notna().any()];ax.grid(alpha=.3)
- for lab,v in zip(r['Indicator'],vals(r,c)):ax.plot(num(c),v,lw=2,label=lab.split(': ')[-1].capitalize())
+ for lab,v in zip(r['Indicator'],vals(r,c)):ax.plot(num(c),v,lw=2,label=(l:=lab.split(': ')[-1])[0].upper()+l[1:])
  ax.legend(frameon=False,fontsize=7)
 def ts(n,cty,codes,t,a=2010):
- r=get(n,cty,codes);f,ax=plt.subplots(figsize=(10.5,5.5));lines(ax,r,a);title(ax,f"{r['Economy'].iloc[0]}: {t}",r['Unit'].iloc[0]);source(f,r)
+ r=get(n,cty,codes);f,ax=plt.subplots(figsize=(10.5,5.5));lines(ax,r,a);title(ax,f"{r['Economy'].iloc[0]}: {t}",'; '.join(r['Unit'].unique()));source(f,r)
 def heatmap(cty,q=12):
  r=get('F',cty).drop_duplicates('Indicator code');c=per(r);V=r[c].apply(pd.to_numeric,errors='coerce')
  k=(V.notna().sum(axis=1)>=8).values;r,V=r[k],V[k];R=V.apply(lambda s:(s.rank(method='min')-1)/(s.count()-1),axis=1)
