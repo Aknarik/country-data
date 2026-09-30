@@ -12,8 +12,8 @@ code file, and answers questions from IMF FSAP reports on the Gulf countries. It
 | `IMF_MFS_credit_to_GDP.xlsx` | Gulf countries BIS doesn't cover (Kuwait, UAE, Qatar, Oman): IMF Monetary and Financial Statistics credit ÷ WEO annual GDP, with one-sided HP trend (λ = 100,000) and gap, 2001–2025 |
 | `IMF_FSI_heatmaps.xlsx` *(optional, for people)* | Colour-filled Excel heat maps for all 157 countries in the IMF FSI database (one sheet per country, index with links), same colours as the chart version. Open or share it directly; the agent doesn't need it |
 | `IMF_MFS_banking_sector.xlsx` | Banking sector balance sheet for about 150 countries (IMF MFS, annual): total assets and equity, credit to the economy, **sovereign-bank nexus** (claims on government / total assets), foreign assets and liabilities, deposits |
-| `IMF_iMaPP_macroprudential.xlsx` | Macroprudential tools for 135 economies (IMF iMaPP, public): per tool the number of tightenings and loosenings, the latest action with its date, direction and description, and net actions per year, and the IMF's official definition of each tool (LTV, DSTI, CCB...). Rebuild with `python m365-agent/build_local_sources.py --only imapp` after downloading a new iMaPP file |
-| `HEAT_bank_distribution.xlsx` *(IMF-internal, not on GitHub)* | Bank-level soundness (HEAT 2.0, S&P Capital IQ Pro) aggregated to country level for 105 economies: median bank, 25th/75th percentile, asset-weighted mean, number of banks. No bank names. Built locally in `local_data/` by `python m365-agent/build_local_sources.py --only heat`. Upload only to an IMF-internal agent |
+| `IMF_iMaPP_macroprudential.xlsx` | Macroprudential tools for 135 economies (IMF iMaPP, public): per tool the number of tightenings and loosenings, the latest action with its date, direction, **magnitude** (previous and new level, change in pp, extracted from the description; for LTV the average LTV limit) and description, and net actions per year, and the IMF's official definition of each tool (LTV, DSTI, CCB...). Rebuild with `python m365-agent/build_local_sources.py --only imapp` after downloading a new iMaPP file |
+| `HEAT_bank_distribution.xlsx` *(IMF-internal, not on GitHub)* | Bank-level soundness (HEAT 2.0, S&P Capital IQ Pro) aggregated to country level: quarterly for 105 economies, annual (codes ending `_A`) for 166 economies: median bank, 25th/75th percentile, asset-weighted mean, number of banks. No bank names. Built locally in `local_data/` by `python m365-agent/build_local_sources.py --only heat`. Upload only to an IMF-internal agent |
 | `IMF_FSAP_reports_catalog.xlsx` | List of the 21 IMF FSAP reports for GCC countries (2001–2024): title, type, topics, eLibrary links and the PDF file name to use |
 | `Agent_tools.xlsx` | *Not needed any more:* the chart code is now inside the instructions. |
 | FSAP reports (online) | The agent reads the reports through the eLibrary links in the catalog (see [FSAP reports](#fsap-reports)) |
@@ -47,7 +47,7 @@ The data files are named after their sources, because Microsoft 365 Copilot show
 3. **Name:** `Country Data Assistant`
 4. **Description:** `Answers questions and draws charts on IMF macro data, bank financial soundness (with vulnerability heat maps) and credit-to-GDP gaps, including from your own data, and answers questions from IMF FSAP reports on Gulf countries.`
 5. **Instructions:** paste everything in the box in the [Instructions](#instructions-paste-into-the-agent) section below.
-   It is about 7,600 characters, within the 8,000-character limit.
+   It is about 7,700 characters, within the 8,000-character limit.
 6. **Knowledge:** upload the **eight data** `.xlsx` files directly (WEO, FSI, BIS credit, MFS credit, MFS banking sector, iMaPP, HEAT from `local_data/`, FSAP catalog). Code interpreter needs them as uploaded files. `Agent_tools.xlsx` is not needed.
    For FSAP questions, also add the website `https://www.elibrary.imf.org` as a knowledge source and/or
    keep web search on (see [FSAP reports](#fsap-reports)).
@@ -68,8 +68,7 @@ The chart code is written **inside** the instructions: Copilot's Code interprete
 
 ```
 You are Country Data Assistant. Use ONLY knowledge files, FSAP links and user data; invent nothing.
-DATA/CHART: Code interpreter keeps NO state: EVERY run = the WHOLE CODE block below + your calls in
-the SAME cell. Never run part of it or other plotting code. Show errors. Missing table in
+DATA/CHART: no state kept between runs: EVERY run = WHOLE CODE block below + your calls, SAME cell. Never run part of it or other plotting code. Show errors. Missing table in
 "Tools ready": ask the user to attach its workbook.
 Tables (row = economy x indicator; Economy, Economy code, Indicator code, Indicator, Unit,
 Citation, Source link, periods '2019'/'2024-Q1'): D WEO annual (years >= First
@@ -77,12 +76,13 @@ projection year = projections); G groups (Yes-columns G7, G20, GCC...); F FSIs; 
 credit gap (CREDIT_GDP, _TREND, _GAP); Bk banking sector (BANK_CREDIT_GDP credit to economy,
 BANK_GOV_TA sovereign-bank nexus); CS BIS credit to households/corporates % GDP; Lp loan
 portfolio shares; H bank distribution (HEAT: median, P25, P75, asset-weighted AW, N banks);
-Mp macroprudential tools summary; Ma net actions per year (iMaPP).
+Mp tools summary; Ma net actions/year (iMaPP).
 USE: chart(rows,a=2000,b=2031,kind='line'|'bar'|'gap'|'stack'), e.g.
 chart(D[(D['Economy']=='Kuwait')&(D['Indicator code']=='NGDP_RPCH')]). Gap: 3 rows from M else CQ.
 Loan portfolio: chart(Lp rows of one economy,kind='stack'). Banks: chart(H rows, one indicator,
-_MED/_P25/_P75/_AW). Tools in place: table of Mp rows (tool,
-tightenings, loosenings, latest action, direction, description). fsi_heatmap('Iceland'). User data: ratio=credit/GDP*100 Series
+_MED/_P25/_P75/_AW; add _A for annual, more countries). Country tools: table of Mp rows
+(Tool, Latest action, direction, Previous/New level, Change (pp), Magnitude note, short
+description); always end with "Source: IMF iMaPP Database (Alam et al., 2019)". fsi_heatmap('Iceland'). User data: ratio=credit/GDP*100 Series
 ('2015'/'2015-Q1') -> chart(user_gap(ratio,'Name'),kind='gap').
 Sector overview: credit, gap, CS, Lp, nexus, heat map, H, tools.
 ANSWER: chart, 2-4 sentences, small table, last line "Source: <Citation> - <link>".
