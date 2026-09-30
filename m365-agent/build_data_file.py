@@ -556,6 +556,10 @@ def main():
         "Credit_by_sector": credit_by_sector_sheet()})
 
     # 5. Banking sector balance sheet (IMF MFS, other depository corporations)
+    write_banking_book(countries, built, refresh)
+
+
+def write_banking_book(countries, built, refresh):
     write_book(HERE / BANK_FILE, {
         "README": [
             "Banking sector (other depository corporations) balance-sheet indicators, annual, from the IMF "
@@ -569,6 +573,9 @@ def main():
             "claims (so ratios to assets are slightly overstated).",
             "Claims on the private sector have reclassification breaks for some countries (e.g. Kuwait); prefer "
             "'Credit to the economy: bank claims on other sectors'.",
+            "Asset structure rows (codes BANK_STR_...) add up to 100% of total assets: private sector and other "
+            "financial corporations, public non-financial corporations, central government, nonresidents, "
+            "central bank, other assets.",
             "Cite the 'Citation' column (IMF MFS), not this workbook.",
             refresh],
         "Banking": bank_sheet(countries)})
@@ -670,7 +677,10 @@ def write_tools():
 
 
 if __name__ == "__main__":
-    if "--tools-only" in sys.argv:
+    if "--banking-only" in sys.argv:
+        write_banking_book(cd.country_names(), time.strftime("%Y-%m-%d"),
+                           "To refresh: run m365-agent/build_data_file.py and re-upload.")
+    elif "--tools-only" in sys.argv:
         write_tools()
         write_fsap_catalog()
     else:

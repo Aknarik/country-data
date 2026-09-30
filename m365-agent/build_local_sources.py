@@ -299,6 +299,40 @@ def heat_rows(path, annual, iso):
     return rows
 
 
+BANK_CITATION = ("CONFIDENTIAL - IMF internal use only. IMF HEAT 2.0 based on S&P Capital IQ Pro bank-level "
+                 "data; do not circulate bank names")
+
+
+def heat_bank_rows(path, iso):
+    """Bank-by-bank rows (annual) for bank ranking charts - CONFIDENTIAL, IMF-internal."""
+    wb = load_workbook(path, read_only=True, data_only=True)
+    names, rows = {}, []
+    for r in wb["O-CapitalAdequacy"].iter_rows(min_row=6, values_only=True):
+        if r and len(r) > 3 and r[1] is not None:
+            names[str(r[1]).strip()] = str(r[2]).strip()
+    ta = read_total_assets(wb["TotalAssets"], True)
+    for sheet, (code, name) in HEAT_SHEETS.items():
+        df = read_o_sheet(wb[sheet], True)
+        per = [c for c in df.columns if c not in ("key", "country")]
+        for _, r in df.iterrows():
+            vals = r[per].dropna().round(2)
+            if vals.empty or r["country"] not in iso:
+                continue
+            rows.append({"Economy code": iso[r["country"]], "Economy": names.get(r["key"], r["key"]),
+                         "Type": "Bank", "Indicator code": f"HEAT_{code}_BANK", "Indicator": name,
+                         "Unit": "Percent", "Citation": BANK_CITATION, "Source link": "", **vals.to_dict()})
+    for key, v in ta.iterrows():
+        vals = (v.dropna() / 1e6).round(2)
+        match = [r for r in rows if r["Economy"] == names.get(key)]
+        if len(vals) and match:
+            rows.append({**{k: match[0][k] for k in ("Economy code", "Economy", "Type", "Citation", "Source link")},
+                         "Indicator code": "HEAT_TA_BANK", "Indicator": "Total assets (billions, reporting currency)",
+                         "Unit": "Billions, reporting currency", **vals.to_dict()})
+    out = pd.DataFrame(rows)
+    per = sorted(c for c in out.columns if re.fullmatch(r"\d{4}", str(c)))
+    return out[[c for c in out.columns if c not in per] + per].sort_values(["Economy code", "Indicator code", "Economy"])
+
+
 def build_heat(quarterly, annual_file):
     t0 = time.time()
     iso, rows, used = {}, [], []
@@ -324,8 +358,10 @@ def build_heat(quarterly, annual_file):
             "Indicators: Tier 1 capital ratio (T1); NPLs net of provisions to total loans (NPLNET); return on "
             "average assets (ROAA); liquid assets to total liabilities (LIQ); tangible common equity to "
             "tangible assets (TCE).",
+            "Sheet 'HEAT_banks' (CONFIDENTIAL): bank-by-bank annual values with bank names (Economy = bank, "
+            "Economy code = country) for internal bank ranking charts.",
             "Do not publish outside the IMF; follow the HEAT ReadMe and the S&P licence."],
-        "HEAT_country": out})
+        "HEAT_country": out, **({"HEAT_banks": heat_bank_rows(annual_file, iso)} if annual_file else {})})
     print(f"HEAT: {out['Economy code'].nunique()} economies, {len(out)} rows, {time.time() - t0:.0f}s",
           file=sys.stderr)
 

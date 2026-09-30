@@ -5,11 +5,13 @@ def xl(k,s):
 D,G,F=xl('World_Economic','Data'),xl('World_Economic','Groups'),xl('Soundness','FSI_Quarterly')
 CQ,M=xl('BIS_credit','Credit_GDP_Quarterly'),xl('IMF_MFS_credit','Credit_GDP_Annual');B='#4B82AD'
 Bk,CS,Lp=xl('banking_sector','Banking'),xl('BIS_credit','Credit_by_sector'),xl('Soundness','Loan_portfolio')
-Mp,Ma,H,Df=xl('iMaPP','Summary'),xl('iMaPP','Actions'),xl('HEAT','HEAT_country'),xl('iMaPP','Definitions')
+Mp,Ma,Df=xl('iMaPP','Summary'),xl('iMaPP','Actions'),xl('iMaPP','Definitions')
+H,Hb=xl('HEAT','HEAT_country'),xl('HEAT','HEAT_banks')
 def P(r,a,b):return[c for c in r.columns if re.fullmatch(r'\d{4}(-Q\d)?',str(c)) and a<=int(str(c)[:4])<=b]
 def X(c):return[int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k) for k in c]
 def fin(f,ax,r,t,tl=1):
  ax.set_title(t,loc='left',weight='bold',color=B);ax.grid(alpha=.3);L=r['Source link'];L='' if pd.isna(L) else str(L)
+ 'CONFID' in str(r['Citation']) and f.text(.99,.99,'CONFIDENTIAL - IMF internal use only',color='r',ha='right',va='top',weight='bold')
  f.text(.01,.01,textwrap.fill('Source: '+str(r['Citation'])+'. '+(L.rsplit('/',1)[0] if '@' in L else L),170),fontsize=7,color='gray')
  tl and f.tight_layout(rect=(0,.05,1,1));plt.show()
 def chart(r,a=2000,b=2031,kind='line',year=None):
@@ -18,16 +20,21 @@ def chart(r,a=2000,b=2031,kind='line',year=None):
  if kind=='gap':
   f,(ax,a2)=plt.subplots(2,1,figsize=(10,7),sharex=True,gridspec_kw={'height_ratios':[2,1]});I=list(r['Indicator code'])
   ax.plot(x,V.values[I.index('CREDIT_GDP')],lw=2,label='Credit-to-GDP ratio')
-  ax.plot(x,V.values[I.index('CREDIT_GDP_TREND')],'--',lw=2,label='Hodrick-Prescott trend')
+  ax.plot(x,V.values[I.index('CREDIT_GDP_TREND')],'--',lw=2,label='HP trend')
   g=V.values[I.index('CREDIT_GDP_GAP')];a2.bar(x,g,width=.22 if '-Q' in c[0] else .8,color=['#c0392b' if v>=0 else B for v in g])
   for h in(2,10):a2.axhline(h,color='gray',ls=':',lw=1)
   a2.axhline(0,color='k',lw=.8);a2.set_ylabel('Gap, pp of GDP');a2.grid(alpha=.3);ax.set_ylabel('% of GDP');ax.legend(frameon=False)
   return fin(f,ax,r0,r0['Economy']+': credit-to-GDP ratio, trend and gap')
  f,ax=plt.subplots(figsize=(10,5.5))
- if kind=='stack':
-  k=(r['Indicator code']!='LOANS_RRE_SH').values;v=V.values[k];m=np.nansum(v,0)>90
-  ax.stackplot(np.array(x)[m],np.nan_to_num(v[:,m]),labels=list(r['Indicator'][k]),alpha=.85)
-  ax.set_ylim(0,100);ax.legend(frameon=False,fontsize=7,loc='upper left',bbox_to_anchor=(1,1));return fin(f,ax,r0,r0['Economy']+': loan portfolio by sector')
+ if kind in('stack','pie'):
+  k=(r['Indicator code']!='LOANS_RRE_SH').values;v=np.nan_to_num(V.values[k]);L=np.array([re.sub('.*: ','',i) for i in r['Indicator'][k]]);m=v.sum(0)>90
+  t=r0['Economy']+(': loan portfolio' if 'LOANS' in r0['Indicator code'] else ': bank asset structure')+' (% of total)'
+  if kind=='pie':
+   j=[i for i in range(len(c)) if m[i] and(year is None or c[i][:4]==str(year))][-1];p=v[:,j]>0
+   ax.pie(v[p,j],labels=L[p],autopct='%1.0f%%');return fin(f,ax,r0,t+', '+c[j])
+  b=0
+  for l,w in zip(L,v[:,m]):ax.bar(np.array(x)[m],w,bottom=b,width=.2 if '-Q' in c[0] else .8,label=l);b=b+w
+  ax.set_ylim(0,100);ax.legend(frameon=False,fontsize=7,loc='upper left',bbox_to_anchor=(1,1));return fin(f,ax,r0,t)
  if kind=='bar':
   n=V.notna().sum();y=str(year) if year else(str(Pj-1) if Pj else n[n>=.8*n.max()].index[-1])
   s=r.set_index('Economy')[y].dropna().sort_values();ax.barh(s.index,s.values,color=B);ax.set_xlabel(r0['Unit'])
@@ -39,7 +46,6 @@ def chart(r,a=2000,b=2031,kind='line',year=None):
  if np.nanmin(V.values)<0<np.nanmax(V.values):ax.axhline(0,color='k',lw=.8)
  ax.set_ylabel(r0['Unit']);ax.legend(frameon=False);fin(f,ax,r0,r0['Indicator'] if r['Indicator'].nunique()==1 else r0['Economy'])
 def fsi_heatmap(cty,q=12):
- if F is None:raise ValueError('FSI workbook not available to Python. Attach IMF_Financial_Soundness_Indicators.xlsx in this chat. Files seen: '+str([f.split('/')[-1] for f in fs]))
  r=F[(F['Economy'].str.lower()==cty.lower())|(F['Economy code']==cty.upper())].drop_duplicates('Indicator code')
  c=[k for k in r.columns if re.fullmatch(r'\d{4}-Q\d',str(k))];V=r[c].apply(pd.to_numeric,errors='coerce')
  k=(V.notna().sum(axis=1)>=8).values;r,V=r[k],V[k];R=V.apply(lambda s:(s.rank(method='min')-1)/(s.count()-1),axis=1)
@@ -53,7 +59,7 @@ def fsi_heatmap(cty,q=12):
  ax.set_yticks(range(len(V)));ax.set_yticklabels(lb,fontsize=7)
  ax.set_xticks(range(len(c)));ax.set_xticklabels(c,rotation=45,fontsize=7);f.colorbar(im,ax=ax,fraction=.03,label='red = more vulnerable')
  fin(f,ax,r.iloc[0],r['Economy'].iloc[0]+': FSI heat map, percent rank vs own history',0)
- return pd.DataFrame({'Indicator':r['Indicator'].values,'Latest':V.ffill(axis=1).iloc[:,-1].round(2).values,'Percentile':R.ffill(axis=1).iloc[:,-1].round(2).values})
+ return pd.Series(R.ffill(axis=1).iloc[:,-1].round(2).values,r['Indicator'],name='percentile')
 def hp(y,l):
  o=[]
  for t in range(1,len(y)+1):
@@ -61,6 +67,6 @@ def hp(y,l):
  return np.array(o)
 def user_gap(ratio,name='User data',lamb=None):
  s=pd.Series(ratio,dtype=float).dropna();s.index=[str(i) for i in s.index];q='Q' in s.index[0];l=lamb or(4e5 if q else 1e5)
- t=hp(s.values,l);t[:40 if q else 10]=np.nan;cite=f'User-provided data; trend: one-sided HP filter (lambda {l:,.0f})'
+ t=hp(s.values,l);t[:40 if q else 10]=np.nan;cite=f'User data; one-sided HP, lambda {l:,.0f}'
  return pd.DataFrame([{'Economy':name,'Indicator code':k,'Indicator':k,'Unit':'','Citation':cite,'Source link':'',**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
-print('Tools ready',[k for k in'D F CQ M Bk CS Lp Mp H'.split() if globals()[k] is not None])
+print('Tools ready',[k for k in'D F CQ M Bk CS Lp Mp H Hb'.split() if globals()[k] is not None])

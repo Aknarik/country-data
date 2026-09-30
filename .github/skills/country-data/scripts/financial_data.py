@@ -292,7 +292,7 @@ ODC = {  # IMF.STA:MFS_ODC indicator -> short key
     "ODCORP_A_ACO_PS_ODCS": "claims_private", "ODCORP_A_ACO_NRES_ODCS": "claims_nonres",
     "ODCORP_A_ACO_S121_ODCS": "claims_cb", "ODCORP_L_F22_IBM_ODCS": "dep_transferable",
     "ODCORP_L_F29_IBM_ODCS": "dep_other", "ODCORP_L_F2M_XBM_ODCS": "dep_excluded",
-    "ODCORP_L_LT_NRES_ODCS": "liab_nonres",
+    "ODCORP_L_LT_NRES_ODCS": "liab_nonres", "ODCORP_A_ACO_S11001_ODCS": "claims_pubnfc",
 }
 # output indicator -> (name, unit, formula on the keys above; gdp = nominal GDP)
 BANK_INDICATORS = {
@@ -300,9 +300,9 @@ BANK_INDICATORS = {
     "BANK_ASSETS_GDP": ("Banking sector total assets", "Percent of GDP", lambda d: 100 * d.assets / d.gdp),
     "BANK_EQUITY_TA": ("Equity (shares and other equity) to total assets", "Percent of total assets",
                        lambda d: 100 * d.equity / d.assets),
-    "BANK_GOV_TA": ("Sovereign-bank nexus: claims on central government to total assets", "Percent of total assets",
+    "BANK_GOV_TA": ("Sovereign-bank nexus: claims on central government (% of bank assets)", "Percent of total assets",
                     lambda d: 100 * d.claims_gov / d.assets),
-    "BANK_GOV_GDP": ("Bank claims on central government", "Percent of GDP", lambda d: 100 * d.claims_gov / d.gdp),
+    "BANK_GOV_GDP": ("Bank claims on central government (% of GDP)", "Percent of GDP", lambda d: 100 * d.claims_gov / d.gdp),
     "BANK_CREDIT_GDP": ("Credit to the economy: bank claims on other sectors", "Percent of GDP",
                         lambda d: 100 * d.claims_other_sectors / d.gdp),
     "BANK_CREDIT_TA": ("Claims on other sectors (loans and securities) to total assets", "Percent of total assets",
@@ -318,6 +318,20 @@ BANK_INDICATORS = {
                                           + d.dep_excluded.fillna(0)).replace(0, np.nan) / d.assets),
     "BANK_FOREIGN_LIAB_TA": ("Liabilities to nonresidents to total assets", "Percent of total assets",
                              lambda d: 100 * d.liab_nonres / d.assets),
+    # Asset structure (shares add up to 100): for stacked bar / pie charts
+    "BANK_STR_PRIV": ("Asset structure: private sector and other financial corporations", "Percent of total assets",
+                      lambda d: 100 * (d.claims_other_sectors - d.claims_pubnfc.fillna(0)) / d.assets),
+    "BANK_STR_PUBNFC": ("Asset structure: public non-financial corporations", "Percent of total assets",
+                        lambda d: 100 * d.claims_pubnfc / d.assets),
+    "BANK_STR_GOV": ("Asset structure: central government", "Percent of total assets",
+                     lambda d: 100 * d.claims_gov / d.assets),
+    "BANK_STR_NRES": ("Asset structure: nonresidents (foreign assets)", "Percent of total assets",
+                      lambda d: 100 * d.claims_nonres / d.assets),
+    "BANK_STR_CB": ("Asset structure: central bank", "Percent of total assets",
+                    lambda d: 100 * d.claims_cb / d.assets),
+    "BANK_STR_OTHER": ("Asset structure: other assets", "Percent of total assets",
+                       lambda d: 100 - 100 * (d.claims_other_sectors + d.claims_gov.fillna(0) + d.claims_nonres.fillna(0)
+                                              + d.claims_cb.fillna(0)) / d.assets),
 }
 
 
