@@ -1,12 +1,9 @@
 import glob,re,textwrap,numpy as np,pandas as pd,matplotlib.pyplot as plt
 fs=glob.glob('/mnt/**/*.xls*',recursive=True)+glob.glob('**/*.xls*',recursive=True)
-def xl(k,s):
- p=[f for f in fs if k.lower() in f.lower().replace(' ','_')];return pd.read_excel(p[0],sheet_name=s) if p else None
-D,G,F=xl('World_Economic','Data'),xl('World_Economic','Groups'),xl('Soundness','FSI_Quarterly')
-CQ,M=xl('BIS_credit','Credit_GDP_Quarterly'),xl('IMF_MFS_credit','Credit_GDP_Annual');B='#4B82AD'
-Bk,CS,Lp=xl('banking_sector','Banking'),xl('BIS_credit','Credit_by_sector'),xl('Soundness','Loan_portfolio')
-Mp,Ma,Df=xl('iMaPP','Summary'),xl('iMaPP','Actions'),xl('iMaPP','Definitions')
-H,Hb=xl('HEAT','HEAT_country'),xl('HEAT','HEAT_banks')
+def fp(k):return[f for f in fs if k.lower() in f.lower().replace(' ','_')]
+def xl(k,s):p=fp(k);return pd.read_excel(p[0],sheet_name=s) if p else None
+S=dict(D=('World_Economic','Data'),G=('World_Economic','Groups'),F=('Soundness','FSI_Quarterly'),CQ=('BIS_credit','Credit_GDP_Quarterly'),M=('IMF_MFS_credit','Credit_GDP_Annual'),Bk=('banking_sector','Banking'),CS=('BIS_credit','Credit_by_sector'),Lp=('Soundness','Loan_portfolio'),Mp=('iMaPP','Summary'),Ma=('iMaPP','Actions'),Df=('iMaPP','Definitions'),H=('HEAT','HEAT_country'),Hb=('HEAT','HEAT_banks'));B='#4B82AD'
+def T(n):return xl(*S[n])
 def P(r,a,b):return[c for c in r.columns if re.fullmatch(r'\d{4}(-Q\d)?',str(c)) and a<=int(str(c)[:4])<=b]
 def X(c):return[int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k) for k in c]
 def fin(f,ax,r,t,tl=1):
@@ -31,9 +28,9 @@ def chart(r,a=2000,b=2031,kind='line',year=None):
   t=r0['Economy']+(': Loan portfolio' if 'LOANS' in r0['Indicator code'] else ': Bank asset structure')+' (% of total)'
   if kind=='pie':
    j=[i for i in range(len(c)) if m[i] and(year is None or c[i][:4]==str(year))][-1];p=v[:,j]>0
-   ax.pie(v[p,j],labels=L[p],autopct='%1.0f%%');return fin(f,ax,r0,t+', '+c[j])
+   ax.pie(v[p,j],labels=L[p],autopct='%1.0f%%',colors=plt.cm.tab20.colors);return fin(f,ax,r0,t+', '+c[j])
   b=0
-  for l,w in zip(L,v[:,m]):ax.bar(np.array(x)[m],w,bottom=b,width=.2 if '-Q' in c[0] else .8,label=l);b=b+w
+  for i,(l,w) in enumerate(zip(L,v[:,m])):ax.bar(np.array(x)[m],w,bottom=b,width=.2 if '-Q' in c[0] else .8,label=l,color=plt.cm.tab20(i));b=b+w
   ax.set_ylim(0,100);ax.legend(frameon=False,fontsize=7,loc='upper left',bbox_to_anchor=(1,1));return fin(f,ax,r0,t)
  if kind=='bar':
   n=V.notna().sum();y=str(year) if year else(str(Pj-1) if Pj else n[n>=.8*n.max()].index[-1])
@@ -46,7 +43,7 @@ def chart(r,a=2000,b=2031,kind='line',year=None):
  if np.nanmin(V.values)<0<np.nanmax(V.values):ax.axhline(0,color='k',lw=.8)
  ax.set_ylabel(r0['Unit']);ax.legend(frameon=False);fin(f,ax,r0,r0['Indicator'] if r['Indicator'].nunique()==1 else r0['Economy'])
 def fsi_heatmap(cty,q=12):
- r=F[(F['Economy'].str.lower()==cty.lower())|(F['Economy code']==cty.upper())].drop_duplicates('Indicator code')
+ F=T('F');r=F[(F['Economy'].str.lower()==cty.lower())|(F['Economy code']==cty.upper())].drop_duplicates('Indicator code')
  c=[k for k in r.columns if re.fullmatch(r'\d{4}-Q\d',str(k))];V=r[c].apply(pd.to_numeric,errors='coerce')
  k=(V.notna().sum(axis=1)>=8).values;r,V=r[k],V[k];R=V.apply(lambda s:(s.rank(method='min')-1)/(s.count()-1),axis=1)
  lo=(r['More vulnerable when']=='lower').values;R[lo]=1-R[lo]
@@ -69,4 +66,4 @@ def user_gap(ratio,name='User data',lamb=None):
  s=pd.Series(ratio,dtype=float).dropna();s.index=[str(i) for i in s.index];q='Q' in s.index[0];l=lamb or(4e5 if q else 1e5)
  t=hp(s.values,l);t[:40 if q else 10]=np.nan;cite=f'User data; one-sided HP, lambda {l:,.0f}'
  return pd.DataFrame([{'Economy':name,'Indicator code':k,'Indicator':k,'Unit':'','Citation':cite,'Source link':'',**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
-print('Tools ready',[k for k in'D F CQ M Bk CS Lp Mp H Hb'.split() if globals()[k] is not None])
+print('Tools ready',[n for n in S if fp(S[n][0])])

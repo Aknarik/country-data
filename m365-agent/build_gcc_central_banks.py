@@ -321,7 +321,7 @@ def cbo_bulletins(years=range(2022, 2031)):
                         break
                 except Exception:
                     pass
-    return sorted(set(out))
+    return sorted({o[2]: o for o in out}.values())  # one entry per bulletin file
 
 
 def _quarters_back(y, q, n):
