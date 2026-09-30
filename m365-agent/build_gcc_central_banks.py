@@ -250,6 +250,10 @@ def sama_file(path=None):
                 return out
         except Exception:
             continue
+    local = sorted((HERE.parent / "local_data").glob("Monthly_Bulletin_*.xlsx"), key=lambda p: p.stat().st_mtime)
+    if local:  # SAMA site unreachable: use the latest bulletin already downloaded
+        print(f"SAMA download failed; using {local[-1].name}", file=sys.stderr)
+        return local[-1]
     raise RuntimeError("No SAMA Monthly Bulletin Excel found")
 
 

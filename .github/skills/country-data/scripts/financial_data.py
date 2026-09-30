@@ -12,8 +12,10 @@ Sources (public, no key needed)
             BIS does not cover (Kuwait, UAE, Qatar, Oman)
 
 MFS credit measure
-  Claims on other sectors (DCORP_A_ACO_S1_Z) minus claims on public non-financial
-  corporations (DCORP_A_ACO_S11001), in domestic currency. The narrower "claims on
+  Claims on other sectors (DCORP_A_ACO_S1_Z), in domestic currency. Claims on public
+  non-financial corporations are kept in: BIS credit to the private non-financial sector also
+  includes publicly owned corporations, and Kuwait reports them separately only from 2020
+  (zero before), so subtracting them would break the series. The narrower "claims on
   private sector" series (DCORP_A_ACO_PS) has a reclassification break for Kuwait
   (about 98% of GDP in 2015 but 4% in 2024, the rest moved to other financial
   corporations), which would create a false gap; the measure used here is continuous.
@@ -228,15 +230,16 @@ def _imf_csv(flow, key):
 
 
 def fetch_mfs_credit(countries=GULF_MFS):
-    """Annual (end-year) depository corporations' credit to non-government, non-public-corporation
-    sectors, domestic currency units: claims on other sectors - claims on public NFCs."""
+    """Annual (end-year) depository corporations' claims on other sectors (non-government sectors,
+    including public non-financial corporations as in the BIS definition), domestic currency units.
+    Public corporations are not subtracted: Kuwait reports them only from 2020 (zero before), which
+    would put a break in the series."""
     cty = _codes(countries)
-    df = _imf_csv("IMF.STA/MFS_DC", f"{cty}.{MFS_OTHER_SECTORS}+{MFS_PUBLIC_NFC}.XDC.A")
+    df = _imf_csv("IMF.STA/MFS_DC", f"{cty}.{MFS_OTHER_SECTORS}.XDC.A")
     if df.empty:
         raise RuntimeError(f"No IMF MFS credit data for {countries}")
     w = df.pivot_table(index=["COUNTRY", "TIME_PERIOD"], columns="INDICATOR", values="OBS_VALUE")
-    w[MFS_PUBLIC_NFC] = w.get(MFS_PUBLIC_NFC, 0).fillna(0) if MFS_PUBLIC_NFC in w else 0
-    return (w[MFS_OTHER_SECTORS] - w[MFS_PUBLIC_NFC]).dropna().rename("credit")
+    return w[MFS_OTHER_SECTORS].dropna().rename("credit")
 
 
 def fetch_weo_gdp(countries=GULF_MFS):

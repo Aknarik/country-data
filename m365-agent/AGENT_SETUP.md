@@ -311,8 +311,10 @@ is named after its source: the automatic reference then reads as the IMF or BIS 
 
 For Kuwait, the UAE, Qatar and Oman the ratio is built from IMF data:
 
-- **Credit:** depository corporations' *claims on other sectors* minus *claims on public non-financial
-  corporations* (dataset `IMF.STA:MFS_DC`), end of year, domestic currency. The narrower
+- **Credit:** depository corporations' *claims on other sectors* (dataset `IMF.STA:MFS_DC`), end of year,
+  domestic currency. Claims on public non-financial corporations stay in: the BIS definition of credit to
+  the private non-financial sector includes publicly owned corporations, and Kuwait reports them
+  separately only from 2020 (zero before), so subtracting them created a break. The narrower
   *claims on private sector* series isn't used because it has a reclassification break for Kuwait:
   about 98% of GDP in 2015 but 4% in 2024, with the rest moved to "other financial corporations".
   That break would create a false collapse in the ratio.

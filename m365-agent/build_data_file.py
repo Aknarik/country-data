@@ -74,8 +74,7 @@ FSI_CITATION = ("International Monetary Fund, Financial Soundness Indicators (FS
                 "(dataset IMF.STA:FSIC)")
 BIS_CITATION = "Bank for International Settlements, credit-to-GDP statistics (dataset WS_CREDIT_GAP)"
 MFS_CITATION = ("International Monetary Fund, Monetary and Financial Statistics (dataset IMF.STA:MFS_DC; "
-                "depository corporations' claims on other sectors less claims on public non-financial "
-                "corporations) and World Economic Outlook (nominal GDP)")
+                "depository corporations' claims on other sectors) and World Economic Outlook (nominal GDP)")
 CREDIT_SERIES = {  # column in financial_data output -> (code, name, unit)
     "ratio": ("CREDIT_GDP", "Credit to the private non-financial sector, % of GDP", "Percent of GDP"),
     "trend": ("CREDIT_GDP_TREND", "Credit-to-GDP trend (one-sided HP filter)", "Percent of GDP"),
@@ -116,15 +115,15 @@ def mfs_sheet():
     """Gulf credit-to-GDP from IMF MFS / WEO GDP, annual, one-sided HP (lambda 100,000)."""
     lamb = fd.LAMBDA["A"]
     df = fd.mfs_credit_to_gdp_with_gap(fd.GULF_MFS)
-    method = (f"Credit = claims on other sectors minus claims on public non-financial corporations "
-              f"(end of year); ratio = credit / nominal GDP x 100; trend: one-sided HP filter, "
+    method = (f"Credit = depository corporations' claims on other sectors, incl. public non-financial "
+              f"corporations (end of year); ratio = credit / nominal GDP x 100; trend: one-sided HP filter, "
               f"lambda = {lamb:,}, from 10 years after the series start")
     rows = []
     for cty, g in df.groupby("country"):
         g = g.set_index("period")
         for col, (code, name, unit) in CREDIT_SERIES.items():
             name = name.replace("Credit to the private non-financial sector",
-                                "Credit to the non-government sector (excl. public corporations)")
+                                "Credit to the non-government sector (claims on other sectors)")
             rows.append({"Economy code": cty, "Economy": fd.GULF_NAMES.get(cty, cty), "Type": "Country",
                          "Indicator code": code, "Indicator": name, "Unit": unit, "Method": method,
                          "Citation": MFS_CITATION + ("" if col == "ratio" else
@@ -620,9 +619,12 @@ def write_banking_book(countries, built, refresh):
             "Bahrain: no IMF MFS data.",
             f"Built on {built} from the public IMF SDMX API (api.imf.org): dataset IMF.STA:MFS_DC "
             "(depository corporations survey) and IMF.RES:WEO (nominal GDP, domestic currency).",
-            "Credit = depository corporations' claims on other sectors minus claims on public non-financial "
-            "corporations, end of year, domestic currency. The narrower 'claims on private sector' series "
-            "is not used because it has a reclassification break for Kuwait.",
+            "Credit = depository corporations' claims on other sectors, end of year, domestic currency. "
+            "Claims on public non-financial corporations are included, as in the BIS definition of credit to "
+            "the private non-financial sector (which covers publicly owned corporations), and because Kuwait "
+            "reports them separately only from 2020 (zero before), so subtracting them would break the series. "
+            "The narrower 'claims on private sector' series is not used because it has a reclassification "
+            "break for Kuwait.",
             "Ratio = credit / annual nominal GDP x 100. The latest year's GDP may be an IMF estimate.",
             "Trend: one-sided Hodrick-Prescott filter, lambda 100,000 (annual data), reported from 10 years "
             "after the series start. Gap = ratio - trend, percentage points of GDP.",
