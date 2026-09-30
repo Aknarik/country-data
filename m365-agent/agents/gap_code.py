@@ -16,21 +16,21 @@ def gap(r,a=2000,mpp=True):
  if isinstance(r,str):r=pick(M,r) if len(pick(M,r)) else pick(CQ,r)
  I=r.set_index('Indicator code');c=[k for k in per(r,a) if pd.notna(I.loc['CREDIT_GDP',k])];x=num(c);v=lambda k:pd.to_numeric(I.loc[k,c]).values
  f,(ax,a2)=plt.subplots(2,1,figsize=(10.5,7.5),sharex=True,gridspec_kw={'height_ratios':[2,1.2]})
- ax.plot(x,v('CREDIT_GDP'),lw=2.2,color=BLUE,label='Credit-to-GDP ratio');ax.plot(x,v('CREDIT_GDP_TREND'),'--',lw=2,color='#e67e22',label='One-sided HP trend')
- g=v('CREDIT_GDP_GAP');a2.bar(x,g,width=.22 if '-Q' in c[0] else .8,color=['#c0392b' if z>=0 else BLUE for z in g])
+ ax.plot(x,v('CREDIT_GDP'),lw=2.2,color=BLUE,label='Credit-to-GDP ratio');ax.plot(x,v('CREDIT_GDP_TREND'),'--',lw=2,color='#e67e22',label='One-sided HP trend');last(ax,x,v('CREDIT_GDP'),BLUE);last(ax,x,v('CREDIT_GDP_TREND'),'#e67e22')
+ g=v('CREDIT_GDP_GAP');a2.bar(x,g,width=.22 if '-Q' in c[0] else .8,color=['#c0392b' if z>=0 else BLUE for z in g]);last(a2,x,g)
  a2.axhspan(2,10,color='#c0392b',alpha=.07);a2.text(x[0],10,' Basel buffer range 2-10 pp',fontsize=7,color='#c0392b',va='bottom')
- a2.xaxis.get_major_locator().set_params(integer=True);a2.axhline(0,color='k',lw=.8);a2.set_ylabel('Gap, pp of GDP');ax.set_ylabel('% of GDP');a2.grid(alpha=.3);ax.grid(alpha=.3)
+ a2.xaxis.get_major_locator().set_params(integer=True);a2.axhline(0,color='k',lw=.8);a2.set_ylabel('Gap, pp of GDP');ax.set_ylabel('Percent of GDP');a2.grid(alpha=.3);ax.grid(alpha=.3)
  m=MA[(MA['Economy code']==r['Economy code'].iloc[0])&MA['Indicator code'].isin(TOOLS)] if mpp else MA[:0]
  if len(m):
   n=m[per(m)].apply(pd.to_numeric,errors='coerce').sum();n=n[(n!=0)&(n.index.astype(int)>=x[0])]
   for y,z in n.items():ax.axvline(int(y)+.5,color='#c0392b' if z>0 else 'green',alpha=.35,lw=1.5)
   ax.plot([],[],color='#c0392b',alpha=.5,label='Net tightening (iMaPP)');ax.plot([],[],color='green',alpha=.5,label='Net loosening')
- ax.legend(frameon=False,fontsize=8);gv=g[~np.isnan(g)][-1];lg=np.array(c)[~np.isnan(g)][-1]
- title(ax,f"{r['Economy'].iloc[0]}: credit-to-GDP ratio, trend and gap",f"Latest {lg}: gap {gv:.1f} pp, Basel guide buffer {buffer(gv)}%");source(f,r,m,note=len(m) and 'Lines: iMaPP scores each tool +1 in a month it is tightened, -1 if loosened; summed per year over 17 tools: red >0, green <0.' or '')
+ leg(a2,ax,-.2);gv=g[~np.isnan(g)][-1];lg=np.array(c)[~np.isnan(g)][-1]
+ title(ax,f"{r['Economy'].iloc[0]}: Credit-to-GDP ratio, trend and gap",f"Latest {lg}: gap {gv:.1f} pp, Basel guide buffer {buffer(gv)} percent");source(f,r,m,note=len(m) and 'Lines: iMaPP scores each tool +1 in a month it is tightened, -1 if loosened; summed per year over 17 tools: red >0, green <0.' or '')
 def sectors(cty,a=2000):
  r=pick(CS,cty);assert len(r),'No BIS sector data for '+cty;c=[k for k in per(r,a) if r[k].notna().any()];f,ax=plt.subplots(figsize=(10.5,5.5))
- for lab,z in zip(r['Indicator'],vals(r,c)):ax.plot(num(c),z,lw=2,label=lab)
- ax.grid(alpha=.3);ax.legend(frameon=False,fontsize=8);title(ax,f"{r['Economy'].iloc[0]}: credit by borrower sector",'% of GDP');source(f,r)
+ for lab,z in zip(r['Indicator'],vals(r,c)):l,=ax.plot(num(c),z,lw=2,label=lab);last(ax,num(c),z,l.get_color())
+ ax.grid(alpha=.3);leg(ax);title(ax,f"{r['Economy'].iloc[0]}: Credit by borrower sector",'Percent of GDP');source(f,r)
 def mpp_table(cty):
  t=pick(MP,cty).sort_values('Latest action',ascending=False)
  print(t.iloc[:,[3,*range(9,16)]].fillna('').to_string(index=False))  # Tool, latest action..description

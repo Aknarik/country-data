@@ -634,12 +634,22 @@ def write_banking_book(countries, built, refresh):
         "Latest": credit_latest(mfs := mfs_sheet()), "Credit_GDP_Annual": mfs})
 
 
+def percent_words(x):
+    """'% of GDP' -> 'Percent of GDP', '(% of GDP)' -> '(percent of GDP)', '5%' -> '5 percent'."""
+    if not isinstance(x, str) or "%" not in x:
+        return x
+    x = re.sub(r"(\d)%", r"\1 percent", x).replace("%", "percent")
+    return x[0].upper() + x[1:]
+
+
 def write_book(path, sheets):
     """Write {sheet name: DataFrame or list of README lines} with frozen headers and sized columns."""
     with pd.ExcelWriter(path, engine="openpyxl") as xw:
         for name, df in sheets.items():
             if isinstance(df, list):
                 df = pd.DataFrame({"About this file": df})
+            else:  # chart labels say "percent", not "%"
+                df = df.assign(**{c: df[c].map(percent_words) for c in ("Indicator", "Unit") if c in df})
             df.to_excel(xw, sheet_name=name, index=False)
             ws = xw.sheets[name]
             ws.freeze_panes = "A2"

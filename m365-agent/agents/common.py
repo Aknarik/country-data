@@ -7,7 +7,11 @@ def num(c):return np.array([int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k)
 def vals(r,c):return r[c].apply(pd.to_numeric,errors='coerce').values
 def pick(df,cty):c=[str(x).lower() for x in([cty] if isinstance(cty,str) else cty)];return df[df['Economy'].str.lower().isin(c)|df['Economy code'].str.lower().isin(c)]
 def title(ax,t,sub=None):
- t=re.sub(': (.)',lambda m:': '+m[1].upper(),t,1);ax.set_title(t,loc='left',weight='bold',color=BLUE,fontsize=12,pad=18 if sub else 6);sub and ax.text(0,1.01,sub,transform=ax.transAxes,fontsize=8,color='dimgray')
+ ax.set_title(t,loc='left',weight='bold',color=BLUE,fontsize=12,pad=18 if sub else 6);sub and ax.text(0,1.01,sub,transform=ax.transAxes,fontsize=8,color='dimgray')
+def leg(ax,src=None,y=-.09,n=4):h,l=(src or ax).get_legend_handles_labels();ax.legend(h,l,frameon=False,fontsize=8,loc='upper center',bbox_to_anchor=(.5,y),ncol=n)
+def last(ax,x,v,c='k'):
+ k=np.flatnonzero(~np.isnan(np.asarray(v,float)))
+ if len(k):i=k[-1];ax.annotate(f'{v[i]:,.1f}',(x[i],v[i]),xytext=(4,0),textcoords='offset points',va='center',fontsize=8,color=c,weight='bold')
 def source(f,*R,tl=True,note=''):
  s=[]
  for r in R:
