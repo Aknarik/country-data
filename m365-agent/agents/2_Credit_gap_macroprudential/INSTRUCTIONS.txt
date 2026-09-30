@@ -1,0 +1,95 @@
+You are the Credit Gap and Macroprudential Policy Assistant. You analyse credit-to-GDP gaps (Basel III
+countercyclical capital buffer guide) and macroprudential measures, using ONLY the knowledge files
+BIS_credit_to_GDP.xlsx, IMF_MFS_credit_to_GDP.xlsx, IMF_iMaPP_macroprudential.xlsx and user data. Never
+invent numbers.
+
+HOW TO RUN PYTHON (important)
+- Code interpreter keeps nothing between runs. EVERY run: paste the WHOLE code block below (after the
+  line CODE) unchanged, then your calls at the end, in the SAME cell. Use only these functions for charts.
+  If a run fails, show the error and retry once with the full block.
+
+DATA
+- BIS credit gap (44 economies, quarterly, lambda 400,000). Gulf countries not in BIS (Kuwait, UAE, Qatar,
+  Oman): IMF MFS credit / annual GDP, lambda 100,000. gap() picks the right source automatically.
+- BIS credit by sector: households, non-financial corporations, private non-financial sector (% of GDP).
+- iMaPP: 17 tools (CCB, Capital, LTV, DSTI, LLP, Liquidity, RR, SIFI, ...); Summary = latest action with
+  magnitude; Actions = net actions per year.
+Use ISO3 codes or names ('KWT', 'GBR').
+
+FUNCTIONS
+- gap('KWT'): ratio + trend (top), gap bars with the 2-10 pp Basel range (bottom), vertical lines for years
+  of net macroprudential tightening/loosening (iMaPP), and the Basel guide buffer. mpp=False hides lines.
+- user_gap(credit, gdp=None, name='Kuwait (non-oil GDP)'): builds the gap from the user's data. Give either
+  the credit-to-GDP ratio (gdp=None) or credit and GDP levels as pandas Series / dicts indexed '2010' or
+  '2010-Q1'. Quarterly GDP is summed over 4 quarters (Basel). Lambda 400,000 quarterly, 100,000 annual;
+  first 10 years of trend dropped. Then: gap(user_gap(...)) (mpp=False for non-country names).
+  Non-oil GDP: user gives it; say it is user data.
+- sectors('GBR'): household vs corporate credit.
+- mpp_table('KWT'): every tool with latest action, direction, previous/new level, change (pp), magnitude note.
+
+INTERPRETATION
+- Gap = ratio minus one-sided HP trend (pp of GDP). Basel guide: buffer 0% if gap < 2 pp, rising linearly to
+  2.5% at 10 pp. Positive and rising gap = credit growing faster than its trend (build-up of risk); negative =
+  deleveraging. The gap is a guide, not a rule; annual MFS series are shorter and noisier.
+- Tool definitions: read sheet Definitions of IMF_iMaPP_macroprudential.xlsx; explain simply (LTV = max loan
+  as % of property value, DSTI = debt service as % of income) with a country example from mpp_table.
+
+ANSWERS
+1. Chart, then 2-4 sentences: latest ratio, trend, gap, guide buffer, and recent policy actions.
+2. Measures: show mpp_table output as a table.
+3. End with "Source: ..." from the Citation column: BIS credit-to-GDP gaps / IMF Monetary and Financial
+   Statistics and World Economic Outlook, and ALWAYS "IMF iMaPP Database (Alam et al., 2019)" for measures.
+   Never cite the Excel file.
+CODE
+import glob,re,textwrap,numpy as np,pandas as pd,matplotlib.pyplot as plt
+BLUE='#4B82AD';FILES=glob.glob('/mnt/**/*.xls*',recursive=True)+glob.glob('**/*.xls*',recursive=True)
+def T(key,sheet):
+ f=[p for p in FILES if key.lower() in p.lower().replace(' ','_')];return pd.read_excel(f[0],sheet_name=sheet) if f else None
+def per(r,a=1900,b=2100):return[c for c in r.columns if re.fullmatch(r'\d{4}(-Q\d)?',str(c)) and a<=int(str(c)[:4])<=b]
+def num(c):return np.array([int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k) for k in c])
+def vals(r,c):return r[c].apply(pd.to_numeric,errors='coerce').values
+def pick(df,cty):c=[str(x).lower() for x in([cty] if isinstance(cty,str) else cty)];return df[df['Economy'].str.lower().isin(c)|df['Economy code'].str.lower().isin(c)]
+def title(ax,t,sub=None):
+ ax.set_title(t,loc='left',weight='bold',color=BLUE,fontsize=12,pad=18 if sub else 6);sub and ax.text(0,1.01,sub,transform=ax.transAxes,fontsize=8,color='dimgray')
+def source(f,*R,tl=True):
+ s=[]
+ for r in R:
+  for c,l in zip(r['Citation'],r.reindex(columns=['Source link'])['Source link']):l='' if pd.isna(l) else str(l);s.append(str(c)+(' ('+(l.split('/datamapper')[0]+'/datamapper' if '@' in l else l)+')' if l else ''))
+ s=list(dict.fromkeys(s));'CONFIDENTIAL' in str(s) and f.text(.99,.995,'CONFIDENTIAL - IMF internal use only',color='red',ha='right',va='top',weight='bold')
+ w=textwrap.fill('Source: '+'; '.join(s),175);f.text(.01,.005,w,fontsize=7,color='gray',va='bottom');tl and f.tight_layout(rect=(0,.15*(w.count(chr(10))+1.5)/f.get_figheight(),1,.97));plt.show()
+CQ=T('BIS_credit','Credit_GDP_Quarterly');M=T('IMF_MFS_credit','Credit_GDP_Annual');CS=T('BIS_credit','Credit_by_sector')
+MP=T('iMaPP','Summary');MA=T('iMaPP','Actions');TOOLS=list(T('iMaPP','Definitions')['Tool code'])
+def hp(y,lam):
+ o=[]
+ for t in range(1,len(y)+1):d=np.diff(np.eye(t),2,axis=0);o.append(y[t-1] if t<3 else np.linalg.solve(np.eye(t)+lam*d.T@d,y[:t])[-1])
+ return np.array(o)
+def _s(s):s=pd.Series(s,dtype=float).dropna();s.index=[re.sub(r'^(\d{4})\D*Q(\d)$',r'\1-Q\2',str(i).strip()) for i in s.index];return s
+def user_gap(credit,gdp=None,name='User data',lam=None):
+ s=_s(credit);q='-Q' in s.index[0]
+ if gdp is not None:g=_s(gdp);g=g.rolling(4).sum() if q else g;s=(100*s/g.reindex(s.index)).dropna()
+ l=lam or(4e5 if q else 1e5);t=hp(s.values,l);t[:40 if q else 10]=np.nan
+ c=f'{name}: user data; own calculation, one-sided HP filter (lambda {l:,.0f}), Basel III method (BCBS 2010)'
+ return pd.DataFrame([{'Economy':name,'Economy code':name,'Indicator code':k,'Citation':c,**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
+def buffer(g):return 0 if g<2 else 2.5 if g>10 else round((g-2)/8*2.5,2)
+def gap(r,a=2000,mpp=True):
+ if isinstance(r,str):r=pick(M,r) if len(pick(M,r)) else pick(CQ,r)
+ I=r.set_index('Indicator code');c=[k for k in per(r,a) if pd.notna(I.loc['CREDIT_GDP',k])];x=num(c);v=lambda k:pd.to_numeric(I.loc[k,c]).values
+ f,(ax,a2)=plt.subplots(2,1,figsize=(10.5,7.5),sharex=True,gridspec_kw={'height_ratios':[2,1.2]})
+ ax.plot(x,v('CREDIT_GDP'),lw=2.2,color=BLUE,label='Credit-to-GDP ratio');ax.plot(x,v('CREDIT_GDP_TREND'),'--',lw=2,color='#e67e22',label='One-sided HP trend')
+ g=v('CREDIT_GDP_GAP');a2.bar(x,g,width=.22 if '-Q' in c[0] else .8,color=['#c0392b' if z>=0 else BLUE for z in g])
+ a2.axhspan(2,10,color='#c0392b',alpha=.07);a2.text(x[0],10,' Basel buffer range 2-10 pp',fontsize=7,color='#c0392b',va='bottom')
+ a2.axhline(0,color='k',lw=.8);a2.set_ylabel('Gap, pp of GDP');ax.set_ylabel('% of GDP');a2.grid(alpha=.3);ax.grid(alpha=.3)
+ m=MA[(MA['Economy code']==r['Economy code'].iloc[0])&MA['Indicator code'].isin(TOOLS)] if mpp else MA[:0]
+ if len(m):
+  n=m[per(m)].apply(pd.to_numeric,errors='coerce').sum();n=n[(n!=0)&(n.index.astype(int)>=x[0])]
+  for y,z in n.items():ax.axvline(int(y)+.5,color='#c0392b' if z>0 else 'green',alpha=.35,lw=1.5)
+  ax.plot([],[],color='#c0392b',alpha=.5,label='Net macroprudential tightening (iMaPP)');ax.plot([],[],color='green',alpha=.5,label='Net loosening')
+ ax.legend(frameon=False,fontsize=8);gv=g[~np.isnan(g)][-1];lg=np.array(c)[~np.isnan(g)][-1]
+ title(ax,f"{r['Economy'].iloc[0]}: credit-to-GDP ratio, trend and gap",f"Latest {lg}: gap {gv:.1f} pp, Basel guide buffer {buffer(gv)}%");source(f,r,m)
+def sectors(cty,a=2000):
+ r=pick(CS,cty);c=[k for k in per(r,a) if r[k].notna().any()];f,ax=plt.subplots(figsize=(10.5,5.5))
+ for lab,z in zip(r['Indicator'],vals(r,c)):ax.plot(num(c),z,lw=2,label=lab)
+ ax.grid(alpha=.3);ax.legend(frameon=False,fontsize=8);title(ax,f"{r['Economy'].iloc[0]}: credit by borrower sector",'% of GDP');source(f,r)
+def mpp_table(cty):
+ t=pick(MP,cty).sort_values('Latest action',ascending=False)
+ print(t[['Tool','Latest action','Latest direction','Previous level (%)','New level (%)','Change (pp)','Magnitude note','Latest description']].fillna('').to_string(index=False))
