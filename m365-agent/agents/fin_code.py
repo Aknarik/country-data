@@ -38,7 +38,7 @@ def banks(cty,ind='T1',year=None):
  r=get('Hb',cty,f'HEAT_{ind}_BANK');n=r[per(r)].notna().sum();y=str(year or n[n>=.6*n.max()].index[-1])
  s=r.set_index('Economy')[y].dropna().sort_values();f,ax=plt.subplots(figsize=(10,.3*len(s)+2));ax.barh(s.index,s.values,color=BLUE)
  ax.axvline(s.median(),color='#c0392b',ls='--',label=f'Median bank {s.median():.1f}');ax.legend(frameon=False,fontsize=8);ax.grid(alpha=.3,axis='x');ax.tick_params(axis='y',labelsize=7)
- title(ax,f"{cty}: {r['Indicator'].iloc[0]} by bank, {y}");source(f,r)
+ e=get('Bk',cty)['Economy'];title(ax,f"{e.iloc[0] if len(e) else cty}: {r['Indicator'].iloc[0]} by bank, {y}");source(f,r)
 def dashboard(cty):
  f,A=plt.subplots(2,3,figsize=(17,9));A=A.flat;u=[]
  P=[('Capital','F',['FSI688_CFSI_PT','FSI626_CFSI_PT']),('Asset quality','F',['AQ12_CFSI_PT','AQ14_CFSI_PT']),('Profitability','F',['ROA_CFSI_PT','ROE_CFSI_PT']),

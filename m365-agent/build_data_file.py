@@ -559,6 +559,38 @@ def main():
     write_banking_book(countries, built, refresh)
 
 
+GAP_GUIDANCE = [
+    "USER-BUILT GAPS: RECOMMENDED DATA LENGTH. Use at least 20 years (80 quarters) of credit-to-GDP data where "
+    "possible, and never less than 10 years. The first 10 years only start the one-sided HP trend and are not "
+    "reported, so with 10-20 years of data the gap covers fewer than 10 years and should be read with caution.",
+    "Why: Drehmann and Tsatsaronis (2014, p. 14 of the article PDF) 'validate the practical rule of thumb that "
+    "suggests using the credit gap only when at least 10 years of data for the credit-to-GDP ratio are already "
+    "available', but note that at the start of a series 'it can take 20 years for measurement differences to "
+    "fully disappear' (p. 13) and that 'we need at least 20 years of data in order to properly assess the "
+    "forecasting ability of the credit gap' (p. 10). Credit cycles are 'on average about four times longer than "
+    "standard business cycles and crises tend to occur once every 20-25 years' (p. 12).",
+    "Structural breaks: adjust the credit series for breaks first; after a large break 'it takes more than 20 "
+    "years for such an effect of this magnitude to fully disappear' (Drehmann and Tsatsaronis, 2014, p. 15).",
+    "Quarterly data (preferred): ratio = credit at end of quarter / sum of GDP over the last 4 quarters x 100; "
+    "one-sided HP trend with lambda 400,000 (BCBS, 2010, Annex 1; ESRB Recommendation ESRB/2014/1, Annex, "
+    "Part II).",
+    "Annual data: this tool uses lambda 100,000, a project convention. The Basel guide is defined on quarterly "
+    "data; frequency-adjustment rules (Ravn and Uhlig, 2002) would give a much smaller annual lambda "
+    "(400,000 / 4^4 = about 1,600), so annual gaps are not directly comparable with BIS quarterly gaps.",
+    "Oil exporters: a ratio to non-oil GDP (user data) avoids oil-price swings in GDP; say that the GDP "
+    "measure is user data.",
+    "References: BCBS (2010), Guidance for national authorities operating the countercyclical capital buffer, "
+    "Basel Committee on Banking Supervision, December, https://www.bis.org/publ/bcbs187.htm. "
+    "Drehmann, M. and K. Tsatsaronis (2014), 'The credit-to-GDP gap and countercyclical capital buffers: "
+    "questions and answers', BIS Quarterly Review, March, https://www.bis.org/publ/qtrpdf/r_qt1403g.htm. "
+    "ESRB (2014), Recommendation of the European Systemic Risk Board on guidance for setting countercyclical "
+    "buffer rates (ESRB/2014/1), OJ C 293, 2.9.2014, "
+    "https://www.esrb.europa.eu/pub/pdf/recommendations/140630_ESRB_Recommendation.en.pdf. "
+    "Ravn, M. and H. Uhlig (2002), 'On adjusting the Hodrick-Prescott filter for the frequency of "
+    "observations', Review of Economics and Statistics 84(2).",
+]
+
+
 def write_banking_book(countries, built, refresh):
     write_book(HERE / BANK_FILE, {
         "README": [
@@ -596,6 +628,7 @@ def write_banking_book(countries, built, refresh):
             "after the series start. Gap = ratio - trend, percentage points of GDP.",
             "Oil-price swings move GDP, so the ratio jumps when oil prices fall (e.g. 2009, 2015, 2020).",
             "Sheet 'Latest': latest ratio, trend and gap for each economy.",
+            *GAP_GUIDANCE,
             "Cite the 'Citation' column (IMF; trend and gap are own calculations), not this workbook.",
             refresh],
         "Latest": credit_latest(mfs := mfs_sheet()), "Credit_GDP_Annual": mfs})

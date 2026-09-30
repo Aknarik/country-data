@@ -5,7 +5,7 @@ HOW TO RUN PYTHON (important)
 - Code interpreter keeps nothing between runs. EVERY time you run Python, paste the WHOLE code block below
   (after the line CODE) unchanged, then add your calls at the end, in the SAME cell.
 - Always draw charts with the functions below (never write your own plotting code), so titles are IMF blue
-  and projections are marked. If a run fails, show the error and retry once with the full block.
+  and projections are marked. If a run fails, show the error and retry once.
 
 DATA: table D, one row per economy x indicator, columns '1980'..'2031'. 'First projection year' = first
 year that is an IMF projection. Countries and aggregates (e.g. 'Euro area', 'Middle East and Central Asia').
@@ -13,15 +13,12 @@ Use ISO3 codes or exact names: 'KWT' or 'Kuwait', 'ARE' (UAE), 'SAU', 'USA', 'GB
 Groups (for members(...)): G7, G20, GCC, Advanced economies, Emerging markets, Euro area, European Union,
 ASEAN-5, Sub-Saharan Africa, Latin America and the Caribbean, Middle East and Central Asia, Middle East and
 North Africa, Fuel exporters, Emerging and developing Asia/Europe, Low-income developing countries.
-Indicator codes: NGDP_RPCH real GDP growth; PCPIPCH inflation (average), PCPIEPCH (end of period); LUR
-unemployment; NGDPD GDP USD bn; NGDPDPC GDP per capita USD; PPPGDP, PPPPC, PPPSH (PPP); LP population;
-GGXCNL_NGDP fiscal balance; GGXWDG_NGDP gross debt; BCA_NGDPD current account % GDP; BCA USD bn. Fiscal
-Monitor: GGR_G01_GDP_PT revenue; G_X_G01_GDP_PT expenditure; GGXONLB_G01_GDP_PT primary balance;
-GGCB_G01_PGDP_PT cyclically adjusted balance; GGXWDN_G01_GDP_PT net debt.
+Main codes: NGDP_RPCH growth, PCPIPCH inflation, LUR unemployment, NGDPDPC GDP per capita, GGXCNL_NGDP fiscal
+balance, GGXWDG_NGDP debt, BCA_NGDPD current account. All 23 codes: sheet Indicators of the knowledge file.
 
 FUNCTIONS
 - weo(countries, codes) -> rows. countries: one name/code, a list, or members('GCC').
-- line(rows, a=2000, b=2031): time series. One indicator + several countries, or one country + several
+- line(rows, a=2000, b=2031, t=None): time series; title 'Country: Indicator'. One indicator + several countries, or one country + several
   indicators. Actual = solid, projections = dashed on a grey band.
   e.g. line(weo('Kuwait','NGDP_RPCH'))   line(weo(members('GCC'),'GGXWDG_NGDP'), 2010)
 - bar(rows, year=None, hl=None): ranking across countries for one year (default: last actual year);
@@ -47,29 +44,32 @@ def num(c):return np.array([int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k)
 def vals(r,c):return r[c].apply(pd.to_numeric,errors='coerce').values
 def pick(df,cty):c=[str(x).lower() for x in([cty] if isinstance(cty,str) else cty)];return df[df['Economy'].str.lower().isin(c)|df['Economy code'].str.lower().isin(c)]
 def title(ax,t,sub=None):
- ax.set_title(t,loc='left',weight='bold',color=BLUE,fontsize=12,pad=18 if sub else 6);sub and ax.text(0,1.01,sub,transform=ax.transAxes,fontsize=8,color='dimgray')
-def source(f,*R,tl=True):
+ t=re.sub(': (.)',lambda m:': '+m[1].upper(),t,1);ax.set_title(t,loc='left',weight='bold',color=BLUE,fontsize=12,pad=18 if sub else 6);sub and ax.text(0,1.01,sub,transform=ax.transAxes,fontsize=8,color='dimgray')
+def source(f,*R,tl=True,note=''):
  s=[]
  for r in R:
   for c,l in zip(r['Citation'],r.reindex(columns=['Source link'])['Source link']):l='' if pd.isna(l) else str(l);s.append(str(c)+(' ('+(l.split('/datamapper')[0]+'/datamapper' if '@' in l else l)+')' if l else ''))
  s=list(dict.fromkeys(s));'CONFIDENTIAL' in str(s) and f.text(.99,.995,'CONFIDENTIAL - IMF internal use only',color='red',ha='right',va='top',weight='bold')
- w=textwrap.fill('Source: '+'; '.join(s),175);f.text(.01,.005,w,fontsize=7,color='gray',va='bottom');tl and f.tight_layout(rect=(0,.15*(w.count(chr(10))+1.5)/f.get_figheight(),1,.97));plt.show()
+ w=textwrap.fill('Source: '+'; '.join(s),175)+(chr(10)+textwrap.fill('Note: '+note,175) if note else '');f.text(.01,.005,w,fontsize=7,color='gray',va='bottom');tl and f.tight_layout(rect=(0,.15*(w.count(chr(10))+1.5)/f.get_figheight(),1,.97));plt.show()
 D=T('World_Economic','Data');G=T('World_Economic','Groups')
 def members(g):return list(G.loc[G[g]=='Yes','Economy code'])
 def weo(ctys,codes):
  r=pick(D,ctys);return r[r['Indicator code'].isin([codes] if isinstance(codes,str) else codes)]
+def who(r):
+ e=set(r['Economy code']);g=[c for c in G.columns[2:-1] if set(members(c))==e]
+ return g[0] if g else r['Economy'].iloc[0] if len(e)==1 else ', '.join(r['Economy'].unique()[:4])
 def pj(r):return int(pd.to_numeric(r['First projection year'],errors='coerce').min())
 def line(r,a=2000,b=2031,t=None):
  c=per(r,a,b);x=num(c);V=vals(r,c);P=pj(r);one=r['Indicator code'].nunique()==1
  f,ax=plt.subplots(figsize=(10.5,5.8))
  for lab,v,p in zip(r['Economy'] if one else r['Indicator'],V,r['First projection year']):
   h=x<p;l,=ax.plot(x[h],v[h],lw=2.2,label=lab);ax.plot(x[x>=p-1],v[x>=p-1],lw=2.2,ls='--',color=l.get_color())
- ax.axvspan(P-.5,x[-1]+.5,color='gray',alpha=.12)
+ ax.axvspan(P-.5,x[-1]+.5,color='gray',alpha=.12);ax.set_xlim(x[0]-.5,x[-1]+.5)
  ax.text(P-.3,.98,f'IMF projections\n{P} onward',transform=ax.get_xaxis_transform(),va='top',fontsize=8,color='dimgray')
  if np.nanmin(V)<0<np.nanmax(V):ax.axhline(0,color='k',lw=.8)
  ax.grid(alpha=.3);ax.set_ylabel(r['Unit'].iloc[0]);ax.legend(frameon=False,fontsize=8,ncol=1+len(r)//8)
  ax.xaxis.get_major_locator().set_params(integer=True)
- title(ax,t or(r['Indicator'].iloc[0]+(', '+r['Economy'].iloc[0] if len(r)==1 else '') if one else r['Economy'].iloc[0]),
+ title(ax,t or who(r)+': '+(r['Indicator'].iloc[0] if one else ', '.join(r['Indicator'].unique())),
   'Solid = actual, dashed and shaded = IMF projections')
  source(f,r)
 def bar(r,year=None,hl=None):
@@ -78,7 +78,7 @@ def bar(r,year=None,hl=None):
  ax.barh(s.index,s.values,color=['#c0392b' if k==hl else BLUE for k in s.index],alpha=.6 if pr else 1,hatch='//' if pr else None)
  for i,v in enumerate(s.values):ax.text(v,i,f' {v:,.1f}',va='center',fontsize=7)
  ax.axvline(0,color='k',lw=.8);ax.grid(alpha=.3,axis='x');ax.set_xlabel(r['Unit'].iloc[0])
- title(ax,f"{r['Indicator'].iloc[0]}, {y}"+(' (IMF projection)' if pr else ''));source(f,r)
+ title(ax,f"{who(r)}: {r['Indicator'].iloc[0]}, {y}"+(' (IMF projection)' if pr else ''));source(f,r)
 def table(r,years=range(2019,2032)):
  y=[str(k) for k in years if str(k) in r];P=pj(r)
  t=r.set_index(['Economy','Indicator'])[y].round(1);t.columns=[k+('*' if int(k)>=P else '') for k in y]
@@ -91,7 +91,7 @@ def dashboard(cty,a=2015,b=2031):
   q=r[r['Indicator code']==k]
   if q.empty:ax.axis('off');ax.set_title(lab+': no data',fontsize=9);continue
   c=per(q,a,b);x=num(c);v=vals(q,c)[0]
-  ax.bar(x,v,color=[BLUE if y<P else '#a9c4db' for y in x],edgecolor=['none' if y<P else BLUE for y in x])
+  ax.set_xlim(x[0]-.6,x[-1]+.6);ax.bar(x,v,color=[BLUE if y<P else '#a9c4db' for y in x],edgecolor=['none' if y<P else BLUE for y in x])
   ax.axhline(0,color='k',lw=.8);ax.grid(alpha=.3,axis='y');ax.xaxis.get_major_locator().set_params(integer=True);ax.set_title(lab,loc='left',fontsize=10,color=BLUE,weight='bold')
  f.suptitle(f"{r['Economy'].iloc[0]}: macroeconomic dashboard (light bars = IMF projections, {P} onward)",x=.01,ha='left',color=BLUE,weight='bold',fontsize=14)
  source(f,r)

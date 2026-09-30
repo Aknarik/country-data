@@ -7,10 +7,10 @@ def num(c):return np.array([int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k)
 def vals(r,c):return r[c].apply(pd.to_numeric,errors='coerce').values
 def pick(df,cty):c=[str(x).lower() for x in([cty] if isinstance(cty,str) else cty)];return df[df['Economy'].str.lower().isin(c)|df['Economy code'].str.lower().isin(c)]
 def title(ax,t,sub=None):
- ax.set_title(t,loc='left',weight='bold',color=BLUE,fontsize=12,pad=18 if sub else 6);sub and ax.text(0,1.01,sub,transform=ax.transAxes,fontsize=8,color='dimgray')
-def source(f,*R,tl=True):
+ t=re.sub(': (.)',lambda m:': '+m[1].upper(),t,1);ax.set_title(t,loc='left',weight='bold',color=BLUE,fontsize=12,pad=18 if sub else 6);sub and ax.text(0,1.01,sub,transform=ax.transAxes,fontsize=8,color='dimgray')
+def source(f,*R,tl=True,note=''):
  s=[]
  for r in R:
   for c,l in zip(r['Citation'],r.reindex(columns=['Source link'])['Source link']):l='' if pd.isna(l) else str(l);s.append(str(c)+(' ('+(l.split('/datamapper')[0]+'/datamapper' if '@' in l else l)+')' if l else ''))
  s=list(dict.fromkeys(s));'CONFIDENTIAL' in str(s) and f.text(.99,.995,'CONFIDENTIAL - IMF internal use only',color='red',ha='right',va='top',weight='bold')
- w=textwrap.fill('Source: '+'; '.join(s),175);f.text(.01,.005,w,fontsize=7,color='gray',va='bottom');tl and f.tight_layout(rect=(0,.15*(w.count(chr(10))+1.5)/f.get_figheight(),1,.97));plt.show()
+ w=textwrap.fill('Source: '+'; '.join(s),175)+(chr(10)+textwrap.fill('Note: '+note,175) if note else '');f.text(.01,.005,w,fontsize=7,color='gray',va='bottom');tl and f.tight_layout(rect=(0,.15*(w.count(chr(10))+1.5)/f.get_figheight(),1,.97));plt.show()

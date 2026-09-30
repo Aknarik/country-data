@@ -8,7 +8,7 @@ def _s(s):s=pd.Series(s,dtype=float).dropna();s.index=[re.sub(r'^(\d{4})\D*Q(\d)
 def user_gap(credit,gdp=None,name='User data',lam=None):
  s=_s(credit);q='-Q' in s.index[0]
  if gdp is not None:g=_s(gdp);g=g.rolling(4).sum() if q else g;s=(100*s/g.reindex(s.index)).dropna()
- assert len(s)>(40 if q else 10),'Need more than 10 years of data for a Basel gap';l=lam or(4e5 if q else 1e5);t=hp(s.values,l);t[:40 if q else 10]=np.nan
+ assert len(s)>(40 if q else 10),'Need over 10 years; 20+ recommended';len(s)<(80 if q else 20) and print('Caution: under 20 years, gap less reliable');l=lam or(4e5 if q else 1e5);t=hp(s.values,l);t[:40 if q else 10]=np.nan
  c=f'{name}: user data; own calculation, one-sided HP filter (lambda {l:,.0f}), Basel III method (BCBS 2010)'
  return pd.DataFrame([{'Economy':name,'Economy code':name,'Indicator code':k,'Citation':c,**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
 def buffer(g):return 0 if g<2 else 2.5 if g>10 else round((g-2)/8*2.5,2)
@@ -24,13 +24,13 @@ def gap(r,a=2000,mpp=True):
  if len(m):
   n=m[per(m)].apply(pd.to_numeric,errors='coerce').sum();n=n[(n!=0)&(n.index.astype(int)>=x[0])]
   for y,z in n.items():ax.axvline(int(y)+.5,color='#c0392b' if z>0 else 'green',alpha=.35,lw=1.5)
-  ax.plot([],[],color='#c0392b',alpha=.5,label='Net macroprudential tightening (iMaPP)');ax.plot([],[],color='green',alpha=.5,label='Net loosening')
+  ax.plot([],[],color='#c0392b',alpha=.5,label='Net tightening (iMaPP)');ax.plot([],[],color='green',alpha=.5,label='Net loosening')
  ax.legend(frameon=False,fontsize=8);gv=g[~np.isnan(g)][-1];lg=np.array(c)[~np.isnan(g)][-1]
- title(ax,f"{r['Economy'].iloc[0]}: credit-to-GDP ratio, trend and gap",f"Latest {lg}: gap {gv:.1f} pp, Basel guide buffer {buffer(gv)}%");source(f,r,m)
+ title(ax,f"{r['Economy'].iloc[0]}: credit-to-GDP ratio, trend and gap",f"Latest {lg}: gap {gv:.1f} pp, Basel guide buffer {buffer(gv)}%");source(f,r,m,note=len(m) and 'Lines: iMaPP scores each tool +1 in a month it is tightened, -1 if loosened; summed per year over 17 tools: red >0, green <0.' or '')
 def sectors(cty,a=2000):
  r=pick(CS,cty);assert len(r),'No BIS sector data for '+cty;c=[k for k in per(r,a) if r[k].notna().any()];f,ax=plt.subplots(figsize=(10.5,5.5))
  for lab,z in zip(r['Indicator'],vals(r,c)):ax.plot(num(c),z,lw=2,label=lab)
  ax.grid(alpha=.3);ax.legend(frameon=False,fontsize=8);title(ax,f"{r['Economy'].iloc[0]}: credit by borrower sector",'% of GDP');source(f,r)
 def mpp_table(cty):
  t=pick(MP,cty).sort_values('Latest action',ascending=False)
- print(t[['Tool','Latest action','Latest direction','Previous level (%)','New level (%)','Change (pp)','Magnitude note','Latest description']].fillna('').to_string(index=False))
+ print(t.iloc[:,[3,*range(9,16)]].fillna('').to_string(index=False))  # Tool, latest action..description
