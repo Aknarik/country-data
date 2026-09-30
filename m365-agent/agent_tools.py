@@ -107,7 +107,7 @@ def user_gap(credit=None, gdp=None, ratio=None, economy='User data', lamb=None, 
     """Build the 3 gap rows from the user's own data, ready for chart(rows, kind='gap').
     Give either `ratio` (% of GDP) or `credit` and `gdp` as pandas Series indexed by period/date.
     Quarterly GDP is summed over the last 4 quarters (BIS method); annual GDP with quarterly credit
-    is matched by calendar year. lambda: 400,000 quarterly, 100,000 annual (override with lamb)."""
+    is matched by calendar year. lambda: 400,000 quarterly, 1,562.5 annual (override with lamb)."""
     if ratio is None:
         c = pd.Series(credit.values, index=to_periods(credit.index), dtype=float).dropna()
         g = pd.Series(gdp.values, index=to_periods(gdp.index), dtype=float).dropna()
@@ -118,7 +118,7 @@ def user_gap(credit=None, gdp=None, ratio=None, economy='User data', lamb=None, 
     else:
         ratio = pd.Series(ratio.values, index=to_periods(ratio.index), dtype=float)
     r = ratio.dropna().sort_index(); q = '-Q' in r.index[0]
-    lamb = lamb or (400_000 if q else 100_000)
+    lamb = lamb or (400_000 if q else 400_000 / 4 ** 4)
     tr = pd.Series(hp_one_sided(r.values, lamb), index=r.index)
     tr.iloc[:min_years * (4 if q else 1)] = np.nan
     cite = f"{source}; trend and gap: own calculation, one-sided HP filter (lambda {lamb:,})"

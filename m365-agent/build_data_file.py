@@ -13,10 +13,10 @@ the file name in its references), for the agent's Code interpreter to read and p
       FSI_Quarterly   IMF core Financial Soundness Indicators, one column per quarter
   BIS_credit_to_GDP.xlsx
       Credit_GDP_Quarterly  BIS credit-to-GDP ratio + one-sided HP trend (lambda 400,000) + gap
-      Credit_GDP_Annual     same on calendar-year averages, lambda 100,000
+      Credit_GDP_Annual     same on calendar-year averages, lambda 1,562.5
   IMF_MFS_credit_to_GDP.xlsx
       Credit_GDP_Annual     Gulf countries not covered by BIS (Kuwait, UAE, Qatar, Oman):
-                            IMF MFS credit / WEO nominal GDP + one-sided HP trend (100,000) + gap
+                            IMF MFS credit / WEO nominal GDP + one-sided HP trend (1,562.5) + gap
 
 The FSI / BIS downloads and the HP filter live in
 .github/skills/country-data/scripts/financial_data.py.
@@ -112,7 +112,7 @@ def fsi_sheet(names):
 
 
 def mfs_sheet():
-    """Gulf credit-to-GDP from IMF MFS / WEO GDP, annual, one-sided HP (lambda 100,000)."""
+    """Gulf credit-to-GDP from IMF MFS / WEO GDP, annual, one-sided HP (lambda 1,562.5)."""
     lamb = fd.LAMBDA["A"]
     df = fd.mfs_credit_to_gdp_with_gap(fd.GULF_MFS)
     method = (f"Credit = depository corporations' claims on other sectors, incl. public non-financial "
@@ -550,7 +550,7 @@ def write_bis_book(built, refresh):
             "Ratio: credit to the private non-financial sector from all sectors, % of GDP, adjusted for breaks.",
             "Trend: one-sided Hodrick-Prescott filter (at each quarter the filter uses only data up to that "
             "quarter). Sheet 'Credit_GDP_Quarterly': lambda 400,000. Sheet 'Credit_GDP_Annual': calendar-"
-            "year averages (complete years only), lambda 100,000. The filter starts at the first observation and "
+            "year averages (complete years only), lambda 1,562.5 (= 400,000 / 4^4). The filter starts at the first observation and "
             "the trend is shown from there; the first 10 years are a start-up period (less reliable; BIS does "
             "not publish them). From year 11 on, the quarterly trend and gap match BIS's published figures "
             "exactly (checked for Saudi Arabia, UK, US, China, Germany, Turkey). No trend or gap is computed "
@@ -586,9 +586,9 @@ GAP_GUIDANCE = [
     "Quarterly data (preferred): ratio = credit at end of quarter / sum of GDP over the last 4 quarters x 100; "
     "one-sided HP trend with lambda 400,000 (BCBS, 2010, Annex 1; ESRB Recommendation ESRB/2014/1, Annex, "
     "Part II).",
-    "Annual data: this tool uses lambda 100,000, a project convention. The Basel guide is defined on quarterly "
-    "data; frequency-adjustment rules (Ravn and Uhlig, 2002) would give a much smaller annual lambda "
-    "(400,000 / 4^4 = about 1,600), so annual gaps are not directly comparable with BIS quarterly gaps.",
+    "Annual data: lambda 1,562.5 = 400,000 / 4^4, the Basel quarterly lambda adjusted for the frequency of "
+    "observations (Ravn and Uhlig, 2002), so annual trends are about as smooth as BIS quarterly trends. The "
+    "Basel guide itself is defined on quarterly data; prefer quarterly data when available.",
     "Oil exporters: a ratio to non-oil GDP (user data) avoids oil-price swings in GDP; say that the GDP "
     "measure is user data.",
     "References: BCBS (2010), Guidance for national authorities operating the countercyclical capital buffer, "
@@ -639,7 +639,7 @@ def write_banking_book(countries, built, refresh):
             "The narrower 'claims on private sector' series is not used because it has a reclassification "
             "break for Kuwait.",
             "Ratio = credit / annual nominal GDP x 100. The latest year's GDP may be an IMF estimate.",
-            "Trend: one-sided Hodrick-Prescott filter, lambda 100,000 (annual data), from the series start; the "
+            "Trend: one-sided Hodrick-Prescott filter, lambda 1,562.5 (annual data; = 400,000 / 4^4), from the series start; the "
             "first 10 years are a start-up period (less reliable). Gap = ratio - trend, percentage points of GDP.",
             "Oil-price swings move GDP, so the ratio jumps when oil prices fall (e.g. 2009, 2015, 2020).",
             "Sheet 'Latest': latest ratio, trend and gap for each economy.",

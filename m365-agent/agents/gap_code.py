@@ -8,8 +8,8 @@ def _s(s):s=pd.Series(s,dtype=float).dropna();s.index=[re.sub(r'^(\d{4})\D*Q(\d)
 def user_gap(credit,gdp=None,name='User data',lam=None):
  s=_s(credit);q='-Q' in s.index[0]
  if gdp is not None:g=_s(gdp);g=g.rolling(4).sum() if q else g;s=(100*s/g.reindex(s.index)).dropna()
- assert len(s)>=(80 if q else 20),'Need 20+ years of data';l=lam or(4e5 if q else 1e5);t=hp(s.values,l)
- c=f'{name}: user data; one-sided HP filter, lambda {l:,.0f} (BCBS 2010)'
+ assert len(s)>=(80 if q else 20),'Need 20+ years of data';l=lam or(4e5 if q else 4e5/4**4);t=hp(s.values,l)
+ c=f'{name}: user data; one-sided HP filter, lambda {l:,g} (BCBS 2010)'
  return pd.DataFrame([{'Economy':name,'Economy code':name,'Indicator code':k,'Citation':c,**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
 def buffer(g):return 0 if g<2 else 2.5 if g>10 else round((g-2)/8*2.5,2)
 def gap(r,a=2000,mpp=True):

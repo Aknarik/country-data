@@ -47,9 +47,9 @@ a Microsoft 365 Copilot agent that charts them with Code interpreter. See
 - `IMF_Financial_Soundness_Indicators.xlsx`: IMF core and selected additional Financial Soundness Indicators
   (incl. deposits to loans, FX loans, large exposures), quarterly, 157 countries
 - `BIS_credit_to_GDP.xlsx`: BIS credit-to-GDP ratio with a one-sided Hodrick–Prescott trend
-  (λ = 400,000 quarterly, 100,000 annual) and the credit-to-GDP gap, 44 economies
+  (λ = 400,000 quarterly, 1,562.5 = 400,000/4⁴ annual) and the credit-to-GDP gap, 44 economies
 - `IMF_MFS_credit_to_GDP.xlsx`: the same for Gulf countries BIS doesn't cover (Kuwait, UAE, Qatar, Oman),
-  from IMF Monetary and Financial Statistics credit ÷ WEO annual GDP (λ = 100,000)
+  from IMF Monetary and Financial Statistics credit ÷ WEO annual GDP (λ = 1,562.5)
 - `IMF_MFS_banking_sector.xlsx`: banking sector balance sheet (151 economies): credit to the economy, sovereign-bank nexus, equity, foreign assets
 - `IMF_iMaPP_macroprudential.xlsx`: macroprudential tools in place and actions (IMF iMaPP, 135 economies)
 - Loan portfolio by sector (106 economies) in the FSI workbook; BIS credit to households and corporates in the BIS workbook

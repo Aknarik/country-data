@@ -8,8 +8,8 @@ code file, and answers questions from IMF FSAP reports on the Gulf countries. It
 |---|---|
 | `IMF_World_Economic_Outlook_data.xlsx` | IMF World Economic Outlook and Fiscal Monitor: 23 annual indicators, about 200 countries and IMF aggregates, 1980–2031 (with projections); country groups including GCC |
 | `IMF_Financial_Soundness_Indicators.xlsx` | IMF Financial Soundness Indicators, core and selected additional (capital, asset quality, concentration, earnings, funding and liquidity incl. deposits to loans, FX exposure incl. FX loans), quarterly, 157 countries, 2001 onward; each indicator's group and vulnerability direction |
-| `BIS_credit_to_GDP.xlsx` | BIS credit-to-GDP ratio for 44 economies (including Saudi Arabia), with its one-sided Hodrick–Prescott trend and the credit-to-GDP gap: quarterly (λ = 400,000) and annual (λ = 100,000) |
-| `IMF_MFS_credit_to_GDP.xlsx` | Gulf countries BIS doesn't cover (Kuwait, UAE, Qatar, Oman): IMF Monetary and Financial Statistics credit ÷ WEO annual GDP, with one-sided HP trend (λ = 100,000) and gap, 2001–2025 |
+| `BIS_credit_to_GDP.xlsx` | BIS credit-to-GDP ratio for 44 economies (including Saudi Arabia), with its one-sided Hodrick–Prescott trend and the credit-to-GDP gap: quarterly (λ = 400,000) and annual (λ = 1,562.5) |
+| `IMF_MFS_credit_to_GDP.xlsx` | Gulf countries BIS doesn't cover (Kuwait, UAE, Qatar, Oman): IMF Monetary and Financial Statistics credit ÷ WEO annual GDP, with one-sided HP trend (λ = 1,562.5) and gap, 2001–2025 |
 | `IMF_FSI_heatmaps.xlsx` *(optional, for people)* | Colour-filled Excel heat maps for all 157 countries in the IMF FSI database (one sheet per country, index with links), same colours as the chart version. Open or share it directly; the agent doesn't need it |
 | `IMF_MFS_banking_sector.xlsx` | Banking sector balance sheet for about 150 countries (IMF MFS, annual): total assets and equity, **asset structure** (private sector, public corporations, government, nonresidents, central bank, other; for stacked bar and pie charts), credit to the economy, **sovereign-bank nexus** (claims on government / total assets), foreign assets and liabilities, deposits |
 | `IMF_iMaPP_macroprudential.xlsx` | Macroprudential tools for 135 economies (IMF iMaPP, public): per tool the number of tightenings and loosenings, the latest action with its date, direction, **magnitude** (previous and new level, change in pp, extracted from the description; for LTV the average LTV limit) and description, and net actions per year, and the IMF's official definition of each tool (LTV, DSTI, CCB...). Rebuild with `python m365-agent/build_local_sources.py --only imapp` after downloading a new iMaPP file |
@@ -153,7 +153,7 @@ def hp(y,l):
   d=np.diff(np.eye(t),2,axis=0);o.append(y[t-1] if t<3 else np.linalg.solve(np.eye(t)+l*d.T@d,y[:t])[-1])
  return np.array(o)
 def user_gap(ratio,name='User data',lamb=None):
- s=pd.Series(ratio,dtype=float).dropna();s.index=[str(i) for i in s.index];q='Q' in s.index[0];l=lamb or(4e5 if q else 1e5)
+ s=pd.Series(ratio,dtype=float).dropna();s.index=[str(i) for i in s.index];q='Q' in s.index[0];l=lamb or(4e5 if q else 4e5/4**4)
  t=hp(s.values,l);t[:40 if q else 10]=np.nan;cite=f'User data; one-sided HP, lambda {l:,.0f}'
  return pd.DataFrame([{'Economy':name,'Indicator code':k,'Indicator':k,'Unit':'','Citation':cite,'Source link':'',**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
 print('Tools ready',[n for n in S if fp(S[n][0])])
@@ -182,8 +182,8 @@ For example: *"Here is Kuwait's credit and non-oil GDP, calculate the credit gap
 - **Frequency** is detected automatically:
   - Quarterly: λ = 400,000. Quarterly GDP is summed over the last 4 quarters, as BIS does.
     If you give quarterly credit with annual GDP, each quarter is divided by its calendar year's GDP.
-  - Annual: λ = 100,000.
-  - Ask for a different λ if you want one, for example *"use lambda 1,600"*.
+  - Annual: λ = 1,562.5 (= 400,000 / 4⁴, Ravn–Uhlig).
+  - Ask for a different λ if you want one, for example *"use lambda 100,000"*.
 - As with the BIS data, the trend is shown from 10 years after the first observation.
 - The agent cites your data as "User-provided data".
 
@@ -301,7 +301,7 @@ is named after its source: the automatic reference then reads as the IMF or BIS 
 - **Trend:** one-sided Hodrick–Prescott filter. For each period, a standard HP filter is fitted on the
   data up to that period only, and its last value is the trend. No future data is used.
   - Quarterly data: λ = 400,000
-  - Annual data (calendar-year averages, complete years only): λ = 100,000
+  - Annual data (calendar-year averages, complete years only): λ = 1,562.5 (= 400,000 / 4⁴)
   - As in the BIS statistics, a trend is reported only once 10 years of data are available.
 - **Gap:** ratio minus trend, in percentage points of GDP.
 - **Check:** the quarterly trend and gap reproduce the BIS-published figures to 4 decimal places
@@ -321,7 +321,7 @@ For Kuwait, the UAE, Qatar and Oman the ratio is built from IMF data:
 - **GDP:** annual nominal GDP in domestic currency from the IMF World Economic Outlook (`NGDP`).
   The latest year may be an IMF estimate. Public IMF data has no non-oil GDP; to use non-oil GDP,
   give the agent your own series (see [Using your own credit and GDP data](#using-your-own-credit-and-gdp-data)).
-- **Ratio = credit ÷ GDP × 100.** Trend: one-sided HP filter with λ = 100,000 (annual data), from 10
+- **Ratio = credit ÷ GDP × 100.** Trend: one-sided HP filter with λ = 1,562.5 (annual data; = 400,000 / 4⁴), from 10
   years after the series start, so from 2011. Gap = ratio − trend.
 - **Saudi Arabia** uses the BIS series, which is quarterly and starts in 1993; IMF MFS only has
   2022 onward. **Bahrain** has no IMF MFS data.

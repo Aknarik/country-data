@@ -45,18 +45,20 @@ def readme(lines, freq_note):
         if "Trend starts 10 years after the series" in line:
             line = ("Trend: one-sided Hodrick-Prescott filter (at each quarter the filter uses only data up to that "
                     "quarter). Sheet 'Credit_GDP_Quarterly': lambda 400,000. Sheet 'Credit_GDP_Annual': calendar-year "
-                    "averages (complete years only), lambda 100,000. The filter starts at the first observation and "
+                    "averages (complete years only), lambda 1,562.5 (= 400,000 / 4^4). The filter starts at the first observation and "
                     "the trend is shown from there; the first 10 years are a start-up period (less reliable; BIS does "
                     "not publish them). From year 11 on, the quarterly trend and gap match BIS's published figures "
                     "exactly (checked for Saudi Arabia, UK, US, China, Germany, Turkey). No trend or gap is computed "
                     "for series shorter than 20 years.")
         elif "reported from 10 years" in line:
-            line = ("Trend: one-sided Hodrick-Prescott filter, lambda 100,000 (annual data), from the series start; the "
+            line = ("Trend: one-sided Hodrick-Prescott filter, lambda 1,562.5 (annual data; = 400,000 / 4^4), from the series start; the "
                     "first 10 years are a start-up period (less reliable). Gap = ratio - trend, percentage points of GDP.")
+        elif line.startswith("Annual data:"):
+            line = next(x for x in bdf.GAP_GUIDANCE if x.startswith("Annual data:"))
         elif line.startswith("USER-BUILT GAPS"):
             new.extend(bdf.GAP_GUIDANCE[:2])
             continue
-        new.append(line)
+        new.append(line.replace("lambda 100,000", "lambda 1,562.5"))
     return new
 
 
@@ -73,6 +75,9 @@ def main():
                 df = recompute(df, sheets[sheet])
                 if "Method" in df:
                     df["Method"] = df["Method"].map(method_text)
+                for col in ("Method", "Citation"):  # annual lambda 100,000 -> 1,562.5
+                    if col in df and sheets[sheet] == "A":
+                        df[col] = df[col].astype(str).str.replace("100,000", "1,562.5")
                 out[sheet] = df
             else:
                 out[sheet] = df

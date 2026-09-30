@@ -8,7 +8,7 @@ HOW TO RUN PYTHON (important)
 
 FUNCTIONS (country = ISO3 code or name, e.g. 'KWT')
 - gap('KWT'): ratio, trend, gap with the Basel 2-10 pp range, buffer guide, then the iMaPP tools table.
-  BIS quarterly (lambda 400,000); Kuwait, UAE, Qatar, Oman: IMF MFS annual (lambda 100,000).
+  BIS quarterly (lambda 400,000); Kuwait, UAE, Qatar, Oman: IMF MFS annual (lambda 1,562.5 = 400,000/4^4).
 - user_gap(credit, gdp=None, name='KWT'): gap from user data (ratio, or credit and GDP levels, indexed
   '2010' or '2010-Q1'; 20+ years needed); then gap(user_gap(...)). Non-oil GDP = user data.
 - sectors('GBR'): household vs corporate credit (BIS economies only).
@@ -58,8 +58,8 @@ def _s(s):s=pd.Series(s,dtype=float).dropna();s.index=[re.sub(r'^(\d{4})\D*Q(\d)
 def user_gap(credit,gdp=None,name='User data',lam=None):
  s=_s(credit);q='-Q' in s.index[0]
  if gdp is not None:g=_s(gdp);g=g.rolling(4).sum() if q else g;s=(100*s/g.reindex(s.index)).dropna()
- assert len(s)>=(80 if q else 20),'Need 20+ years of data';l=lam or(4e5 if q else 1e5);t=hp(s.values,l)
- c=f'{name}: user data; one-sided HP filter, lambda {l:,.0f} (BCBS 2010)'
+ assert len(s)>=(80 if q else 20),'Need 20+ years of data';l=lam or(4e5 if q else 4e5/4**4);t=hp(s.values,l)
+ c=f'{name}: user data; one-sided HP filter, lambda {l:,g} (BCBS 2010)'
  return pd.DataFrame([{'Economy':name,'Economy code':name,'Indicator code':k,'Citation':c,**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
 def buffer(g):return 0 if g<2 else 2.5 if g>10 else round((g-2)/8*2.5,2)
 def gap(r,a=2000,mpp=True):

@@ -24,7 +24,8 @@ One-sided HP filter
   For each period t, a standard (two-sided) HP filter is run on the data available
   up to t only, and the trend value at t is kept. This uses no future information,
   as in the Basel III countercyclical capital buffer guide.
-  Default smoothing (lambda): quarterly 400,000; annual 100,000 (override with --lamb).
+  Default smoothing (lambda): quarterly 400,000 (Basel); annual 400,000 / 4^4 = 1,562.5
+  (Ravn and Uhlig, 2002, frequency adjustment) (override with --lamb).
   gap = ratio - trend (percentage points of GDP).
   As BIS does, a trend is reported only once 10 years of data are available (--min-obs).
   With these defaults the quarterly trend reproduces BIS's published credit-to-GDP trend.
@@ -33,7 +34,7 @@ Usage
   python financial_data.py fsi    --countries "USA,GBR,KWT" --out fsi.csv
   python financial_data.py credit --countries "US,GB,DE"    --out credit_gap.csv
   python financial_data.py credit --countries all --out credit_gap.xlsx
-  python financial_data.py credit --countries US --annual           # annual averages, lambda 100,000
+  python financial_data.py credit --countries US --annual           # annual averages, lambda 1,562.5
   python financial_data.py credit --countries US --plot us_gap.png
   python financial_data.py mfs    --countries "KWT,ARE,QAT,OMN" --out gulf_gap.csv --plot gulf.png
   python financial_data.py mfs    --non-oil-gdp non_oil_gdp.csv --out gulf_nonoil_gap.csv --plot gulf.png
@@ -60,7 +61,7 @@ import requests
 IMF_SDMX = "https://api.imf.org/external/sdmx/3.0"
 BIS_SDMX = "https://stats.bis.org/api/v2"
 HEADERS = {"User-Agent": "python-requests/2.34 country_data.py"}
-LAMBDA = {"Q": 400_000, "A": 100_000}
+LAMBDA = {"Q": 400_000, "A": 400_000 / 4 ** 4}  # annual = 1,562.5 (Ravn-Uhlig frequency adjustment)
 PERIODS_PER_YEAR = {"Q": 4, "A": 1}
 MIN_YEARS = 0  # trend shown from the first observation (BIS shows it only after 10 years; values after
 #               that are identical, since the one-sided filter always uses all data from the start)
@@ -136,7 +137,7 @@ def hp_one_sided(series, lamb=None, freq=None, min_obs=None):
     """One-sided (real-time) HP trend of a pandas Series indexed by period.
 
     trend[t] = last value of the two-sided HP trend fitted on observations up to t.
-    lamb defaults to 400,000 for quarterly and 100,000 for annual data.
+    lamb defaults to 400,000 for quarterly and 1,562.5 (= 400,000 / 4^4) for annual data.
     Missing values are dropped first. The filter always starts at the first observation.
     min_obs (default: from the first period) is the number of observations before a trend is
     reported. Series shorter than MIN_SPAN_YEARS get no trend (all NaN)."""
@@ -269,7 +270,7 @@ def load_non_oil_gdp(path):
 
 def mfs_credit_to_gdp_with_gap(countries=GULF_MFS, lamb=None, min_obs=None, non_oil_gdp=None):
     """Credit-to-GDP ratio (%) = MFS credit / nominal GDP, with one-sided HP trend
-    (annual, lambda 100,000 by default) and gap. GDP is WEO total GDP, or non-oil GDP from the
+    (annual, lambda 1,562.5 by default) and gap. GDP is WEO total GDP, or non-oil GDP from the
     file `non_oil_gdp` (see load_non_oil_gdp). Returns country, period, credit, gdp, ratio, trend, gap."""
     gdp = load_non_oil_gdp(non_oil_gdp) if non_oil_gdp else fetch_weo_gdp(countries)
     if non_oil_gdp:
@@ -499,7 +500,7 @@ def main():
     s.add_argument("--out", default="fsi.csv")
     s = sub.add_parser("credit", help="BIS credit-to-GDP ratio + one-sided HP trend and gap")
     s.add_argument("--countries", default="all", help="BIS codes, e.g. US,GB,DE,XM (default all)")
-    s.add_argument("--annual", action="store_true", help="use annual averages (lambda 100,000)")
+    s.add_argument("--annual", action="store_true", help="use annual averages (lambda 1,562.5)")
     s.add_argument("--lamb", type=float, help="override the smoothing parameter")
     s.add_argument("--min-obs", type=int,
                    help="observations needed before a trend is reported (default 10 years)")
@@ -507,7 +508,7 @@ def main():
     s.add_argument("--plot", help="also save a chart (PNG) per country")
     s = sub.add_parser("mfs", help="IMF MFS credit / WEO GDP (annual) + one-sided HP trend and gap")
     s.add_argument("--countries", default=",".join(GULF_MFS), help="ISO3 codes (default Gulf: KWT,ARE,QAT,OMN)")
-    s.add_argument("--lamb", type=float, help="override the smoothing parameter (default 100,000)")
+    s.add_argument("--lamb", type=float, help="override the smoothing parameter (default 400,000 quarterly, 1,562.5 annual)")
     s.add_argument("--min-obs", type=int, help="observations needed before a trend is reported (default 11)")
     s.add_argument("--non-oil-gdp", help="CSV/XLSX with country, year, non_oil_gdp (millions, domestic "
                                          "currency); used instead of WEO total GDP")

@@ -84,10 +84,10 @@ For banking-sector health or credit cycles, use `scripts/financial_data.py`:
   US, GB, SA, XM = euro area):
   `python <this-skill-dir>/scripts/financial_data.py credit --countries "SA,US" --out credit_gap.csv --plot gap.png`
   The trend uses lambda 400,000 for quarterly data; add `--annual` for calendar-year averages with lambda
-  100,000. The gap is ratio minus trend in percentage points. Basel III guide: above 2 pp may signal a
+  1,562.5 (= 400,000 / 4^4, Ravn-Uhlig). The gap is ratio minus trend in percentage points. Basel III guide: above 2 pp may signal a
   buffer build-up; above 10 pp the maximum buffer.
 - Gulf countries BIS doesn't cover (Kuwait, UAE, Qatar, Oman): IMF MFS credit / WEO annual GDP with the
-  same one-sided HP trend (lambda 100,000) and gap; the chart shows ratio + trend on top and the gap below:
+  same one-sided HP trend (lambda 1,562.5) and gap; the chart shows ratio + trend on top and the gap below:
   `python <this-skill-dir>/scripts/financial_data.py mfs --countries "KWT,QAT" --out gulf_gap.csv --plot gulf.png`
   Saudi Arabia: use `credit --countries SA` (BIS). Bahrain: not available.
 
