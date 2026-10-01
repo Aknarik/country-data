@@ -68,7 +68,7 @@ AGENTS = [
      "note": "If the agent cannot open the reports, download the PDFs from the catalog links and upload them to "
              "Knowledge, or add a SharePoint/OneDrive folder that contains them."},
     {"folder": "5_Banks_and_Balance_Sheets", "source": "5_Banks_balance_sheets",
-     "name": "Banks & Balance Sheets (IMF staff)",
+     "name": "Banks & Balance Sheets",
      "description": "Bank-by-bank indicators with bank names (IMF HEAT 2.0), banking balance sheet growth, loan "
                     "portfolio and asset structure for any country",
      "knowledge": [DATA / "IMF_Financial_Soundness_Indicators.xlsx", DATA / "IMF_MFS_banking_sector.xlsx",
@@ -78,8 +78,7 @@ AGENTS = [
                   "Loan portfolio structure for a country"],
      "test": "Kuwait Tier 1 capital by bank, then: Brazil bank balance sheet growth",
      "expected": "Bars with bank names and the median bank; growth chart and table for total assets, credit, "
-                 "deposits, equity, claims on government, foreign assets.",
-     "note": "Contains licensed S&P Capital IQ Pro data (HEAT): share only with IMF colleagues entitled to it."},
+                 "deposits, equity, claims on government, foreign assets."},
 ]
 
 STEPS = """HOW TO CREATE THIS AGENT
@@ -105,7 +104,7 @@ def main():
     lines = [f"COPILOT AGENTS PACKAGE - built {time.strftime('%Y-%m-%d %H:%M')}", "",
              "One folder per agent. In each: INSTRUCTIONS.txt, SETUP.txt, knowledge/ (files to upload).",
              "All agents work for any country; the user names it in the question.",
-             "Folder 5 contains licensed HEAT data: share it only with IMF colleagues entitled to it.", ""]
+             "For internal use. Folder 5 includes the HEAT 2.0 bank data.", ""]
     for a in AGENTS:
         d = OUT / a["folder"]
         (d / "knowledge").mkdir(parents=True)

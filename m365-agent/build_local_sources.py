@@ -339,7 +339,7 @@ def heat_rows(path, annual, iso):
     return rows
 
 
-BANK_CITATION = "IMF HEAT 2.0, bank-level data from S&P Capital IQ Pro (IMF staff use)"
+BANK_CITATION = "IMF HEAT 2.0, bank-level data from S&P Capital IQ Pro"
 
 
 def heat_bank_rows(path, iso):
