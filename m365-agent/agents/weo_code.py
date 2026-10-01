@@ -16,7 +16,7 @@ def line(r,a=2000,b=2031,t=None):
  if np.nanmin(V)<0<np.nanmax(V):ax.axhline(0,color='k',lw=.8)
  ax.grid(alpha=.3);ax.set_ylabel(r['Unit'].iloc[0]);leg(ax)
  ax.xaxis.get_major_locator().set_params(integer=True)
- title(ax,t or who(r)+': '+(r['Indicator'].iloc[0] if one else ', '.join(r['Indicator'].unique())))
+ title(ax,t or who(r)+': '+(r['Indicator'].iloc[0] if one else ', '.join(r['Indicator'].unique()))+U(r))
  source(f,r)
 def bar(r,year=None,hl=None):
  P=pj(r);y=str(year or P-1);s=r.set_index('Economy')[y].dropna().sort_values()
@@ -24,7 +24,7 @@ def bar(r,year=None,hl=None):
  ax.barh(s.index,s.values,color=['#c0392b' if k==hl else BLUE for k in s.index]);pr and(ax.set_facecolor('#ececec'),ax.text(.99,.02,'IMF projection',transform=ax.transAxes,ha='right',color='dimgray'))
  for i,v in enumerate(s.values):ax.text(v,i,f' {v:,.1f}',va='center',fontsize=7)
  ax.axvline(0,color='k',lw=.8);ax.grid(alpha=.3,axis='x');ax.set_xlabel(r['Unit'].iloc[0])
- title(ax,f"{who(r)}: {r['Indicator'].iloc[0]}, {y}");source(f,r)
+ title(ax,f"{who(r)}: {r['Indicator'].iloc[0]}, {y}{U(r)}");source(f,r)
 def table(r,years=range(2019,2032)):
  y=[str(k) for k in years if str(k) in r];P=pj(r)
  t=r.set_index(['Economy','Indicator'])[y].round(1);t.columns=[k+('*' if int(k)>=P else '') for k in y]

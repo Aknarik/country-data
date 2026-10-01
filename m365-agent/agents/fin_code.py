@@ -7,7 +7,7 @@ def lines(ax,r,a=2010,n=2):
  for lab,v in zip(r['Indicator'],vals(r,c)):L,=ax.plot(num(c),v,lw=2,label=(l:=lab.split(': ')[-1])[0].upper()+l[1:]);last(ax,num(c),v,L.get_color())
  leg(ax,n=n)
 def ts(n,cty,codes,t,a=2010):
- r=get(n,cty,codes);f,ax=plt.subplots(figsize=(10.5,5.5));lines(ax,r,a);title(ax,f"{r['Economy'].iloc[0]}: {t}",'; '.join(r['Unit'].unique()));source(f,r)
+ r=get(n,cty,codes);f,ax=plt.subplots(figsize=(10.5,5.5));lines(ax,r,a);title(ax,f"{r['Economy'].iloc[0]}: {t}{U(r)}");source(f,r)
 def heatmap(cty,q=12):
  r=get('F',cty).drop_duplicates('Indicator code');c=per(r);V=r[c].apply(pd.to_numeric,errors='coerce')
  k=(V.notna().sum(axis=1)>=8).values;r,V=r[k],V[k];R=V.apply(lambda s:(s.rank(method='min')-1)/(s.count()-1),axis=1)
@@ -33,12 +33,12 @@ def lp(cty):
 def structure(cty,what='loans',kind='stack',year=None):
  r=lp(cty) if what=='loans' else get('Bk',cty).pipe(lambda d:d[d['Indicator code'].str[:8]=='BANK_STR'])
  assert len(r),'No data for '+cty;f,ax=plt.subplots(figsize=(11,5.8));p=mix(ax,r,kind,year)
- title(ax,f"{r['Economy'].iloc[0]}: "+('Bank loan portfolio by sector' if what=='loans' else 'Bank asset structure by counterparty')+p,'Percent of total');source(f,r)
+ title(ax,f"{r['Economy'].iloc[0]}: "+('Bank loan portfolio by sector' if what=='loans' else 'Bank asset structure by counterparty')+p+' (percent of total)');source(f,r)
 def banks(cty,ind='T1',year=None):
  r=get('Hb',cty,f'HEAT_{ind}_BANK');n=r[per(r)].notna().sum();y=str(year or n[n>=.6*n.max()].index[-1])
  s=r.set_index('Economy')[y].dropna().sort_values();f,ax=plt.subplots(figsize=(10,.3*len(s)+2));ax.barh(s.index,s.values,color=BLUE)
  ax.axvline(s.median(),color='#c0392b',ls='--',label=f'Median bank {s.median():.1f}');leg(ax,y=-.12);ax.grid(alpha=.3,axis='x')
- e=get('Bk',cty)['Economy'];title(ax,f"{e.iloc[0] if len(e) else cty}: {r['Indicator'].iloc[0]} by bank, {y}");source(f,r)
+ e=get('Bk',cty)['Economy'];title(ax,f"{e.iloc[0] if len(e) else cty}: {r['Indicator'].iloc[0]} by bank, {y}{U(r)}");source(f,r)
 def dashboard(cty):
  f,A=plt.subplots(2,3,figsize=(17,9));A=A.flat;u=[]
  P=[('Capital','F',['FSI688_CFSI_PT']),('Asset quality','F',['AQ12_CFSI_PT','AQ14_CFSI_PT']),('Profitability','F',['ROA_CFSI_PT','ROE_CFSI_PT']),
@@ -47,4 +47,4 @@ def dashboard(cty):
   r=lp(cty) if n=='Lp' else get(n,cty,k)
   if len(r)==0:ax.axis('off');ax.set_title(t+': no data',loc='left');continue
   ax.set_title(t+(mix(ax,r,'pie',None) if n=='Lp' else ''),loc='left',color=BLUE,weight='bold');n=='Lp' or lines(ax,r,2016,1);u.append(r)
- f.suptitle(f"{u[0]['Economy'].iloc[0]}: Banking sector dashboard, percent",x=.01,ha='left',color=BLUE,weight='bold',size=15);source(f,*u)
+ f.suptitle(f"{u[0]['Economy'].iloc[0]}: Banking sector dashboard, percent",x=.01,ha='left',color=BLUE,weight='bold');source(f,*u)

@@ -21,15 +21,15 @@ def gap(r,a=2000,mpp=True):
  a2.axhspan(2,10,color='#c0392b',alpha=.07);a2.text(x[0],10,' Basel range 2-10 pp',fontsize=7,color='#c0392b',va='bottom')
  a2.xaxis.get_major_locator().set_params(integer=True);a2.axhline(0,color='k',lw=.8);a2.set_ylabel('Gap, pp of GDP');ax.set_ylabel('Percent of GDP');a2.grid(alpha=.3);ax.grid(alpha=.3)
  s0=num([k for k in per(r) if pd.notna(I.loc['CREDIT_GDP',k])])[0]+10
- if s0>x[0]:[z.axvspan(x[0]-.5,s0-.5,color='gray',alpha=.12) for z in(ax,a2)];ax.text(x[0],.98,' Start-up (first 10 years)',transform=ax.get_xaxis_transform(),va='top',fontsize=7,color='dimgray')
+ if s0>x[0]:[z.axvspan(x[0]-.5,s0-.5,color='gray',alpha=.12,label='Trend start-up (first 10 years)') for z in(ax,a2)]
  leg(a2,ax,-.2);gv=g[~np.isnan(g)][-1];lg=np.array(c)[~np.isnan(g)][-1]
- title(ax,f"{r['Economy'].iloc[0]}: Credit-to-GDP ratio, trend and gap",f"Latest {lg}: gap {gv:.1f} pp, Basel guide buffer {buffer(gv)} percent");source(f,r)
+ title(ax,f"{r['Economy'].iloc[0]}: Credit-to-GDP ratio, trend and gap (percent of GDP)",f"Latest {lg}: gap {gv:.1f} pp, Basel guide buffer {buffer(gv)} percent");source(f,r)
  e=r['Economy code'].iloc[0]
  if mpp and len(pick(MP,e)):return mpp_table(e)
 def sectors(cty,a=2000):
  r=pick(CS,cty);assert len(r),'No BIS sector data for '+cty;c=[k for k in per(r,a) if r[k].notna().any()];f,ax=plt.subplots(figsize=(10.5,5.5))
  for lab,z in zip(r['Indicator'],vals(r,c)):l,=ax.plot(num(c),z,lw=2,label=lab);last(ax,num(c),z,l.get_color())
- ax.grid(alpha=.3);leg(ax);title(ax,f"{r['Economy'].iloc[0]}: Credit by borrower sector",'Percent of GDP');source(f,r)
+ ax.grid(alpha=.3);leg(ax);title(ax,f"{r['Economy'].iloc[0]}: Credit by borrower sector (percent of GDP)");source(f,r)
 N='A tool introduced is in place unless later removed; No = no action since 1990. Source: IMF iMaPP Database (Alam et al., 2019).'
 def mpp_table(cty):
  t=pick(MP,cty)

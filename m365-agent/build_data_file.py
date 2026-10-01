@@ -445,7 +445,7 @@ def main():
                 seen_agg.add(name)
             else:
                 name, kind = countries.get(econ, econ), "Country"
-            link = f"https://www.imf.org/external/datamapper/{code}@{tag}/{econ}"
+            link = "https://www.imf.org/external/datamapper"  # one link, so chart source lines stay short
             econ = "KOS" if econ == "UVK" else econ  # match the Groups sheet code
             rows.append({"Economy code": econ, "Economy": clean(name), "Type": kind,
                          "Indicator code": code, "Indicator": clean(m["label"]),
