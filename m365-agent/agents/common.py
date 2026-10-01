@@ -1,6 +1,6 @@
 import glob,re,textwrap,numpy as np,pandas as pd,matplotlib.pyplot as plt
 BLUE='#4B82AD'
-try:plt.rcParams.update({'axes.titlecolor':BLUE,'axes.titleweight':'bold','axes.titlelocation':'left'})
+try:plt.rcParams.update({'axes.titlecolor':BLUE,'axes.titleweight':'bold','axes.titlelocation':'left','axes.linewidth':.5,'grid.linewidth':.4,'xtick.major.width':.5,'ytick.major.width':.5})
 except Exception:0
 FILES=glob.glob('/mnt/**/*.xls*',recursive=True)+glob.glob('**/*.xls*',recursive=True)
 def T(key,sheet):
@@ -18,5 +18,4 @@ def last(ax,x,v,c='k',d=0):
  if len(k):i=k[-1];ax.annotate(f'{v[i]:,.1f}',(x[i],v[i]),xytext=(4,d),textcoords='offset points',va='center',fontsize=8,color=c,weight='bold')
 def source(f,*R,tl=True):
  s=list(dict.fromkeys(f'{c} ({l})' if isinstance(l,str) else str(c) for r in R for c,l in zip(r['Citation'],r.reindex(columns=['Source link'])['Source link'])))
- 'CONFIDENTIAL' in str(s) and f.text(.99,.995,'CONFIDENTIAL - IMF internal use only',color='red',ha='right',va='top',weight='bold')
- w=textwrap.fill('Source: '+'; '.join(s),175);f.text(.01,.005,w,fontsize=7,color='gray',va='bottom');tl and f.tight_layout(rect=(0,.15*(w.count(chr(10))+1.5)/f.get_figheight(),1,.97));plt.show()
+ w=textwrap.fill('Source: '+'; '.join(s),175);f.text(.01,.005,w,fontsize=7,color='gray',va='bottom');tl and f.tight_layout(rect=(0,.15*(w.count(chr(10))+1.5)/f.get_figheight(),1,.97),h_pad=2.5,w_pad=2);plt.show()

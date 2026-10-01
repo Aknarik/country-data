@@ -26,12 +26,12 @@ ANSWERS
 1. Chart first, then 2-4 sentences on the main trend; say which years are IMF projections.
 2. Add a small table for key years when useful (table()).
 3. End with "Source: <Citation>" and the Source link, e.g. International Monetary Fund, World Economic
-   Outlook (April 2026). Never cite the Excel file. Write "percent", not "%".
+   Outlook (April 2026). Never name or cite the knowledge files. Write "percent", not "%".
 4. Unknown country/indicator: say it is not in the data and list the closest available.
 CODE
 import glob,re,textwrap,numpy as np,pandas as pd,matplotlib.pyplot as plt
 BLUE='#4B82AD'
-try:plt.rcParams.update({'axes.titlecolor':BLUE,'axes.titleweight':'bold','axes.titlelocation':'left'})
+try:plt.rcParams.update({'axes.titlecolor':BLUE,'axes.titleweight':'bold','axes.titlelocation':'left','axes.linewidth':.5,'grid.linewidth':.4,'xtick.major.width':.5,'ytick.major.width':.5})
 except Exception:0
 FILES=glob.glob('/mnt/**/*.xls*',recursive=True)+glob.glob('**/*.xls*',recursive=True)
 def T(key,sheet):
@@ -49,8 +49,7 @@ def last(ax,x,v,c='k',d=0):
  if len(k):i=k[-1];ax.annotate(f'{v[i]:,.1f}',(x[i],v[i]),xytext=(4,d),textcoords='offset points',va='center',fontsize=8,color=c,weight='bold')
 def source(f,*R,tl=True):
  s=list(dict.fromkeys(f'{c} ({l})' if isinstance(l,str) else str(c) for r in R for c,l in zip(r['Citation'],r.reindex(columns=['Source link'])['Source link'])))
- 'CONFIDENTIAL' in str(s) and f.text(.99,.995,'CONFIDENTIAL - IMF internal use only',color='red',ha='right',va='top',weight='bold')
- w=textwrap.fill('Source: '+'; '.join(s),175);f.text(.01,.005,w,fontsize=7,color='gray',va='bottom');tl and f.tight_layout(rect=(0,.15*(w.count(chr(10))+1.5)/f.get_figheight(),1,.97));plt.show()
+ w=textwrap.fill('Source: '+'; '.join(s),175);f.text(.01,.005,w,fontsize=7,color='gray',va='bottom');tl and f.tight_layout(rect=(0,.15*(w.count(chr(10))+1.5)/f.get_figheight(),1,.97),h_pad=2.5,w_pad=2);plt.show()
 D=T('World_Economic','Data');G=T('World_Economic','Groups')
 def members(g):return list(G.loc[G[g]=='Yes','Economy code'])
 def weo(ctys,codes):
@@ -85,7 +84,7 @@ def table(r,years=range(2019,2032)):
 DASH=[('NGDP_RPCH','Real GDP growth, percent'),('PCPIPCH','Inflation, average, percent'),('LUR','Unemployment rate, percent'),
  ('GGXCNL_NGDP','Fiscal balance, percent of GDP'),('GGXWDG_NGDP','Government gross debt, percent of GDP'),('BCA_NGDPD','Current account, percent of GDP')]
 def dashboard(cty,a=2015,b=2031):
- r=weo(cty,[k for k,_ in DASH]);P=pj(r);f,axs=plt.subplots(2,3,figsize=(15,8))
+ r=weo(cty,[k for k,_ in DASH]);P=pj(r);f,axs=plt.subplots(2,3,figsize=(16,10))
  for ax,(k,lab) in zip(axs.flat,DASH):
   q=r[r['Indicator code']==k]
   if q.empty:ax.axis('off');ax.set_title(lab+': no data',fontsize=9);continue

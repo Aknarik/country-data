@@ -32,7 +32,7 @@ def table(r,years=range(2019,2032)):
 DASH=[('NGDP_RPCH','Real GDP growth, percent'),('PCPIPCH','Inflation, average, percent'),('LUR','Unemployment rate, percent'),
  ('GGXCNL_NGDP','Fiscal balance, percent of GDP'),('GGXWDG_NGDP','Government gross debt, percent of GDP'),('BCA_NGDPD','Current account, percent of GDP')]
 def dashboard(cty,a=2015,b=2031):
- r=weo(cty,[k for k,_ in DASH]);P=pj(r);f,axs=plt.subplots(2,3,figsize=(15,8))
+ r=weo(cty,[k for k,_ in DASH]);P=pj(r);f,axs=plt.subplots(2,3,figsize=(16,10))
  for ax,(k,lab) in zip(axs.flat,DASH):
   q=r[r['Indicator code']==k]
   if q.empty:ax.axis('off');ax.set_title(lab+': no data',fontsize=9);continue

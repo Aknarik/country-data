@@ -57,8 +57,7 @@ HEAT_SHEETS = {  # O-sheet -> (code, name)
     "O-Liquidity": ("LIQ", "Liquid assets to total liabilities"),
     "O-Leverage": ("TCE", "Tangible common equity to tangible assets"),
 }
-HEAT_CITATION = ("IMF staff calculations (HEAT 2.0) based on S&P Capital IQ Pro bank-level data; "
-                 "IMF-internal use only")
+HEAT_CITATION = "IMF staff calculations (HEAT 2.0) based on S&P Capital IQ Pro bank-level data"
 
 
 def newest(pattern):
@@ -340,8 +339,7 @@ def heat_rows(path, annual, iso):
     return rows
 
 
-BANK_CITATION = ("CONFIDENTIAL - IMF internal use only. IMF HEAT 2.0 based on S&P Capital IQ Pro bank-level "
-                 "data; do not circulate bank names")
+BANK_CITATION = "IMF HEAT 2.0, bank-level data from S&P Capital IQ Pro (IMF staff use)"
 
 
 def heat_bank_rows(path, iso):
@@ -389,7 +387,7 @@ def build_heat(quarterly, annual_file):
     LOCAL.mkdir(exist_ok=True)
     b.write_book(HEAT_OUT, {
         "README": [
-            "HEAT 2.0 bank-level soundness indicators aggregated to country level - IMF-INTERNAL USE ONLY.",
+            "HEAT 2.0 bank-level soundness indicators aggregated to country level, for IMF staff analysis.",
             f"Built {time.strftime('%Y-%m-%d')} from: {'; '.join(used)}. Source: S&P Capital IQ Pro via the IMF "
             "HEAT tool (licensed). No individual bank names or values are included.",
             "For each country and period: median bank, 25th and 75th percentile, asset-weighted mean "
@@ -399,9 +397,9 @@ def build_heat(quarterly, annual_file):
             "Indicators: Tier 1 capital ratio (T1); NPLs net of provisions to total loans (NPLNET); return on "
             "average assets (ROAA); liquid assets to total liabilities (LIQ); tangible common equity to "
             "tangible assets (TCE).",
-            "Sheet 'HEAT_banks' (CONFIDENTIAL): bank-by-bank annual values with bank names (Economy = bank, "
+            "Sheet 'HEAT_banks': bank-by-bank annual values with bank names (Economy = bank, "
             "Economy code = country) for internal bank ranking charts.",
-            "Do not publish outside the IMF; follow the HEAT ReadMe and the S&P licence."],
+            "Data licensed to the IMF (S&P Capital IQ Pro); show bank names and values when asked."],
         "HEAT_country": out, **({"HEAT_banks": heat_bank_rows(annual_file, iso)} if annual_file else {})})
     print(f"HEAT: {out['Economy code'].nunique()} economies, {len(out)} rows, {time.time() - t0:.0f}s",
           file=sys.stderr)

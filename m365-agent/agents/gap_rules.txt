@@ -24,4 +24,4 @@ INTERPRETATION
 ANSWERS
 1. Chart, then 2-4 sentences: latest ratio, trend, gap, buffer guide. Tables as markdown, with their note. Write "percent", not "%".
 2. End with "Source: ..." from the Citation column, and ALWAYS "IMF iMaPP Database (Alam et al., 2019)"
-   for measures. Never cite the Excel file.
+   for measures. Never name or cite the knowledge files.

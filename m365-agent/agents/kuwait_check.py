@@ -12,12 +12,13 @@ CHECKS = {"1_WEO_outlook": [("weo_growth", "line(weo('Kuwait','NGDP_RPCH'))"),
                             ("sectors", "sectors('KWT')"), ("mpp", "mpp_table('KWT')"),
                             ("defs", "print(T('iMaPP','Definitions').query('`Tool code` in [\"LTV\",\"DSTI\"]').iloc[:,:3].to_string())"),
                             ("lambda", "r=gap_rows if False else M[M['Economy code']=='KWT'];print(r['Method'].iloc[0])")],
-          "3_Banking_sector": [("dash", "dashboard('KWT')"), ("heat", "print(heatmap('Kuwait'))"), ("loans_bar", "structure('KWT')"),
-                            ("loans_pie", "structure('KWT',kind='pie',year=2025)"), ("assets", "structure('KWT','assets')"),
+          "3_Financial_soundness": [("dash", "dashboard('KWT')"), ("heat", "heatmap('Kuwait')"),
                             ("nexus", "ts('Bk','KWT',['BANK_GOV_TA','BANK_GOV_GDP'],'Sovereign-bank nexus')"),
                             ("liab", "ts('Bk','KWT',['BANK_DEPOSITS_TA','BANK_EQUITY_TA','BANK_FOREIGN_LIAB_TA'],'Bank funding structure')"),
                             ("npl", "ts('F','KWT',['AQ12_CFSI_PT'],'Nonperforming loans')"),
-                            ("dirs", "r=get('F','KWT').drop_duplicates('Indicator code');print(r[['Group','Indicator','More vulnerable when']].to_string(index=False))")]
+                            ("dirs", "r=get('F','KWT').drop_duplicates('Indicator code');print(r[['Group','Indicator','More vulnerable when']].to_string(index=False))")],
+          "5_Banks_balance_sheets": [("loans_bar", "structure('KWT')"), ("loans_pie", "structure('KWT',kind='pie',year=2025)"),
+                            ("assets", "structure('KWT','assets')"), ("growth", "growth('KWT')")]
           + [(f"bank_{k}", f"banks('KWT','{k}')") for k in ("T1", "LIQ", "NPLNET", "TCE", "ROAA")]}
 for agent, calls in CHECKS.items():
     code = (HERE / agent / "INSTRUCTIONS.txt").read_text(encoding="utf-8").split("CODE\n", 1)[1]
