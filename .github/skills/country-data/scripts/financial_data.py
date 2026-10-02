@@ -377,10 +377,11 @@ LOAN_SECTORS = {"NINTBKF4_T_S11_A_XDC": ("LOANS_NFC_SH", "Non-financial corporat
 LOAN_RRE = ("RREF4_XDC", "LOANS_RRE_SH", "Residential real estate loans (memo: part of the sectors above)")
 
 
-def loan_portfolio(countries="all", freq="Q"):
+def loan_portfolio(countries="all", freq="Q", amounts=False):
     """Deposit takers' customer (non-interbank) loans by borrowing sector, as % of total customer
     loans, from the IMF FSI balance-sheet data (IMF.STA:FSIBSIS). Long DataFrame:
-    country, period, code, name, value."""
+    country, period, code, name, value. amounts=True returns the loan amounts (domestic currency, as
+    reported) instead of shares."""
     codes = list(LOAN_SECTORS) + [LOAN_RRE[0]]
     raw = _imf_csv("IMF.STA/FSIBSIS", f"{_codes(countries)}.S12CFSI.{'+'.join(codes)}.{freq}")
     if raw.empty:
@@ -392,7 +393,7 @@ def loan_portfolio(countries="all", freq="Q"):
     names = {**{v[0]: v[1] for v in LOAN_SECTORS.values()}, LOAN_RRE[1]: LOAN_RRE[2]}
     out = []
     for k in sectors + ([LOAN_RRE[1]] if LOAN_RRE[1] in w else []):
-        share = (100 * w[k] / total).dropna()
+        share = (w[k] if amounts else 100 * w[k] / total).dropna()
         out.append(pd.DataFrame({"country": share.index.get_level_values(0),
                                  "period": share.index.get_level_values(1),
                                  "code": k, "name": names[k], "value": share.values}))

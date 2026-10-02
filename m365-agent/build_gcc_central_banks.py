@@ -60,8 +60,12 @@ def get(url, **kw):
     return r
 
 
-def lp_rows(iso, name, shares, citation, link, prefix):
-    """Loan-portfolio rows in the agent's Lp format from a DataFrame (periods x sectors, % of total)."""
+AMOUNTS = []  # loan amounts by sector (same codes as the shares) for sheet Loan_amounts
+
+
+def lp_rows(iso, name, shares, citation, link, prefix, levels=None, unit=""):
+    """Loan-portfolio rows in the agent's Lp format from a DataFrame (periods x sectors, % of total).
+    levels (same shape, amounts) are kept in AMOUNTS for growth rates."""
     rows = []
     for sector in shares.columns:
         s = shares[sector].dropna().round(2)
@@ -69,6 +73,8 @@ def lp_rows(iso, name, shares, citation, link, prefix):
         rows.append({"Economy code": iso, "Economy": name, "Type": "Country", "Indicator code": code,
                      "Indicator": sector, "Unit": "Percent of total credit", "Citation": citation,
                      "Source link": link, **s.to_dict()})
+        if levels is not None and sector in levels:
+            AMOUNTS.append({**rows[-1], "Unit": unit, **levels[sector].dropna().round(3).to_dict()})
     return rows
 
 
@@ -120,7 +126,7 @@ def kuwait():
     cite = ("Central Bank of Kuwait, Monthly Monetary Statistical Bulletin, Table 13: local banks' sectoral "
             "distribution of utilized credit facilities to residents (excluding loans to banks)")
     print(f"Kuwait: {len(shares)} periods {list(shares.index)[:2]}..{list(shares.index)[-1]}", file=sys.stderr)
-    return lp_rows("KWT", "Kuwait", shares.T.T, cite, CBK_BULLETIN, "CBK")
+    return lp_rows("KWT", "Kuwait", shares.T.T, cite, CBK_BULLETIN, "CBK", lev, "Millions of Kuwaiti dinars")
 
 
 # --------------------------------------------------------------------------- Saudi Arabia (SAMA via KAPSARC)
@@ -143,8 +149,16 @@ def saudi():
 def cbb_file(path):
     if path:
         return Path(path)
-    links = re.findall(r'href="(https://www\.cbb\.gov\.bh/wp-content/uploads/[^"]+\.xlsx)"', get(CBB_PAGE).text)
-    if not links:
+    try:
+        links = re.findall(r'href="(https://www\.cbb\.gov\.bh/wp-content/uploads/[^"]+\.xlsx)"', get(CBB_PAGE).text)
+    except Exception as e:
+        links = []
+        print(f"CBB site not reachable ({type(e).__name__})", file=sys.stderr)
+    if not links:  # use the latest bulletin already downloaded (files like Jul-2026.xlsx)
+        local = sorted((HERE.parent / "local_data").glob("[A-Z][a-z][a-z]-20[0-9][0-9]*.xlsx"), key=lambda p: p.stat().st_mtime)
+        if local:
+            print(f"using {local[-1].name}", file=sys.stderr)
+            return local[-1]
         raise RuntimeError("No CBB Excel bulletin link found")
     out = HERE.parent / "local_data" / Path(links[0]).name
     out.parent.mkdir(exist_ok=True)
@@ -294,7 +308,7 @@ def saudi_sama(path):
             "classified by economic activity")
     print(f"Saudi Arabia (SAMA): {len(shares)} quarters {shares.index[0]}..{shares.index[-1]}, "
           f"sector sum check {check:.2%}", file=sys.stderr)
-    return lp_rows("SAU", "Saudi Arabia", shares, cite, SAMA_PAGE, "SAMA")
+    return lp_rows("SAU", "Saudi Arabia", shares, cite, SAMA_PAGE, "SAMA", q, "Millions of Saudi riyals")
 
 
 # --------------------------------------------------------------------------- Oman (CBO quarterly bulletin PDF)
@@ -347,9 +361,24 @@ def _page_with(pdf, title, must):
     return ""
 
 
+def chain_link(editions):
+    """Join the 5-quarter amounts of successive bulletin editions into one consistent series: older
+    editions are rescaled (per sector) to the newer ones at their first overlapping quarter, so coverage
+    changes between editions do not show up as growth. Stops at the first edition with no overlap."""
+    linked = editions[-1].copy()
+    for old in reversed(editions[:-1]):
+        common = [p for p in old.index if p in linked.index]
+        if not common:
+            break
+        f = (linked.loc[common[0]] / old.loc[common[0]].where(old.loc[common[0]] != 0)).fillna(1)
+        new = [p for p in old.index if p not in linked.index]
+        linked = pd.concat([old.loc[new] * f, linked]).sort_index()
+    return linked
+
+
 def oman():
     import pdfplumber
-    sectors, ratios, sources = {}, {}, []
+    sectors, ratios, sources, editions = {}, {}, [], []
     for y, q, path, url in cbo_bulletins():
         with pdfplumber.open(path) as pdf:
             t17 = _page_with(pdf, "Bank Credit by Sectors", "Personal Loans")
@@ -372,6 +401,7 @@ def oman():
         if len(found) < 15 or gap_b > 0.3:
             print(f"  Oman: skipped bulletin {y}-Q{q} ({len(found)} sectors read, gap {gap_b:.2f} pp)", file=sys.stderr)
             continue
+        editions.append(amt_b)
         for name, nums in found.items():
             for i, p in enumerate(per5):
                 sectors.setdefault(name, {})[p] = (nums[2 * i], nums[2 * i + 1])  # (amount, published %)
@@ -392,7 +422,8 @@ def oman():
         raise ValueError(f"Oman: computed shares differ from published % by up to {gap:.2f} pp")
     cite = (f"Central Bank of Oman, Quarterly Statistical Bulletin (editions {', '.join(sources)}), Table 17: "
             "bank credit by sectors (other depository corporations)")
-    rows = lp_rows("OMN", "Oman", shares, cite, CBO_PAGE, "CBO")
+    rows = lp_rows("OMN", "Oman", shares, cite, CBO_PAGE, "CBO", chain_link(editions), "Thousands of Omani rials "
+                   "(editions chain-linked for growth rates)")
     fsi = []
     rcite = (f"Central Bank of Oman, Quarterly Statistical Bulletin (editions {', '.join(sources)}), Table 10: "
              "selected ratios, conventional banks")
@@ -426,6 +457,32 @@ def replace_rows(path, sheet, new_rows, economies):
     print(f"{path.name}/{sheet}: {len(new)} rows for {economies}", file=sys.stderr)
 
 
+def write_loan_amounts(path):
+    """Sheet Loan_amounts: loans by sector in amounts (for growth rates) - IMF FSI balance sheets
+    (FSIBSIS) for all countries plus the central bank tables (Kuwait, Saudi Arabia, Oman)."""
+    rows = list(AMOUNTS)
+    try:
+        d = b.fd.loan_portfolio("all", amounts=True)
+        names = b.cd.country_names()
+        w = d.pivot_table(index=["country", "code", "name"], columns="period", values="value").reset_index()
+        per = sorted(c for c in w.columns if "-Q" in str(c))
+        for _, r in w.iterrows():
+            rows.append({"Economy code": r["country"], "Economy": names.get(r["country"], r["country"]),
+                         "Type": "Country", "Indicator code": r["code"], "Indicator": r["name"],
+                         "Unit": "Domestic currency (as reported)",
+                         "Citation": "International Monetary Fund, Financial Soundness Indicators, balance sheet "
+                                     "data of deposit takers (dataset IMF.STA:FSIBSIS)",
+                         "Source link": "https://data.imf.org", **r[per].dropna().to_dict()})
+    except Exception as e:  # IMF API down: keep the central bank amounts
+        print(f"IMF FSIBSIS amounts not available ({e}); central bank amounts only", file=sys.stderr)
+    df = pd.DataFrame(rows)
+    per = sorted((c for c in df.columns if re.fullmatch(r"\d{4}-Q\d", str(c))))
+    df = df[[c for c in df.columns if c not in per] + per]
+    with pd.ExcelWriter(path, engine="openpyxl", mode="a", if_sheet_exists="replace") as xw:
+        df.to_excel(xw, sheet_name="Loan_amounts", index=False)
+    print(f"{path.name}/Loan_amounts: {df['Economy code'].nunique()} economies, {len(df)} rows", file=sys.stderr)
+
+
 def main():
     a = argparse.ArgumentParser()
     a.add_argument("--cbb", help="CBB statistical bulletin .xlsx (default: download latest)")
@@ -438,6 +495,7 @@ def main():
     edition = re.sub(r"-\d$", "", f.stem)  # "Jul-2026-1" -> "Jul-2026"
     wb = load_workbook(f, read_only=True, data_only=True)
     replace_rows(HERE / b.FSI_FILE, "Loan_portfolio", lp, ["KWT", "SAU", "OMN"])
+    write_loan_amounts(HERE / b.FSI_FILE)
     replace_rows(HERE / b.FSI_FILE, "FSI_Quarterly", bahrain_fsi(wb, edition) + om_fsi, ["BHR", "OMN"])
     replace_rows(HERE / b.BANK_FILE, "Banking", bahrain_assets(wb, edition), ["BHR"])
     print(f"done in {time.time() - t0:.0f}s", file=sys.stderr)

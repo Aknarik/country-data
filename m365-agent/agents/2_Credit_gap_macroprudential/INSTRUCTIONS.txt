@@ -75,7 +75,7 @@ def gap(r,a=2000,mpp=True):
  s0=num([k for k in per(r) if pd.notna(I.loc['CREDIT_GDP',k])])[0]+10
  if s0>x[0]:[z.axvspan(x[0]-.5,s0-.5,color='gray',alpha=.12,label='Trend start-up (first 10 years)') for z in(ax,a2)]
  leg(a2,ax,-.2);gv=g[~np.isnan(g)][-1];lg=np.array(c)[~np.isnan(g)][-1]
- title(ax,f"{r['Economy'].iloc[0]}: Credit-to-GDP ratio, trend and gap (percent of GDP)",f"Latest {lg}: gap {gv:.1f} pp, Basel guide buffer {buffer(gv)} percent");source(f,r)
+ title(ax,f"{r['Economy'].iloc[0]}: Credit-to-GDP ratio, trend and gap (percent)",f"Latest {lg}: gap {gv:.1f} pp, Basel guide buffer {buffer(gv)} percent");source(f,r)
  e=r['Economy code'].iloc[0]
  if mpp and MP is not None and len(pick(MP,e)):return mpp_table(e)
 def sectors(cty,a=2000):

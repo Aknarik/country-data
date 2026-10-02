@@ -5,7 +5,7 @@ def get(n,cty,codes=None):
 def lines(ax,r,a=2010,n=2):
  c=[k for k in per(r,a) if r[k].notna().any()];ax.grid(alpha=.3)
  for lab,v in zip(r['Indicator'],vals(r,c)):L,=ax.plot(num(c),v,lw=2,label=(l:=lab.split(': ')[-1])[0].upper()+l[1:]);last(ax,num(c),v,L.get_color())
- leg(ax,n=n)
+ leg(ax,n=n);ax.locator_params(axis='x',integer=True)
 def ts(n,cty,codes,t,a=2010):
  r=get(n,cty,codes);f,ax=plt.subplots(figsize=(10.5,5.5));lines(ax,r,a);title(ax,f"{r['Economy'].iloc[0]}: {t}{U(r)}");source(f,r)
 def mix(ax,r,kind,year):
@@ -17,5 +17,5 @@ def mix(ax,r,kind,year):
  b=0
  for i,w in enumerate(v):ax.bar(num(c),w,bottom=b,width=.2 if '-Q' in c[0] else .8,label=lb[i],color=plt.cm.tab20(i));b=b+w
  ax.set_ylim(0,100);leg(ax);return ''
-def lp(cty):
- r=get('Lp',cty);cb=r[~r['Indicator code'].str.endswith('_SH')];return cb if len(cb) else r[r['Indicator code']!='LOANS_RRE_SH']
+def lp(cty,n='Lp'):
+ r=get(n,cty);cb=r[~r['Indicator code'].str.endswith('_SH')];return cb if len(cb) else r[r['Indicator code']!='LOANS_RRE_SH']
