@@ -6,7 +6,7 @@ that already contain every table, heat map and mini chart, so it only has to fin
 Without Python, Copilot searches its files instead of computing, and it finds text documents far
 more reliably than large spreadsheets.
 
-With a Microsoft 365 Copilot licence, use [AGENT_SETUP.md](AGENT_SETUP.md) instead, which adds real charts.
+With a Microsoft 365 Copilot licence, use [agents/README.md](agents/README.md) instead, which adds real charts.
 
 ## What the agent can do
 

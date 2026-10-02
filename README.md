@@ -41,7 +41,7 @@ FSI heat map with coloured squares, credit-to-GDP gap, text mini charts) and FSA
 
 The [`m365-agent/`](m365-agent/) folder has ready-made data files and step-by-step instructions to build
 a Microsoft 365 Copilot agent that charts them with Code interpreter. See
-[`m365-agent/AGENT_SETUP.md`](m365-agent/AGENT_SETUP.md).
+[`m365-agent/agents/README.md`](m365-agent/agents/README.md).
 
 - `IMF_World_Economic_Outlook_data.xlsx`: 23 IMF WEO / Fiscal Monitor indicators, about 200 countries, 1980–2031
 - `IMF_Financial_Soundness_Indicators.xlsx`: IMF core and selected additional Financial Soundness Indicators

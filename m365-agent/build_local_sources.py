@@ -2,17 +2,11 @@
 """
 Process locally downloaded source files for the Country Data agent.
 
-1. iMaPP (IMF Integrated Macroprudential Policy database, public) -> IMF_iMaPP_macroprudential.xlsx
-     Actions  : net macroprudential actions per economy, tool and year (tightening +1, loosening -1)
-     Summary  : per economy and tool: tightenings, loosenings, first/last action, latest description
-2. HEAT 2.0 bank-level data (S&P Capital IQ Pro via IMF HEAT tool; IMF-INTERNAL, LICENSED)
-     -> local_data/HEAT_bank_distribution.xlsx: country-level aggregates only (no bank names):
-        median, 25th/75th percentile and asset-weighted mean across banks, number of banks,
-        total assets. Written to local_data/, which is git-ignored: never publish it.
+iMaPP (IMF Integrated Macroprudential Policy database, public) -> IMF_iMaPP_macroprudential.xlsx:
+Definitions, Tools_in_place, Measures_history, Summary, Actions.
 
-    python m365-agent/build_local_sources.py [--imapp FILE] [--heat FILE] [--heat-annual FILE]
-Defaults: the newest iMaPP_database*.xlsx, HEAT*Quarterly*.xlsm and HEAT*Annual*.xlsm in the
-repository root. Quarterly and annual HEAT aggregates go into one sheet (annual codes end in _A).
+    python m365-agent/build_local_sources.py [--imapp FILE]
+Default: the newest iMaPP_database*.xlsx in the repository root.
 """
 
 import argparse
@@ -32,7 +26,6 @@ sys.path.insert(0, str(HERE))
 import build_data_file as b  # noqa: E402  (write_book, country names)
 
 IMAPP_OUT = HERE / "IMF_iMaPP_macroprudential.xlsx"
-HEAT_OUT = LOCAL / "HEAT_bank_distribution.xlsx"
 IMAPP_CITATION = ("International Monetary Fund, Integrated Macroprudential Policy (iMaPP) Database; "
                   "Alam, Alter, Eiseman, Gelos, Kang, Narita, Nier and Wang (2019), IMF WP/19/66")
 IMAPP_LINK = "https://www.elibrary-areaer.imf.org/Macroprudential/Pages/Home.aspx"
@@ -50,14 +43,6 @@ TOOLS = {
     "LFX": "Limits on FX positions", "RR": "Reserve requirements", "RR_FCD": "Reserve requirements on FX deposits",
     "SIFI": "Measures for systemically important institutions", "OT": "Other measures",
 }
-HEAT_SHEETS = {  # O-sheet -> (code, name)
-    "O-CapitalAdequacy": ("T1", "Tier 1 capital ratio"),
-    "O-AssetQuality": ("NPLNET", "NPLs net of provisions to total loans"),
-    "O-Earnings": ("ROAA", "Return on average assets"),
-    "O-Liquidity": ("LIQ", "Liquid assets to total liabilities"),
-    "O-Leverage": ("TCE", "Tangible common equity to tangible assets"),
-}
-HEAT_CITATION = "IMF staff calculations based on S&P Capital IQ Pro bank-level data"
 
 
 def newest(pattern):
@@ -297,169 +282,19 @@ def build_imapp(path):
           file=sys.stderr)
 
 
-# --------------------------------------------------------------------------- HEAT
-PERIOD_Q, PERIOD_A = re.compile(r"(\d{4})Q([1-4])"), re.compile(r"(\d{4})Y?")
-
-
-def _num(v):
-    try:
-        return float(v)
-    except (TypeError, ValueError):
-        return np.nan
-
-
-def _period(h, annual):
-    """'2010Q1' -> '2010-Q1' (quarterly); '2010' or '2010Y' -> '2010' (annual); else None."""
-    h = str(h).strip() if h is not None else ""
-    m = (PERIOD_A if annual else PERIOD_Q).fullmatch(h)
-    return (m.group(1) if annual else f"{m.group(1)}-Q{m.group(2)}") if m else None
-
-
-def read_o_sheet(ws, annual):
-    """Bank rows of an O- sheet: key, country, then one value per period."""
-    header, out = None, []
-    for r in ws.iter_rows(values_only=True):
-        if header is None:
-            if r and len(r) > 2 and str(r[1]).strip() == "SNL Institution Key":
-                header = [str(x).strip() if x is not None else "" for x in r]
-                cols = [(i, _period(h, annual)) for i, h in enumerate(header) if _period(h, annual)]
-                ccol = header.index("Country")
-            continue
-        if r[1] is None or str(r[1]).strip() == "":
-            continue
-        out.append([str(r[1]).strip(), str(r[ccol]).strip()] + [_num(r[i]) for i, _ in cols])
-    return pd.DataFrame(out, columns=["key", "country"] + [p for _, p in cols]).drop_duplicates("key")
-
-
-def read_total_assets(ws, annual):
-    """TotalAssets sheet: bank key -> total assets per period (row 5 holds '2010Q1' or '2010Y')."""
-    prow = list(ws.iter_rows(min_row=5, max_row=5, values_only=True))[0]
-    cols = [(i, _period(h, annual)) for i, h in enumerate(prow) if _period(h, annual)]
-    out = []
-    for r in ws.iter_rows(min_row=7, values_only=True):
-        if r[1] is None or str(r[1]).strip() == "":
-            continue
-        out.append([str(r[1]).strip()] + [_num(r[i]) for i, _ in cols])
-    return pd.DataFrame(out, columns=["key"] + [p for _, p in cols]).drop_duplicates("key").set_index("key")
-
-
-def heat_rows(path, annual, iso):
-    """Country-level distribution rows (no bank names) from one HEAT workbook."""
-    wb = load_workbook(path, read_only=True, data_only=True)
-    ta = read_total_assets(wb["TotalAssets"], annual)
-    sfx, label = ("_A", " (annual)") if annual else ("", "")
-    rows = []
-    for sheet, (code, name) in HEAT_SHEETS.items():
-        df = read_o_sheet(wb[sheet], annual)
-        per = [c for c in df.columns if c not in ("key", "country")]
-        for cty, g in df.groupby("country"):
-            if cty not in iso:
-                try:
-                    iso[cty] = {"Palestine": "WBG", "Dem. Rep. Congo": "COD", "Guernsey": "GGY", "Isle of Man": "IMN",
-                              "Jersey": "JEY", "Vatican City": "VAT"}.get(cty) or b.cd.resolve_countries(cty, verbose=False)[0]
-                except Exception:
-                    iso[cty] = cty
-            v = g.set_index("key")[per]
-            w = ta.reindex(v.index).reindex(columns=per)
-            stats = {
-                "MED": ("median bank", v.median()),
-                "P25": ("25th percentile bank", v.quantile(0.25)),
-                "P75": ("75th percentile bank", v.quantile(0.75)),
-                "AW": ("asset-weighted mean", (v * w).sum(min_count=1) / w.where(v.notna()).sum(min_count=1)),
-                "N": ("number of banks reporting", v.notna().sum().replace(0, np.nan)),
-            }
-            for sc, (sname, ser) in stats.items():
-                ser = ser.round(2).dropna()
-                if ser.empty:
-                    continue
-                rows.append({"Economy code": iso[cty], "Economy": b.cd.country_names().get(iso[cty], cty),
-                             "Type": "Country", "Indicator code": f"HEAT_{code}_{sc}{sfx}",
-                             "Indicator": f"{name} - {sname}{label}",
-                             "Unit": "Number of banks" if sc == "N" else "Percent",
-                             "Citation": HEAT_CITATION, "Source link": "", **ser.to_dict()})
-    return rows
-
-
-BANK_CITATION = "S&P Capital IQ Pro, bank-level data"
-
-
-def heat_bank_rows(path, iso):
-    """Bank-by-bank rows (annual) for bank ranking charts - CONFIDENTIAL, IMF-internal."""
-    wb = load_workbook(path, read_only=True, data_only=True)
-    names, rows = {}, []
-    for r in wb["O-CapitalAdequacy"].iter_rows(min_row=6, values_only=True):
-        if r and len(r) > 3 and r[1] is not None:
-            names[str(r[1]).strip()] = str(r[2]).strip()
-    ta = read_total_assets(wb["TotalAssets"], True)
-    for sheet, (code, name) in HEAT_SHEETS.items():
-        df = read_o_sheet(wb[sheet], True)
-        per = [c for c in df.columns if c not in ("key", "country")]
-        for _, r in df.iterrows():
-            vals = r[per].dropna().round(2)
-            if vals.empty or r["country"] not in iso:
-                continue
-            rows.append({"Economy code": iso[r["country"]], "Economy": names.get(r["key"], r["key"]),
-                         "Type": "Bank", "Indicator code": f"HEAT_{code}_BANK", "Indicator": name,
-                         "Unit": "Percent", "Citation": BANK_CITATION, "Source link": "", **vals.to_dict()})
-    for key, v in ta.iterrows():
-        vals = (v.dropna() / 1e6).round(2)
-        match = [r for r in rows if r["Economy"] == names.get(key)]
-        if len(vals) and match:
-            rows.append({**{k: match[0][k] for k in ("Economy code", "Economy", "Type", "Citation", "Source link")},
-                         "Indicator code": "HEAT_TA_BANK", "Indicator": "Total assets (billions, reporting currency)",
-                         "Unit": "Billions, reporting currency", **vals.to_dict()})
-    out = pd.DataFrame(rows)
-    per = sorted(c for c in out.columns if re.fullmatch(r"\d{4}", str(c)))
-    return out[[c for c in out.columns if c not in per] + per].sort_values(["Economy code", "Indicator code", "Economy"])
-
-
-def build_heat(quarterly, annual_file):
-    t0 = time.time()
-    iso, rows, used = {}, [], []
-    for path, annual in ((quarterly, False), (annual_file, True)):
-        if path:
-            n = len(rows)
-            rows += heat_rows(path, annual, iso)
-            used.append(f"{path.name} ({'annual' if annual else 'quarterly'}, {len(rows) - n} rows)")
-    out = pd.DataFrame(rows)
-    per = sorted((c for c in out.columns if re.fullmatch(r"\d{4}(-Q\d)?", str(c))),
-                 key=lambda c: (len(c), c))  # annual years first, then quarters
-    out = out[[c for c in out.columns if c not in per] + per].sort_values(["Economy", "Indicator code"])
-    LOCAL.mkdir(exist_ok=True)
-    b.write_book(HEAT_OUT, {
-        "README": [
-            "HEAT 2.0 bank-level soundness indicators aggregated to country level, for IMF staff analysis.",
-            f"Built {time.strftime('%Y-%m-%d')} from: {'; '.join(used)}. Source: S&P Capital IQ Pro via the IMF "
-            "HEAT tool (licensed). No individual bank names or values are included.",
-            "For each country and period: median bank, 25th and 75th percentile, asset-weighted mean "
-            "(weights = total assets) and number of banks reporting.",
-            "Quarterly rows: codes like HEAT_T1_MED, periods '2010-Q1'. Annual rows (more banks, from 2000): "
-            "codes ending _A (e.g. HEAT_T1_MED_A), periods '2010'.",
-            "Indicators: Tier 1 capital ratio (T1); NPLs net of provisions to total loans (NPLNET); return on "
-            "average assets (ROAA); liquid assets to total liabilities (LIQ); tangible common equity to "
-            "tangible assets (TCE).",
-            "Sheet 'HEAT_banks': bank-by-bank annual values with bank names (Economy = bank, "
-            "Economy code = country) for internal bank ranking charts.",
-            "Data licensed to the IMF (S&P Capital IQ Pro); show bank names and values when asked."],
-        "HEAT_country": out, **({"HEAT_banks": heat_bank_rows(annual_file, iso)} if annual_file else {})})
-    print(f"HEAT: {out['Economy code'].nunique()} economies, {len(out)} rows, {time.time() - t0:.0f}s",
-          file=sys.stderr)
-
-
 def main():
     a = argparse.ArgumentParser()
     a.add_argument("--imapp", default=None)
-    a.add_argument("--heat", default=None, help="quarterly HEAT workbook")
-    a.add_argument("--heat-annual", dest="heat_annual", default=None, help="annual HEAT workbook")
     a.add_argument("--only", choices=["imapp", "heat"])
-    args = a.parse_args()
+    args, rest = a.parse_known_args()
     if args.only != "heat":
         p = Path(args.imapp) if args.imapp else newest("iMaPP_database*.xlsx")
         build_imapp(p) if p else print("iMaPP file not found", file=sys.stderr)
-    if args.only != "imapp":
-        q = Path(args.heat) if args.heat else newest("HEAT*Quarterly*.xlsm")
-        an = Path(args.heat_annual) if args.heat_annual else newest("HEAT*Annual*.xlsm")
-        build_heat(q, an) if (q or an) else print("HEAT files not found", file=sys.stderr)
+    private = HERE / "private" / "build_heat.py"
+    if args.only != "imapp" and private.exists():  # bank data builder kept outside GitHub
+        import runpy
+        sys.argv = [str(private)] + rest
+        runpy.run_path(str(private), run_name="__main__")
 
 
 if __name__ == "__main__":

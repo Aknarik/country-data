@@ -1,7 +1,7 @@
 """Build a local HTML page with every test chart, to review the agents' output.
 
 Run kuwait_check.py (and/or test_agents.py) first, then:  python m365-agent/agents/review_report.py
-The page stays on this computer (test_output/ is git-ignored) because bank-by-bank charts are confidential.
+The page stays on this computer (test_output/ is git-ignored).
 """
 import base64, html, os, sys, webbrowser
 from pathlib import Path
@@ -20,9 +20,6 @@ CAPTIONS = {
     "loans_bar": "Loan portfolio by sector (stacked)", "loans_pie": "Loan portfolio, one year (pie)",
     "assets": "Bank asset structure", "nexus": "Sovereign-bank nexus",
     "liab": "Funding structure: deposits, equity, foreign liabilities", "npl": "Nonperforming loans",
-    "bank_T1": "Bank by bank: Tier 1 capital", "bank_LIQ": "Bank by bank: liquidity",
-    "bank_NPLNET": "Bank by bank: asset quality", "bank_TCE": "Bank by bank: leverage",
-    "bank_ROAA": "Bank by bank: income (ROAA)",
 }
 
 
@@ -54,7 +51,7 @@ img{{width:100%;background:#fff;border-radius:4px}} figcaption span{{color:var(-
 label{{float:right}} textarea{{width:100%;box-sizing:border-box;margin-top:6px;min-height:40px}}
 </style></head><body><h1>Agent chart review: {html.escape(folder.name.title())}</h1>
 <p>Click a chart to open it full size. Tick OK or write what to improve (notes stay in this browser tab only;
-copy them into the chat). <span class=note>Bank-by-bank charts are CONFIDENTIAL - IMF internal use only; do not share this file.</span></p>
+copy them into the chat).</p>
 {''.join(parts)}</body></html>"""
     out = folder / "review.html"
     out.write_text(page, encoding="utf-8")

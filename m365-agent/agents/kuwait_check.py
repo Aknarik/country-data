@@ -19,9 +19,9 @@ CHECKS = {"1_WEO_outlook": [("weo_growth", "line(weo('Kuwait','NGDP_RPCH'))"),
                             ("dirs", "r=get('F','KWT').drop_duplicates('Indicator code');print(r[['Group','Indicator','More vulnerable when']].to_string(index=False))")],
           "5_Bank_balance_sheets": [("loans_bar", "structure('KWT')"), ("loans_pie", "structure('KWT',kind='pie',year=2025)"),
                             ("assets", "structure('KWT','assets')"), ("growth", "growth('KWT')"), ("contrib", "contrib('KWT')"),
-                            ("contrib_loans", "contrib('KWT','loans')")],
-          "6_Bank_by_bank": [(f"bank_{k}", f"banks('KWT','{k}')") for k in ("T1", "LIQ", "NPLNET", "TCE", "ROAA")]
-          + [("bank_hist", "bank_hist('KWT')"), ("bank_profile", "bank_profile('National Bank of Kuwait')")]}
+                            ("contrib_loans", "contrib('KWT','loans')")]}
+if ta._priv:
+    CHECKS.update(ta._priv.CHECKS)
 for agent, calls in CHECKS.items():
     code = (HERE / agent / "INSTRUCTIONS.txt").read_text(encoding="utf-8").split("CODE\n", 1)[1]
     box = Path(tempfile.mkdtemp()); ta.copy_knowledge(agent, box); os.chdir(box)
@@ -33,9 +33,9 @@ for agent, calls in CHECKS.items():
                 t = ax.title
                 if t.get_text(): titles.append((t.get_text(), matplotlib.colors.to_hex(t.get_color())))
             if f._suptitle: titles.append((f._suptitle.get_text(), matplotlib.colors.to_hex(f._suptitle.get_color())))
-            f.savefig(OUT / f"{agent[0]}_{name}.png", dpi=65); plt.close("all")
+            f.savefig(OUT / f"{agent.split('/')[-1][0]}_{name}.png", dpi=65); plt.close("all")
         plt.show = show
-        print(f"\n### {agent[0]} {name}: {call[:80]}")
+        print(f"\n### {agent.split('/')[-1][0]} {name}: {call[:80]}")
         try:
             exec(code + "\n" + call, {})
         except Exception as e:

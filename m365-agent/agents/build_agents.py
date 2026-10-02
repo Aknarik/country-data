@@ -5,8 +5,15 @@ AGENTS = {"1_WEO_outlook": ("weo_rules.txt", "weo_code.py"),
           "2_Credit_gap_macroprudential": ("gap_rules.txt", "gap_code.py"),
           "3_Financial_soundness": ("fsi_rules.txt", ["fin_base.py", "fsi_code.py"]),
           "4_FSAP_reports": ("fsap_rules.txt", None),
-          "5_Bank_balance_sheets": ("bs_rules.txt", ["fin_base.py", "bs_code.py"]),
-          "6_Bank_by_bank": ("bbb_rules.txt", ["fin_base.py", "bbb_code.py"])}
+          "5_Bank_balance_sheets": ("bs_rules.txt", ["fin_base.py", "bs_code.py"])}
+import sys
+try:  # private agents kept outside GitHub (m365-agent/private/agents/private_config.py)
+    sys.path.insert(0, str(HERE.parent / "private" / "agents"))
+    import private_config as _priv
+except ImportError:
+    _priv = None
+if _priv:
+    AGENTS.update(_priv.AGENTS)
 LIMIT = 8000
 if __name__ == "__main__":
     core = (HERE / "common.py").read_text(encoding="utf-8")

@@ -78,16 +78,6 @@ AGENTS = [
      "test": "Kuwait loan portfolio pie, then: Kuwait contributions to bank asset growth",
      "expected": "Pie with sector names and percent on the slices; stacked bars of sector contributions with "
                  "total growth dots; blue titles, official sources."},
-    {"folder": "6_Bank_by_Bank", "source": "6_Bank_by_bank",
-     "name": "Bank-by-Bank",
-     "description": "Individual bank indicators with bank names (capital, leverage, asset quality, income, "
-                    "liquidity): latest ranking, history and single-bank profiles",
-     "knowledge": [ROOT / "local_data" / "HEAT_bank_distribution.xlsx"],
-     "code": True,
-     "starters": ["Tier 1 capital by bank in a country", "Leverage of the largest banks over time",
-                  "Profile of a bank"],
-     "test": "Kuwait Tier 1 capital by bank over time, then: profile of National Bank of Kuwait",
-     "expected": "Lines for the largest banks with the median bank; six-panel bank profile; source S&P Capital IQ Pro."},
 ]
 
 STEPS = """HOW TO CREATE THIS AGENT
@@ -104,6 +94,15 @@ STEPS = """HOW TO CREATE THIS AGENT
 UPDATING: new data -> delete the old knowledge file, upload the new one (same name), Update, test in a new chat.
 New instructions -> paste the new INSTRUCTIONS.txt over the old text, Update.
 """
+
+
+try:  # private agents kept outside GitHub (m365-agent/private/agents/private_config.py)
+    sys.path.insert(0, str(HERE.parent / "private" / "agents"))
+    import private_config as _priv
+except ImportError:
+    _priv = None
+if _priv:
+    AGENTS.extend(_priv.PACKAGE)
 
 
 NAMES = {'IMF_World_Economic_Outlook_data.xlsx': 'IMF World Economic Outlook.xlsx', 'BIS_credit_to_GDP.xlsx': 'BIS credit-to-GDP statistics.xlsx', 'IMF_MFS_credit_to_GDP.xlsx': 'IMF MFS credit to GDP.xlsx', 'IMF_iMaPP_macroprudential.xlsx': 'IMF iMaPP Database.xlsx', 'IMF_Financial_Soundness_Indicators.xlsx': 'IMF Financial Soundness Indicators.xlsx', 'IMF_MFS_banking_sector.xlsx': 'IMF MFS banking sector.xlsx', 'HEAT_bank_distribution.xlsx': 'SP Capital IQ Pro bank data.xlsx', 'IMF_FSAP_reports_catalog.xlsx': 'IMF FSAP reports.xlsx'}  # uploaded under official-source names
@@ -135,7 +134,7 @@ def main():
     lines = [f"COPILOT AGENTS PACKAGE - built {time.strftime('%Y-%m-%d %H:%M')}", "",
              "One folder per agent. In each: INSTRUCTIONS.txt, SETUP.txt, knowledge/ (files to upload).",
              "All agents work for any country; the user names it in the question.",
-             "For internal use. Folder 6 includes the S&P Capital IQ Pro bank data.", ""]
+             "For internal use.", ""]
     for a in AGENTS:
         d = OUT / a["folder"]
         (d / "knowledge").mkdir(parents=True)
@@ -165,9 +164,10 @@ def main():
         (d / "SETUP.txt").write_text("\n".join(setup), encoding="utf-8", newline="\r\n")
         lines.append(f"{a['folder']}: {a['name']} - {len(a['knowledge'])} knowledge file(s), {n:,} characters")
         print(f"{a['folder']:36} {n:5} chars, knowledge: {', '.join(NAMES.get(f.name, f.name) for f in a['knowledge'])}")
-    main = OUT / "0_Main_agent_Copilot_Studio"  # orchestrator that connects the six agents
-    shutil.copytree(HERE / "0_Main_orchestrator", main)
-    lines.append("0_Main_agent_Copilot_Studio: main agent that connects agents 1-6 (Copilot Studio)")
+    main_agent = HERE.parent / "private" / "agents" / "0_Main_orchestrator"
+    if main_agent.exists():  # main agent connecting all agents (private)
+        shutil.copytree(main_agent, OUT / "0_Main_agent_Copilot_Studio")
+        lines.append("0_Main_agent_Copilot_Studio: main agent that connects all agents (Copilot Studio)")
     (OUT / "START_HERE.txt").write_text("\n".join(lines + ["", "Create the agents in order 1-6; test each before the next."]),
                                         encoding="utf-8", newline="\r\n")
     print(f"\nPackage: {OUT}")

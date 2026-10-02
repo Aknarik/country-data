@@ -11,3 +11,5 @@ local_data/
 *- Copy*
 m365-agent/agents/test_output/
 copilot_agents_package/
+m365-agent/private/
+CLAUDE.local.md

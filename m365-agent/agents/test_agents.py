@@ -9,7 +9,7 @@ KNOW = {"1_WEO_outlook": ["m365-agent/IMF_World_Economic_Outlook_data.xlsx"],
                                          "m365-agent/IMF_iMaPP_macroprudential.xlsx"],
         "3_Financial_soundness": ["m365-agent/IMF_Financial_Soundness_Indicators.xlsx", "m365-agent/IMF_MFS_banking_sector.xlsx"],
         "5_Bank_balance_sheets": ["m365-agent/IMF_Financial_Soundness_Indicators.xlsx", "m365-agent/IMF_MFS_banking_sector.xlsx"],
-        "6_Bank_by_bank": ["local_data/HEAT_bank_distribution.xlsx"]}
+}
 TESTS = {"1_WEO_outlook": ["line(weo('Kuwait','NGDP_RPCH'))", "line(weo(members('GCC'),'GGXWDG_NGDP'),2010)",
                            "line(weo('SAU',['GGXCNL_NGDP','BCA_NGDPD']))", "bar(weo(members('GCC'),'NGDP_RPCH'),2026,hl='Kuwait')",
                            "bar(weo(members('G20'),'PCPIPCH'))", "table(weo(members('GCC'),'NGDP_RPCH'),range(2022,2028))",
@@ -21,9 +21,14 @@ TESTS = {"1_WEO_outlook": ["line(weo('Kuwait','NGDP_RPCH'))", "line(weo(members(
                                    "ts('F','KWT',['AQ12_CFSI_PT','AQ14_CFSI_PT'],'Asset quality')", "ts('Bk','SAU',['BANK_GOV_TA','BANK_GOV_GDP'],'Sovereign-bank nexus')"],
          "5_Bank_balance_sheets": ["structure('OMN')", "structure('SAU',kind='pie',year=2025)", "structure('KWT','assets')",
                                    "structure('ARE','assets','pie',2024)", "growth('KWT')", "growth('BRA','loans',2015)",
-                                   "contrib('KWT')", "contrib('SAU','loans')", "contrib('BRA','loans',2015)", "growth('USA')"],
-         "6_Bank_by_bank": ["banks('KWT')", "banks('SAU','NPLNET',2024)", "bank_hist('KWT')", "bank_hist('BRA','TCE',6)",
-                            "bank_profile('National Bank of Kuwait')", "ts('H','KWT',['HEAT_T1_MED','HEAT_T1_AW'],'Tier 1 capital ratio across banks')"]}
+                                   "contrib('KWT')", "contrib('SAU','loans')", "contrib('BRA','loans',2015)", "growth('USA')"]}
+try:  # private agents kept outside GitHub (m365-agent/private/agents/private_config.py)
+    sys.path.insert(0, str(HERE.parent / "private" / "agents"))
+    import private_config as _priv
+except ImportError:
+    _priv = None
+if _priv:
+    KNOW.update(_priv.KNOW); TESTS.update(_priv.TESTS)
 
 
 def copy_knowledge(agent, box):
