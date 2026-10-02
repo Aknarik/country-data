@@ -1,6 +1,6 @@
-MAIN AGENT (Copilot Studio): Financial Sector Analyst
+MAIN AGENT (Copilot Studio): Financial Sector Assistant
 
-Name:        Financial Sector Analyst
+Name:        Financial Sector Assistant
 Description: Financial sector analysis for any country: credit gaps and macroprudential policy, banking-
              sector soundness, bank balance sheets, individual banks, IMF FSAP reports and the IMF macro
              outlook - charts with official sources.
