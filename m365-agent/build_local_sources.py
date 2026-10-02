@@ -115,22 +115,42 @@ def level_changes(text):
 
 
 def latest_ltv(xl):
-    """Latest average LTV limit per country (iMaPP LTV_average sheet: months x countries)."""
+    """Latest average LTV limit per country from the iMaPP LTV_average sheet (Country, Year, Month, LTV_average)."""
     try:
-        sh = xl.parse("LTV_average", header=None)
+        d = xl.parse("LTV_average").dropna(subset=["LTV_average"])
     except Exception:
         return {}
-    h = sh.index[sh.iloc[:, 0].astype(str).str.strip().eq("Country")]
-    if not len(h):
-        return {}
-    body = sh.iloc[h[0] + 1:]
-    body = body[body.iloc[:, 0].astype(str).str.fullmatch(r"\d{4}M\d{1,2}")]
-    out = {}
-    for j, c in enumerate(sh.iloc[h[0], 1:].tolist(), start=1):
-        col = pd.to_numeric(body.iloc[:, j], errors="coerce").dropna()
-        if len(col):
-            out[str(c).strip()] = (float(col.iloc[-1]), str(body.loc[col.index[-1]].iloc[0]))
-    return out
+    d = d.sort_values(["Country", "Year", "Month"]).groupby("Country").tail(1)
+    return {str(c).strip(): (float(v), f"{int(y)}-{int(m):02d}")
+            for c, v, y, m in zip(d["Country"], d["LTV_average"], d["Year"], d["Month"])}
+
+
+REVERT = re.compile(r"revert|back to|returned to|return to|restor|expir|withdr|lapse|ended", re.I)
+
+
+def current_level(hist):
+    """Latest levels stated for a tool, with the month set. If a later action reverts, ends or lets a
+    measure expire, the levels from before that temporary change are reported as restored."""
+    lv = [(i, stated_levels(x)) for i, (_, _, x) in enumerate(hist)]
+    lv = [(i, v) for i, v in lv if v and v != "0"]
+    if not lv:
+        return ""
+    i, v = lv[-1]
+    later = [(d, x) for d, _, x in hist[i + 1:] if REVERT.search(x)]
+    if later and len(lv) > 1:
+        j, w = lv[-2]
+        return f"{w} (set {hist[j][0]}; restored {later[-1][0]})"
+    return f"{v} (set {hist[i][0]})"
+
+
+def stated_levels(text):
+    """Labelled 'from X to Y' changes, else the percentages mentioned (e.g. '50, 60, 70')."""
+    lv = level_changes(text)
+    if lv:
+        return lv
+    pct = r"(\d+(?:\.\d+)?)\s*(?:%|percent(?!age)|per cent)(?!age)(?!\s*points?)"  # levels, not pp changes
+    nums = list(dict.fromkeys(f"{float(x):g}" for x in re.findall(pct, str(text or ""), re.I)))
+    return ", ".join(nums[:6])
 
 
 # --------------------------------------------------------------------------- iMaPP
@@ -178,7 +198,7 @@ def build_imapp(path):
                 texts[(str(c).strip(), t)] = {str(body.loc[i].iloc[0]).strip(): v for i, v in col.items()}
 
     ltv = latest_ltv(xl)
-    s_rows = []
+    s_rows, h_rows = [], []
     orig = dict(zip(mapp["iso3"], mapp["Country"]))
     for iso, g in mapp.groupby("iso3"):
         tg, lg = tight[tight["iso3"] == iso], loose[loose["iso3"] == iso]
@@ -193,6 +213,20 @@ def build_imapp(path):
             bymonth = texts.get((orig[iso], t), {})
             text = bymonth.get(f"{int(last['Year'])}M{int(last['Month'])}") or (list(bymonth.values())[-1] if bymonth else "")
             text = re.sub(r"[　-鿿]", "", text.replace("_x000D_", " "))
+            hist = []  # every action of this tool, oldest first
+            for idx, e in ev.iterrows():
+                d = f"{int(e['Year'])}-{int(e['Month']):02d}"
+                tt, ll = int(tg.loc[idx, t]), int(lg.loc[idx, t])
+                tx = re.sub(r"\s+", " ", re.sub(r"[　-鿿]", "", bymonth.get(f"{int(e['Year'])}M{int(e['Month'])}", "")
+                                                   .replace("_x000D_", " "))).strip()
+                hist.append((d, "tightening" if tt and not ll else "loosening" if ll and not tt else "both", tx))
+                h_rows.append({"Economy code": iso, "Economy": cname, "Tool": TOOLS[t], "Date": d,
+                               "Direction": hist[-1][1], "Levels, percent": stated_levels(tx),
+                               "Measure": tx.replace("%", " percent")[:700], "Citation": IMAPP_CITATION})
+            level_now = current_level(hist)
+            if t == "LTV" and orig[iso] in ltv:
+                v, mth = ltv[orig[iso]]
+                level_now = f"average LTV limit {v:g} ({mth})" + (f"; last stated: {level_now}" if level_now else "")
             mag = magnitude(text)
             if t == "LTV" and orig[iso] in ltv and mag[1] is None:
                 v, mth = ltv[orig[iso]]
@@ -206,9 +240,11 @@ def build_imapp(path):
                            "Latest direction": "tightening" if lt and not ll else "loosening" if ll and not lt else "both",
                            "Previous level (%)": mag[0], "New level (%)": mag[1], "Change (pp)": mag[2],
                            "Magnitude note": mag[3], "Level change (percent)": level_changes(text),
+                           "Current or last stated level": level_now,
                            "Latest description": re.sub(r"\s+", " ", text)[:600],
                            "Citation": IMAPP_CITATION})
     summary = pd.DataFrame(s_rows)
+    history = pd.DataFrame(h_rows).sort_values(["Economy", "Tool", "Date"])
     agg = {"Capital", "LCG", "LoanR"}  # '(all)' rows, dropped when the sub-tools are listed
     keep = [not (t in agg and ((summary["Economy code"] == e) & summary["Tool code"].str.startswith(t + "_")).any())
             for e, t in zip(summary["Economy code"], summary["Tool code"])]
@@ -217,8 +253,7 @@ def build_imapp(path):
         "Economy code": in_place["Economy code"], "Economy": in_place["Economy"], "Tool": in_place["Tool"],
         "In place since": in_place["First action"],
         "Latest change": in_place["Latest action"] + ", " + in_place["Latest direction"],
-        "Level change (percent)": [lv or (m.replace("%", " percent") if str(m).startswith("average LTV") else "")
-                                   for lv, m in zip(in_place["Level change (percent)"], in_place["Magnitude note"].fillna(""))],
+        "Level, percent (date set)": in_place["Current or last stated level"],
         "Latest measure": in_place["Latest description"].str.replace("%", " percent").str.slice(0, 400),
         "Citation": IMAPP_CITATION})
     # Official tool definitions from the iMaPP table of contents (C1.CCB ... C17.Other, A1.LTV_average)
@@ -247,11 +282,17 @@ def build_imapp(path):
             "measure removed it), since when, latest change, level changes (each 'from X to Y' in the text, "
             "labelled with its ratio, e.g. LAR 7 to 10) and the latest measure. Aggregate '(all)' tools are left "
             "out when their sub-tools are listed. Economies not in iMaPP (e.g. Qatar) have no rows.",
+            "In Tools_in_place, 'Level, percent (date set)' = the latest levels stated in any action for that tool, with "
+            "the month they were set (for LTV also iMaPP's average LTV limit). If the latest action reverts or ends a "
+            "measure, read Measures_history for the levels it restored.",
+            "Sheet 'Measures_history': every recorded action since 1990 for every economy and tool - date, direction, "
+            "levels mentioned and the IMF description (from all instrument sheets of the iMaPP database).",
             "Tools: " + "; ".join(f"{k} = {v}" for k, v in TOOLS.items()) + ".",
             "iMaPP records policy actions (changes), not whether a tool is currently in force; a tool with "
             "tightenings and no later full loosening is likely still in use - check the description.",
             "Cite: " + IMAPP_CITATION + ". " + IMAPP_LINK],
-        "Definitions": definitions, "Tools_in_place": in_place, "Summary": summary, "Actions": actions})
+        "Definitions": definitions, "Tools_in_place": in_place, "Measures_history": history, "Summary": summary,
+        "Actions": actions})
     print(f"iMaPP: {len(names)} economies, {len(summary)} economy-tool records, {time.time() - t0:.0f}s",
           file=sys.stderr)
 
