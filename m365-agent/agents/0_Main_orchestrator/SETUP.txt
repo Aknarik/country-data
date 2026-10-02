@@ -6,7 +6,8 @@ Description: Financial sector analysis for any country: credit gaps and macropru
              outlook - charts with official sources.
 Instructions: INSTRUCTIONS.txt in this folder (paste all of it)
 Knowledge:   none (the connected agents hold the data)
-Code interpreter: not needed in the main agent (each connected agent keeps it ON)
+Code interpreter: OFF in the main agent (otherwise it redraws charts itself); ON in agents 1, 2, 3, 5, 6
+Knowledge in the main agent: NONE
 
 STEPS IN COPILOT STUDIO
 1. All six specialist agents must be in Copilot Studio, in the SAME environment as the main agent
@@ -15,7 +16,12 @@ STEPS IN COPILOT STUDIO
 2. Create the main agent: Create > New agent > name and description above > paste INSTRUCTIONS.txt.
 3. Agents (or "Add agent") > add each of the six as a connected agent. For each, replace its description
    with the routing description below - the main agent picks an agent mainly from these descriptions.
-4. Turn on generative orchestration if offered. Publish to Teams / Microsoft 365 Copilot when tested.
+4. Turn on generative orchestration if offered. In each connected agent's settings, if there is an option
+   to let the connected agent respond to the user directly / pass its full output, turn it on (so its
+   chart image reaches the user unchanged).
+5. Test pane: open the activity map and check that the right connected agent is called for each test.
+6. Publish to Teams / Microsoft 365 Copilot when tested. If charts still do not come through, use the six
+   agents directly (faster) and keep the main agent for routing questions.
 
 ROUTING DESCRIPTIONS (paste as the description of each connected agent)
 1 WEO Economic Outlook: Macroeconomic data and IMF forecasts for any country or group: GDP growth,
