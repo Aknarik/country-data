@@ -4,6 +4,8 @@ Python that downloads public IMF/BIS/central bank data, builds Excel knowledge f
 of Microsoft 365 Copilot agents (charts drawn by Code interpreter).
 
 ## Everyday commands
+- Routine when asked to "update": run `python update_all.py` (add `--imf` / `--local` if new releases or
+  files), then tell the user the "RE-UPLOAD IN COPILOT" list it prints (agent -> instructions / files).
 - Update everything quickly: `python update_all.py` (central bank bulletins + agents)
 - With new IMF/BIS releases: `python update_all.py --imf`; new iMaPP or bank data files: `--local`
 - Only agents after editing rules/code: `python update_all.py --agents`

@@ -127,6 +127,41 @@ def strip_sheets(path):
     wb.save(path)
 
 
+MANIFEST = HERE / ".package_manifest.json"  # what was in the last package, to list what to re-upload
+
+
+def report_changes():
+    """Compare this package with the previous one and print, per agent, what to re-upload."""
+    import hashlib
+    import json
+    src_of = {v: k for k, v in NAMES.items()}
+    now = {}
+    for f in OUT.rglob("*"):
+        if not f.is_file() or f.name == "START_HERE.txt":
+            continue
+        path = f
+        if f.suffix == ".xlsx":  # compare the source workbook (copies differ by save time)
+            k = src_of.get(f.name, f.name)
+            path = next((p for p in (DATA / k, ROOT / "local_data" / k) if p.exists()), f)
+        now[f.relative_to(OUT).as_posix()] = hashlib.md5(path.read_bytes()).hexdigest()
+    old = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {}
+    MANIFEST.write_text(json.dumps(now, indent=0))
+    changed = sorted(k for k, v in now.items() if old.get(k) != v and not k.endswith("SETUP.txt"))
+    if not old:
+        print("\nFirst package build: upload everything.")
+    elif not changed:
+        print("\nNothing changed since the last package: no re-upload needed.")
+    else:
+        print("\nRE-UPLOAD IN COPILOT (changed since the last package):")
+        by = {}
+        for k in changed:
+            agent, rest = k.split("/", 1)
+            by.setdefault(agent, []).append("paste new INSTRUCTIONS.txt" if rest == "INSTRUCTIONS.txt"
+                                            else "re-upload " + rest.split("/")[-1])
+        for agent, items in by.items():
+            print(f"  {agent}: " + "; ".join(items))
+
+
 def main():
     subprocess.run([sys.executable, str(HERE / "build_agents.py")], check=True)  # fresh INSTRUCTIONS.txt, size check
     if OUT.exists():
@@ -170,6 +205,7 @@ def main():
         lines.append("0_Main_agent_Copilot_Studio: main agent that connects all agents (Copilot Studio)")
     (OUT / "START_HERE.txt").write_text("\n".join(lines + ["", "Create the agents in order 1-6; test each before the next."]),
                                         encoding="utf-8", newline="\r\n")
+    report_changes()
     print(f"\nPackage: {OUT}")
 
 
