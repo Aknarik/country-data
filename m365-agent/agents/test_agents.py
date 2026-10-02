@@ -22,11 +22,17 @@ TESTS = {"1_WEO_outlook": ["line(weo('Kuwait','NGDP_RPCH'))", "line(weo(members(
          "5_Banks_balance_sheets": ["ts('H','KWT',['HEAT_T1_MED','HEAT_T1_AW'],'Tier 1 ratio across banks')", "structure('OMN')", "structure('SAU',kind='pie',year=2025)",
                                     "structure('KWT','assets')", "structure('ARE','assets','pie',2024)", "banks('KWT')", "banks('SAU','NPLNET',2024)",
                                     "growth('KWT')", "growth('BRA',2015)", "growth('USA')"]}
+def copy_knowledge(agent, box):
+    from build_package import NAMES
+    for f in KNOW[agent]:
+        shutil.copy(ROOT / f, Path(box) / NAMES.get(Path(f).name, Path(f).name))
+
+
 out = HERE / "test_output"; out.mkdir(exist_ok=True)
 for agent in ([] if __name__ != "__main__" else KNOW):
     files = KNOW[agent]
     code = (HERE / agent / "INSTRUCTIONS.txt").read_text(encoding="utf-8").split("CODE\n", 1)[1]
-    box = Path(tempfile.mkdtemp()); [shutil.copy(ROOT / f, box) for f in files]; os.chdir(box)
+    box = Path(tempfile.mkdtemp()); copy_knowledge(agent, box); os.chdir(box)
     for i, call in enumerate(TESTS[agent]):
         n = [0]; plt.show = lambda: (n.__setitem__(0, n[0] + 1), plt.savefig(out / f"{agent[:1]}_{i}.png", dpi=65), plt.close("all"))
         t = time.time()

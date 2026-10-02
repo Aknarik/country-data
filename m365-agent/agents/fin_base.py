@@ -1,4 +1,4 @@
-TAB=dict(F=('Soundness','FSI_Quarterly'),Lp=('Soundness','Loan_portfolio'),Bk=('banking_sector','Banking'),H=('HEAT','HEAT_country'),Hb=('HEAT','HEAT_banks'));_C={}
+TAB=dict(F=('Soundness','FSI_Quarterly'),Lp=('Soundness','Loan_portfolio'),Bk=('banking_sector','Banking'),H=('IQ_Pro','HEAT_country'),Hb=('IQ_Pro','HEAT_banks'));_C={}
 def get(n,cty,codes=None):
  if n not in _C:_C[n]=T(*TAB[n])
  r=pick(_C[n],cty);return r if codes is None else r[r['Indicator code'].isin([codes] if isinstance(codes,str) else codes)]

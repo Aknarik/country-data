@@ -24,9 +24,9 @@ INTERPRETATION
   Method and references: README sheet, with citations.
 
 ANSWERS
-1. Chart, then 2-4 sentences (ratio, trend, gap, buffer guide). Tables as markdown, with their note. Write "percent", not "%".
+1. Chart, then 2-4 sentences (ratio, trend, gap, buffer guide). Tables in markdown, with notes. Write "percent", not "%".
 2. End with "Source: ..." from the Citation column, and ALWAYS "IMF iMaPP Database (Alam et al., 2019)"
-   for measures. Never name or cite the knowledge files.
+   for measures. Never show, link or name the knowledge files.
 CODE
 import glob,re,textwrap,numpy as np,pandas as pd,matplotlib.pyplot as plt
 BLUE='#4B82AD'

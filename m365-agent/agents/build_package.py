@@ -57,14 +57,14 @@ AGENTS = [
                  "dashboard without overlapping labels."},
     {"folder": "4_FSAP_Reports", "source": "4_FSAP_reports",
      "name": "FSAP Reports",
-     "description": "Answers from IMF FSAP reports for GCC countries: key points, the full supporting paragraph with "
-                    "paragraph number, report title, page and link",
+     "description": "Answers from IMF FSAP reports for GCC countries using only the reports' exact wording: key "
+                    "sentences and full paragraphs with paragraph number, report title, page and link",
      "knowledge": [DATA / "IMF_FSAP_reports_catalog.xlsx"],
      "website": "https://www.elibrary.imf.org",
      "code": False,
      "starters": ["What did the latest FSAP say about a topic for a country?", "Key recommendations of an FSAP report"],
      "test": "Key recommendations of the 2024 Saudi Arabia FSSA",
-     "expected": "Key-point bullets, then each paragraph quoted in full with its paragraph number, report title, page and link.",
+     "expected": "Only exact quotes: key sentences (para., page), then full paragraphs with paragraph number, report title, page and link; no own wording.",
      "note": "If the agent cannot open the reports, download the PDFs from the catalog links and upload them to "
              "Knowledge, or add a SharePoint/OneDrive folder that contains them."},
     {"folder": "5_Banks_and_Balance_Sheets", "source": "5_Banks_balance_sheets",
@@ -97,6 +97,7 @@ New instructions -> paste the new INSTRUCTIONS.txt over the old text, Update.
 """
 
 
+NAMES = {'IMF_World_Economic_Outlook_data.xlsx': 'IMF World Economic Outlook.xlsx', 'BIS_credit_to_GDP.xlsx': 'BIS credit-to-GDP statistics.xlsx', 'IMF_MFS_credit_to_GDP.xlsx': 'IMF MFS credit to GDP.xlsx', 'IMF_iMaPP_macroprudential.xlsx': 'IMF iMaPP Database.xlsx', 'IMF_Financial_Soundness_Indicators.xlsx': 'IMF Financial Soundness Indicators.xlsx', 'IMF_MFS_banking_sector.xlsx': 'IMF MFS banking sector.xlsx', 'HEAT_bank_distribution.xlsx': 'SP Capital IQ Pro bank data.xlsx', 'IMF_FSAP_reports_catalog.xlsx': 'IMF FSAP reports.xlsx'}  # uploaded under official-source names
 DROP = ("Code", "Heatmap", "GCC_Summary")  # old code / ready-made tables: the agents draw charts instead
 
 
@@ -134,14 +135,14 @@ def main():
         for f in a["knowledge"]:
             if not f.exists():
                 raise FileNotFoundError(f"Missing knowledge file: {f}")
-            shutil.copy2(f, d / "knowledge" / f.name)
-            strip_sheets(d / "knowledge" / f.name)
+            shutil.copy2(f, d / "knowledge" / NAMES.get(f.name, f.name))
+            strip_sheets(d / "knowledge" / NAMES.get(f.name, f.name))
         n = len(instr.replace("\n", "\r\n"))
         setup = [f"AGENT: {a['name']}", "",
                  f"Name:        {a['name']}",
                  f"Description: {a['description']}",
                  f"Instructions: INSTRUCTIONS.txt ({n:,} characters; limit 8,000)",
-                 "Knowledge:   " + ", ".join(f.name for f in a["knowledge"])
+                 "Knowledge:   " + ", ".join(NAMES.get(f.name, f.name) for f in a["knowledge"])
                  + (f" + website {a['website']}" if a.get("website") else ""),
                  f"Code interpreter: {'ON' if a['code'] else 'not needed'}",
                  "Starter prompts: " + " | ".join(a["starters"]), "",
@@ -154,7 +155,7 @@ def main():
             code="turn Code interpreter ON." if a["code"] else "Code interpreter is not needed."))
         (d / "SETUP.txt").write_text("\n".join(setup), encoding="utf-8", newline="\r\n")
         lines.append(f"{a['folder']}: {a['name']} - {len(a['knowledge'])} knowledge file(s), {n:,} characters")
-        print(f"{a['folder']:36} {n:5} chars, knowledge: {', '.join(f.name for f in a['knowledge'])}")
+        print(f"{a['folder']:36} {n:5} chars, knowledge: {', '.join(NAMES.get(f.name, f.name) for f in a['knowledge'])}")
     (OUT / "START_HERE.txt").write_text("\n".join(lines + ["", "Create the agents in order 1-5; test each before the next."]),
                                         encoding="utf-8", newline="\r\n")
     print(f"\nPackage: {OUT}")

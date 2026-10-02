@@ -22,7 +22,7 @@ CHECKS = {"1_WEO_outlook": [("weo_growth", "line(weo('Kuwait','NGDP_RPCH'))"),
           + [(f"bank_{k}", f"banks('KWT','{k}')") for k in ("T1", "LIQ", "NPLNET", "TCE", "ROAA")]}
 for agent, calls in CHECKS.items():
     code = (HERE / agent / "INSTRUCTIONS.txt").read_text(encoding="utf-8").split("CODE\n", 1)[1]
-    box = Path(tempfile.mkdtemp()); [shutil.copy(ta.ROOT / f, box) for f in ta.KNOW[agent]]; os.chdir(box)
+    box = Path(tempfile.mkdtemp()); ta.copy_knowledge(agent, box); os.chdir(box)
     for name, call in calls:
         titles = []
         def show(name=name):

@@ -25,7 +25,7 @@ ANSWERS
 1. Chart, then 2-4 sentences: level, trend, outliers (banks far from the median), fastest-growing items.
 2. Table of the values when useful. Write "percent", not "%".
 3. End with "Source: ..." from the Citation column: S&P Capital IQ Pro for bank data; IMF Monetary and
-   Financial Statistics for balance sheets. Never name or cite the knowledge files.
+   Financial Statistics for balance sheets. Never show, link or name the knowledge files.
 CODE
 import glob,re,textwrap,numpy as np,pandas as pd,matplotlib.pyplot as plt
 BLUE='#4B82AD'
@@ -48,7 +48,7 @@ def last(ax,x,v,c='k',d=0):
 def source(f,*R,tl=True):
  s=list(dict.fromkeys(f'{c} ({l})' if isinstance(l,str) else str(c) for r in R for c,l in zip(r['Citation'],r.reindex(columns=['Source link'])['Source link'])))
  w=textwrap.fill('Source: '+'; '.join(s),175);f.text(.01,.005,w,fontsize=7,color='gray',va='bottom');tl and f.tight_layout(rect=(0,.15*(w.count(chr(10))+1.5)/f.get_figheight(),1,.97),h_pad=2.5,w_pad=2);plt.show()
-TAB=dict(F=('Soundness','FSI_Quarterly'),Lp=('Soundness','Loan_portfolio'),Bk=('banking_sector','Banking'),H=('HEAT','HEAT_country'),Hb=('HEAT','HEAT_banks'));_C={}
+TAB=dict(F=('Soundness','FSI_Quarterly'),Lp=('Soundness','Loan_portfolio'),Bk=('banking_sector','Banking'),H=('IQ_Pro','HEAT_country'),Hb=('IQ_Pro','HEAT_banks'));_C={}
 def get(n,cty,codes=None):
  if n not in _C:_C[n]=T(*TAB[n])
  r=pick(_C[n],cty);return r if codes is None else r[r['Indicator code'].isin([codes] if isinstance(codes,str) else codes)]
