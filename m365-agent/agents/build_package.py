@@ -165,6 +165,9 @@ def main():
         (d / "SETUP.txt").write_text("\n".join(setup), encoding="utf-8", newline="\r\n")
         lines.append(f"{a['folder']}: {a['name']} - {len(a['knowledge'])} knowledge file(s), {n:,} characters")
         print(f"{a['folder']:36} {n:5} chars, knowledge: {', '.join(NAMES.get(f.name, f.name) for f in a['knowledge'])}")
+    main = OUT / "0_Main_agent_Copilot_Studio"  # orchestrator that connects the six agents
+    shutil.copytree(HERE / "0_Main_orchestrator", main)
+    lines.insert(len(lines) - 1, "0_Main_agent_Copilot_Studio: main agent that connects agents 1-6 (Copilot Studio)")
     (OUT / "START_HERE.txt").write_text("\n".join(lines + ["", "Create the agents in order 1-6; test each before the next."]),
                                         encoding="utf-8", newline="\r\n")
     print(f"\nPackage: {OUT}")
