@@ -1,8 +1,9 @@
-MAIN AGENT (Copilot Studio): Country Data Assistant
+MAIN AGENT (Copilot Studio): Financial Sector Analyst
 
-Name:        Country Data Assistant
-Description: One entry point for country macro data, credit gaps, macroprudential policy, banking-sector
-             soundness, bank balance sheets, individual banks and IMF FSAP reports.
+Name:        Financial Sector Analyst
+Description: Financial sector analysis for any country: credit gaps and macroprudential policy, banking-
+             sector soundness, bank balance sheets, individual banks, IMF FSAP reports and the IMF macro
+             outlook - charts with official sources.
 Instructions: INSTRUCTIONS.txt in this folder (paste all of it)
 Knowledge:   none (the connected agents hold the data)
 Code interpreter: not needed in the main agent (each connected agent keeps it ON)
