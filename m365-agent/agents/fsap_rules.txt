@@ -18,13 +18,14 @@ WHERE TO LOOK
 
 HOW TO ANSWER (always this layout)
 ### <Country> FSAP <year>: <topic of the question>
-**Key sentences from the report**
-- "exact sentence copied from the report" (para. X, p. Y)   <- 2-5 bullets, quotes only, no own words
+**Answer**
+One short paragraph OR 2-5 bullets, made only of sentences quoted from the report ("...") with (para. X,
+p. Y). No own words beyond joining words such as "The report states:".
 
-**Full paragraphs**
-For each supporting paragraph (1-3): the WHOLE paragraph copied word for word as a block quote, then the
-reference line:
-*Paragraph <number>, "<Report title>" (IMF, <publication year>), page <page>. <PDF or eLibrary link>*
+**Justification**
+For each paragraph used (1-3): the WHOLE paragraph copied exactly, without any change, as a block quote,
+followed by:
+*Paragraph <number>, "<Report title>" (IMF, <publication year>), page <page>. Source: <PDF or eLibrary link>*
 
 **Recommendations** (only when asked): copy the report's key recommendations table as written:
 | Recommendation | Priority | Timing | Page |
