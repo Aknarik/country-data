@@ -1,4 +1,4 @@
-# Five specialised Copilot agents
+# Six specialised Copilot agents
 
 The single "Country Data Assistant" had to squeeze every tool into one 8,000-character instruction box.
 These four agents each get their own box, so they carry clearer rules and more capable code, and each one
@@ -10,7 +10,8 @@ loads only its own data (faster, fewer time-outs). They can be combined later.
 | 2 | **Credit Gap & Macroprudential** | Credit-to-GDP ratio, one-sided HP trend and gap (BIS; IMF MFS for Kuwait, UAE, Qatar, Oman), Basel 2-10 pp range and guide buffer, iMaPP tightening/loosening years on the chart; gaps from user data (ratio, or credit + GDP, e.g. non-oil GDP); household vs corporate credit; iMaPP measures table with magnitudes and definitions | `BIS_credit_to_GDP.xlsx`, `IMF_MFS_credit_to_GDP.xlsx`, `IMF_iMaPP_macroprudential.xlsx` |
 | 3 | **Financial Soundness** | Dashboard in sections (capital, asset quality, profitability, liquidity, loans pie, sovereign-bank nexus); FSI heat map grouped by section; any FSI or banking series | `IMF_Financial_Soundness_Indicators.xlsx`, `IMF_MFS_banking_sector.xlsx` |
 | 4 | **FSAP Reports** | Answers from the GCC FSAP reports: short answer, verbatim paragraph with the key sentence in bold, report title, page, link. No Python needed | `IMF_FSAP_reports_catalog.xlsx` + website `https://www.elibrary.imf.org` |
-| 5 | **Banks & Balance Sheets** | Bank-by-bank bars with bank names (HEAT 2.0); annual growth of total assets, credit, deposits, equity, claims on government, foreign assets; loan portfolio and asset structure; HEAT distribution series | `IMF_Financial_Soundness_Indicators.xlsx`, `IMF_MFS_banking_sector.xlsx`, `local_data/HEAT_bank_distribution.xlsx` |
+| 5 | **Bank Balance Sheets** | Asset and loan structure (pie with names and percent on slices, or stacked bars over time); growth of every asset/liability item and loan sector; contributions by sector to asset or credit growth | `IMF Financial Soundness Indicators.xlsx`, `IMF MFS banking sector.xlsx` |
+| 6 | **Bank-by-Bank** | Individual banks with names: latest ranking, history for the largest banks with the median bank, single-bank profiles (capital, leverage, asset quality, income, liquidity, size); source S&P Capital IQ Pro | `SP Capital IQ Pro bank data.xlsx` |
 
 The instructions for each agent are in `<agent folder>/INSTRUCTIONS.txt` (all under 8,000 characters).
 
@@ -20,7 +21,7 @@ Run `python m365-agent/agents/build_package.py`. It creates `copilot_agents_pack
 confidential HEAT data) with one folder per agent: `INSTRUCTIONS.txt` (paste), `SETUP.txt` (name, description,
 starter prompts, test question) and `knowledge/` (exactly the files to upload). Rerun after every update.
 
-## Create each agent (repeat 5 times)
+## Create each agent (repeat 6 times)
 
 1. Microsoft 365 Copilot → **Agents → Create agent** → **Configure** tab.
 2. **Name**: e.g. "WEO Economic Outlook". **Description**: one line from the table above.
@@ -38,7 +39,7 @@ starter prompts, test question) and `knowledge/` (exactly the files to upload). 
    - Agent 4: "What did the 2019 Kuwait FSSA say about liquidity risk? Quote the paragraph.",
      "Key recommendations of the 2024 Saudi Arabia FSSA"
 
-Agent 5 includes the HEAT 2.0 bank data (S&P Capital IQ Pro); the agents are for internal use.
+Agent 6 includes the S&P Capital IQ Pro bank data; the agents are for internal use.
 
 ## Updating later
 

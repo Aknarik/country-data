@@ -17,9 +17,11 @@ CHECKS = {"1_WEO_outlook": [("weo_growth", "line(weo('Kuwait','NGDP_RPCH'))"),
                             ("liab", "ts('Bk','KWT',['BANK_DEPOSITS_TA','BANK_EQUITY_TA','BANK_FOREIGN_LIAB_TA'],'Bank funding structure')"),
                             ("npl", "ts('F','KWT',['AQ12_CFSI_PT'],'Nonperforming loans')"),
                             ("dirs", "r=get('F','KWT').drop_duplicates('Indicator code');print(r[['Group','Indicator','More vulnerable when']].to_string(index=False))")],
-          "5_Banks_balance_sheets": [("loans_bar", "structure('KWT')"), ("loans_pie", "structure('KWT',kind='pie',year=2025)"),
-                            ("assets", "structure('KWT','assets')"), ("growth", "growth('KWT')")]
-          + [(f"bank_{k}", f"banks('KWT','{k}')") for k in ("T1", "LIQ", "NPLNET", "TCE", "ROAA")]}
+          "5_Bank_balance_sheets": [("loans_bar", "structure('KWT')"), ("loans_pie", "structure('KWT',kind='pie',year=2025)"),
+                            ("assets", "structure('KWT','assets')"), ("growth", "growth('KWT')"), ("contrib", "contrib('KWT')"),
+                            ("contrib_loans", "contrib('KWT','loans')")],
+          "6_Bank_by_bank": [(f"bank_{k}", f"banks('KWT','{k}')") for k in ("T1", "LIQ", "NPLNET", "TCE", "ROAA")]
+          + [("bank_hist", "bank_hist('KWT')"), ("bank_profile", "bank_profile('National Bank of Kuwait')")]}
 for agent, calls in CHECKS.items():
     code = (HERE / agent / "INSTRUCTIONS.txt").read_text(encoding="utf-8").split("CODE\n", 1)[1]
     box = Path(tempfile.mkdtemp()); ta.copy_knowledge(agent, box); os.chdir(box)

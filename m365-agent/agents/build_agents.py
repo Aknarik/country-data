@@ -5,7 +5,8 @@ AGENTS = {"1_WEO_outlook": ("weo_rules.txt", "weo_code.py"),
           "2_Credit_gap_macroprudential": ("gap_rules.txt", "gap_code.py"),
           "3_Financial_soundness": ("fsi_rules.txt", ["fin_base.py", "fsi_code.py"]),
           "4_FSAP_reports": ("fsap_rules.txt", None),
-          "5_Banks_balance_sheets": ("bank_rules.txt", ["fin_base.py", "bank_code.py"])}
+          "5_Bank_balance_sheets": ("bs_rules.txt", ["fin_base.py", "bs_code.py"]),
+          "6_Bank_by_bank": ("bbb_rules.txt", ["fin_base.py", "bbb_code.py"])}
 LIMIT = 8000
 if __name__ == "__main__":
     core = (HERE / "common.py").read_text(encoding="utf-8")

@@ -67,18 +67,27 @@ AGENTS = [
      "expected": "Only exact quotes: key sentences (para., page), then full paragraphs with paragraph number, report title, page and link; no own wording.",
      "note": "If the agent cannot open the reports, download the PDFs from the catalog links and upload them to "
              "Knowledge, or add a SharePoint/OneDrive folder that contains them."},
-    {"folder": "5_Banks_and_Balance_Sheets", "source": "5_Banks_balance_sheets",
-     "name": "Banks & Balance Sheets",
-     "description": "Bank-by-bank indicators with bank names (IMF HEAT 2.0), banking balance sheet growth, loan "
-                    "portfolio and asset structure for any country",
-     "knowledge": [DATA / "IMF_Financial_Soundness_Indicators.xlsx", DATA / "IMF_MFS_banking_sector.xlsx",
-                   ROOT / "local_data" / "HEAT_bank_distribution.xlsx"],
+    {"folder": "5_Bank_Balance_Sheets", "source": "5_Bank_balance_sheets",
+     "name": "Bank Balance Sheets",
+     "description": "Banking-sector assets, liabilities and credit for any country: structure (pie or stacked bars), "
+                    "growth by item and contributions by sector",
+     "knowledge": [DATA / "IMF_Financial_Soundness_Indicators.xlsx", DATA / "IMF_MFS_banking_sector.xlsx"],
      "code": True,
-     "starters": ["Tier 1 capital by bank in a country", "Bank balance sheet growth for a country",
-                  "Loan portfolio structure for a country"],
-     "test": "Kuwait Tier 1 capital by bank, then: Brazil bank balance sheet growth",
-     "expected": "Bars with bank names and the median bank; growth chart and table for total assets, credit, "
-                 "deposits, equity, claims on government, foreign assets."},
+     "starters": ["Bank asset structure for a country", "Loan portfolio pie for a country",
+                  "Contributions to bank credit growth by sector"],
+     "test": "Kuwait loan portfolio pie, then: Kuwait contributions to bank asset growth",
+     "expected": "Pie with sector names and percent on the slices; stacked bars of sector contributions with "
+                 "total growth dots; blue titles, official sources."},
+    {"folder": "6_Bank_by_Bank", "source": "6_Bank_by_bank",
+     "name": "Bank-by-Bank",
+     "description": "Individual bank indicators with bank names (capital, leverage, asset quality, income, "
+                    "liquidity): latest ranking, history and single-bank profiles",
+     "knowledge": [ROOT / "local_data" / "HEAT_bank_distribution.xlsx"],
+     "code": True,
+     "starters": ["Tier 1 capital by bank in a country", "Leverage of the largest banks over time",
+                  "Profile of a bank"],
+     "test": "Kuwait Tier 1 capital by bank over time, then: profile of National Bank of Kuwait",
+     "expected": "Lines for the largest banks with the median bank; six-panel bank profile; source S&P Capital IQ Pro."},
 ]
 
 STEPS = """HOW TO CREATE THIS AGENT
@@ -126,7 +135,7 @@ def main():
     lines = [f"COPILOT AGENTS PACKAGE - built {time.strftime('%Y-%m-%d %H:%M')}", "",
              "One folder per agent. In each: INSTRUCTIONS.txt, SETUP.txt, knowledge/ (files to upload).",
              "All agents work for any country; the user names it in the question.",
-             "For internal use. Folder 5 includes the HEAT 2.0 bank data.", ""]
+             "For internal use. Folder 6 includes the S&P Capital IQ Pro bank data.", ""]
     for a in AGENTS:
         d = OUT / a["folder"]
         (d / "knowledge").mkdir(parents=True)
@@ -156,7 +165,7 @@ def main():
         (d / "SETUP.txt").write_text("\n".join(setup), encoding="utf-8", newline="\r\n")
         lines.append(f"{a['folder']}: {a['name']} - {len(a['knowledge'])} knowledge file(s), {n:,} characters")
         print(f"{a['folder']:36} {n:5} chars, knowledge: {', '.join(NAMES.get(f.name, f.name) for f in a['knowledge'])}")
-    (OUT / "START_HERE.txt").write_text("\n".join(lines + ["", "Create the agents in order 1-5; test each before the next."]),
+    (OUT / "START_HERE.txt").write_text("\n".join(lines + ["", "Create the agents in order 1-6; test each before the next."]),
                                         encoding="utf-8", newline="\r\n")
     print(f"\nPackage: {OUT}")
 
