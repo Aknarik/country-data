@@ -58,13 +58,13 @@ AGENTS = [
     {"folder": "4_FSAP_Reports", "source": "4_FSAP_reports",
      "name": "FSAP Reports",
      "description": "Answers from IMF FSAP reports for GCC countries: key points, the full supporting paragraph with "
-                    "the answering sentence highlighted, page and link",
+                    "paragraph number, report title, page and link",
      "knowledge": [DATA / "IMF_FSAP_reports_catalog.xlsx"],
      "website": "https://www.elibrary.imf.org",
      "code": False,
      "starters": ["What did the latest FSAP say about a topic for a country?", "Key recommendations of an FSAP report"],
      "test": "Key recommendations of the 2024 Saudi Arabia FSSA",
-     "expected": "Key-point bullets, then the whole paragraph(s) quoted with the answering sentence marked 🟨 in bold, page, source link.",
+     "expected": "Key-point bullets, then each paragraph quoted in full with its paragraph number, report title, page and link.",
      "note": "If the agent cannot open the reports, download the PDFs from the catalog links and upload them to "
              "Knowledge, or add a SharePoint/OneDrive folder that contains them."},
     {"folder": "5_Banks_and_Balance_Sheets", "source": "5_Banks_balance_sheets",
