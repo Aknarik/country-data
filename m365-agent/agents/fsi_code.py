@@ -12,7 +12,7 @@ def heatmap(cty,q=12):
  ax.set_yticks(range(len(V)));ax.set_yticklabels(lb,fontsize=7);ax.set_xticks(range(len(c)));ax.set_xticklabels(c,rotation=45,fontsize=7)
  for g,d in r.groupby('Group',sort=False):
   ax.text(len(c)-.35,d.index.to_numpy().mean(),g,va='center',fontsize=7,weight='bold',color=BLUE);d.index[0] and ax.axhline(d.index[0]-.5,color='w',lw=3)
- f.colorbar(im,cax=f.add_axes([1-.8/W,1.2/h,.12/W,1-1.8/h]),label='Red = more vulnerable');title(ax,r['Economy'].iloc[0]+': FSI heat map, percentile vs own history');source(f,r,tl=False)
+ f.colorbar(im,cax=f.add_axes([1-.8/W,1.2/h,.12/W,1-1.8/h]),label='Red = more vulnerable');title(ax,r['Economy'].iloc[0]+': FSI heat map, percentile vs own history');source(f,r,tl=False);return V.set_axis(lb)
 def dashboard(cty):
  f,A=plt.subplots(2,3,figsize=(18,11.5));A=A.flat;u=[]
  P=[('Capital','F',['FSI688_CFSI_PT','FSI626_CFSI_PT']),('Asset quality','F',['AQ12_CFSI_PT','AQ14_CFSI_PT']),('Profitability','F',['ROA_CFSI_PT','ROE_CFSI_PT']),

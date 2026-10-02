@@ -97,6 +97,27 @@ New instructions -> paste the new INSTRUCTIONS.txt over the old text, Update.
 """
 
 
+DROP = ("Code", "Heatmap", "GCC_Summary")  # old code / ready-made tables: the agents draw charts instead
+
+
+def strip_sheets(path):
+    """Remove the sheets in DROP and the README lines describing them from a knowledge copy."""
+    import openpyxl
+    wb = openpyxl.load_workbook(path)
+    names = [n for n in DROP if n in wb.sheetnames]
+    if not names:
+        return
+    for n in names:
+        del wb[n]
+    if "README" in wb.sheetnames:
+        ws = wb["README"]
+        for row in range(ws.max_row, 1, -1):
+            v = str(ws.cell(row, 1).value or "")
+            if any(f"'{n}'" in v or f"{n} sheet" in v for n in DROP):
+                ws.delete_rows(row)
+    wb.save(path)
+
+
 def main():
     subprocess.run([sys.executable, str(HERE / "build_agents.py")], check=True)  # fresh INSTRUCTIONS.txt, size check
     if OUT.exists():
@@ -114,6 +135,7 @@ def main():
             if not f.exists():
                 raise FileNotFoundError(f"Missing knowledge file: {f}")
             shutil.copy2(f, d / "knowledge" / f.name)
+            strip_sheets(d / "knowledge" / f.name)
         n = len(instr.replace("\n", "\r\n"))
         setup = [f"AGENT: {a['name']}", "",
                  f"Name:        {a['name']}",

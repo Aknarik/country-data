@@ -6,7 +6,7 @@ def banks(cty,ind='T1',year=None):
  r=get('Hb',cty,f'HEAT_{ind}_BANK');n=r[per(r)].notna().sum();y=str(year or n[n>=.6*n.max()].index[-1])
  s=r.set_index('Economy')[y].dropna().sort_values();f,ax=plt.subplots(figsize=(10,.3*len(s)+2));ax.barh(s.index,s.values,color=BLUE)
  ax.axvline(s.median(),color='#c0392b',ls='--',label=f'Median bank {s.median():.1f}');leg(ax,y=-.12);ax.grid(alpha=.3,axis='x')
- e=get('Bk',cty)['Economy'];title(ax,f"{e.iloc[0] if len(e) else cty}: {r['Indicator'].iloc[0]} by bank, {y}{U(r)}");source(f,r)
+ e=get('Bk',cty)['Economy'];title(ax,f"{e.iloc[0] if len(e) else cty}: {r['Indicator'].iloc[0]} by bank, {y}{U(r)}");source(f,r);return s
 def growth(cty,a=2012):
  r=get('Bk',cty);I=r.set_index('Indicator code').reindex(columns=per(r)).apply(pd.to_numeric,errors='coerce')
  assert 'BANK_ASSETS' in I.index,'No bank balance sheet data for '+cty;ta=I.loc['BANK_ASSETS']

@@ -57,7 +57,7 @@ HEAT_SHEETS = {  # O-sheet -> (code, name)
     "O-Liquidity": ("LIQ", "Liquid assets to total liabilities"),
     "O-Leverage": ("TCE", "Tangible common equity to tangible assets"),
 }
-HEAT_CITATION = "IMF staff calculations (HEAT 2.0) based on S&P Capital IQ Pro bank-level data"
+HEAT_CITATION = "IMF staff calculations based on S&P Capital IQ Pro bank-level data"
 
 
 def newest(pattern):
@@ -380,7 +380,7 @@ def heat_rows(path, annual, iso):
     return rows
 
 
-BANK_CITATION = "IMF HEAT 2.0, bank-level data from S&P Capital IQ Pro"
+BANK_CITATION = "S&P Capital IQ Pro, bank-level data"
 
 
 def heat_bank_rows(path, iso):
