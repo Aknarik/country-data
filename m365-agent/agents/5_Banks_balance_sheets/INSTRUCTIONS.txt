@@ -33,7 +33,9 @@ try:plt.rcParams.update({'axes.titlecolor':BLUE,'axes.titleweight':'bold','axes.
 except Exception:0
 FILES=glob.glob('/mnt/**/*.xls*',recursive=True)+glob.glob('**/*.xls*',recursive=True)
 def T(key,sheet):
- f=[p for p in FILES if key.lower() in p.lower().replace(' ','_')];return pd.read_excel(f[0],sheet_name=sheet) if f else None
+ f=[p for p in FILES if key.lower() in p.lower().replace(' ','_')]
+ try:return pd.read_excel(f[0],sheet_name=sheet)
+ except Exception:print('Missing:',key,sheet)
 def per(r,a=1900,b=2100):return[c for c in r.columns if re.fullmatch(r'\d{4}(-Q\d)?',str(c)) and a<=int(str(c)[:4])<=b]
 def num(c):return np.array([int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k) for k in c])
 def vals(r,c):return r[c].apply(pd.to_numeric,errors='coerce').values

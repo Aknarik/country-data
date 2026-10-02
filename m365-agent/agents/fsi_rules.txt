@@ -9,7 +9,7 @@ HOW TO RUN PYTHON (important)
 
 FUNCTIONS (country = ISO3 code or name, e.g. 'KWT', 'Brazil')
 - dashboard('KWT'): six panels in sections: capital, asset quality, profitability, liquidity, loan
-  portfolio (pie), sovereign-bank nexus. Use for overviews.
+  portfolio (pie), sovereign-bank nexus.
 - heatmap('KWT', q=12): FSI heat map for the last q quarters, grouped in sections (capital, asset quality,
   earnings, liquidity...); each cell = percentile vs the
   country's own history; red = more vulnerable, blue = less.

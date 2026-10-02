@@ -9,7 +9,7 @@ def user_gap(credit,gdp=None,name='User data',lam=None):
  s=_s(credit);q='-Q' in s.index[0]
  if gdp is not None:g=_s(gdp);g=g.rolling(4).sum() if q else g;s=(100*s/g.reindex(s.index)).dropna()
  assert len(s)>=(80 if q else 20),'Need 20+ years of data';l=lam or(4e5 if q else 4e5/4**4);t=hp(s.values,l)
- c=f'{name}: user data; one-sided HP filter, lambda {l:,g} (BCBS 2010)'
+ c=f'{name}: user data; one-sided HP, lambda {l:,g} (BCBS 2010)'
  return pd.DataFrame([{'Economy':name,'Economy code':name,'Indicator code':k,'Citation':c,**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
 def buffer(g):return 0 if g<2 else 2.5 if g>10 else round((g-2)/8*2.5,2)
 def gap(r,a=2000,mpp=True):
@@ -25,12 +25,12 @@ def gap(r,a=2000,mpp=True):
  leg(a2,ax,-.2);gv=g[~np.isnan(g)][-1];lg=np.array(c)[~np.isnan(g)][-1]
  title(ax,f"{r['Economy'].iloc[0]}: Credit-to-GDP ratio, trend and gap (percent of GDP)",f"Latest {lg}: gap {gv:.1f} pp, Basel guide buffer {buffer(gv)} percent");source(f,r)
  e=r['Economy code'].iloc[0]
- if mpp and len(pick(MP,e)):return mpp_table(e)
+ if mpp and MP is not None and len(pick(MP,e)):return mpp_table(e)
 def sectors(cty,a=2000):
  r=pick(CS,cty);assert len(r),'No BIS sector data for '+cty;c=[k for k in per(r,a) if r[k].notna().any()];f,ax=plt.subplots(figsize=(10.5,5.5))
  for lab,z in zip(r['Indicator'],vals(r,c)):l,=ax.plot(num(c),z,lw=2,label=lab);last(ax,num(c),z,l.get_color())
  ax.grid(alpha=.3);leg(ax);title(ax,f"{r['Economy'].iloc[0]}: Credit by borrower sector (percent of GDP)");source(f,r)
-N='In place unless later removed; No = no action since 1990. Source: IMF iMaPP Database (Alam et al., 2019).'
+N='In place unless removed; No = no action since 1990. Source: IMF iMaPP Database (Alam et al., 2019).'
 def mpp_table(cty):
  t=pick(MP,cty)
  if t.empty:return print(cty,'is not in the IMF iMaPP Database.')

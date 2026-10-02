@@ -6,22 +6,21 @@ HOW TO RUN PYTHON (important)
   Excel file unless the user asks: then save the returned table with .to_excel(). On error, retry once.
 
 FUNCTIONS (country: ISO3 code or name)
-- gap('KWT'): ratio, trend, gap with the Basel 2-10 pp range, buffer guide, then the iMaPP tools table.
+- gap('KWT'): ALWAYS use for credit gaps (never compute or plot one yourself): ratio, trend,
+  gap with the Basel 2-10 pp range, buffer guide, then the iMaPP tools table.
   BIS quarterly (lambda 400,000); Kuwait, UAE, Qatar, Oman: IMF MFS annual (1,562.5).
 - user_gap(credit, gdp=None, name='KWT'): gap from user data (ratio, or credit and GDP, indexed '2010' or
   '2010-Q1'; 20+ years); then gap(user_gap(...)).
 - sectors('GBR'): household vs corporate credit (BIS countries).
-- mpp_table('KWT'): tools in place, since, latest change, level (date set), latest measure. Tool
-  definitions: sheet Definitions.
-- mpp_history('KWT', 'Loan-to-value'): all actions (date, direction, levels, text):
-  when a measure was imposed, changed or reverted.
+- mpp_table('KWT'): tools in place, since, latest change, level (date set), latest measure.
+- mpp_history('KWT', 'Loan-to-value'): all actions: when a measure was imposed, changed or reverted.
 - mpp_compare(['SAU','ARE','KWT'], tools=None): cross-country: tool exists or not, since,
   size; tools e.g. ['Loan-to-value'].
 
 INTERPRETATION
 - First 10 years shaded = trend start-up; no gap under 20 years.
-  Gap = ratio minus trend (pp); buffer guide 0 percent below 2 pp, rising to 2.5 percent at 10 pp.
-  Method and references: README sheet, with citations.
+  Buffer guide: 0 percent below a 2 pp gap, rising to 2.5 percent at 10 pp.
+  Method: README sheet, with citations.
 
 ANSWERS
 1. Chart, then 2-4 sentences (ratio, trend, gap, buffer guide). Tables in markdown, with notes. Write "percent", not "%".
@@ -34,7 +33,9 @@ try:plt.rcParams.update({'axes.titlecolor':BLUE,'axes.titleweight':'bold','axes.
 except Exception:0
 FILES=glob.glob('/mnt/**/*.xls*',recursive=True)+glob.glob('**/*.xls*',recursive=True)
 def T(key,sheet):
- f=[p for p in FILES if key.lower() in p.lower().replace(' ','_')];return pd.read_excel(f[0],sheet_name=sheet) if f else None
+ f=[p for p in FILES if key.lower() in p.lower().replace(' ','_')]
+ try:return pd.read_excel(f[0],sheet_name=sheet)
+ except Exception:print('Missing:',key,sheet)
 def per(r,a=1900,b=2100):return[c for c in r.columns if re.fullmatch(r'\d{4}(-Q\d)?',str(c)) and a<=int(str(c)[:4])<=b]
 def num(c):return np.array([int(k[:4])+(int(k[-1])-1)/4 if '-Q' in k else int(k) for k in c])
 def vals(r,c):return r[c].apply(pd.to_numeric,errors='coerce').values
@@ -60,7 +61,7 @@ def user_gap(credit,gdp=None,name='User data',lam=None):
  s=_s(credit);q='-Q' in s.index[0]
  if gdp is not None:g=_s(gdp);g=g.rolling(4).sum() if q else g;s=(100*s/g.reindex(s.index)).dropna()
  assert len(s)>=(80 if q else 20),'Need 20+ years of data';l=lam or(4e5 if q else 4e5/4**4);t=hp(s.values,l)
- c=f'{name}: user data; one-sided HP filter, lambda {l:,g} (BCBS 2010)'
+ c=f'{name}: user data; one-sided HP, lambda {l:,g} (BCBS 2010)'
  return pd.DataFrame([{'Economy':name,'Economy code':name,'Indicator code':k,'Citation':c,**dict(zip(s.index,v))} for k,v in(('CREDIT_GDP',s.values),('CREDIT_GDP_TREND',t),('CREDIT_GDP_GAP',s.values-t))])
 def buffer(g):return 0 if g<2 else 2.5 if g>10 else round((g-2)/8*2.5,2)
 def gap(r,a=2000,mpp=True):
@@ -76,12 +77,12 @@ def gap(r,a=2000,mpp=True):
  leg(a2,ax,-.2);gv=g[~np.isnan(g)][-1];lg=np.array(c)[~np.isnan(g)][-1]
  title(ax,f"{r['Economy'].iloc[0]}: Credit-to-GDP ratio, trend and gap (percent of GDP)",f"Latest {lg}: gap {gv:.1f} pp, Basel guide buffer {buffer(gv)} percent");source(f,r)
  e=r['Economy code'].iloc[0]
- if mpp and len(pick(MP,e)):return mpp_table(e)
+ if mpp and MP is not None and len(pick(MP,e)):return mpp_table(e)
 def sectors(cty,a=2000):
  r=pick(CS,cty);assert len(r),'No BIS sector data for '+cty;c=[k for k in per(r,a) if r[k].notna().any()];f,ax=plt.subplots(figsize=(10.5,5.5))
  for lab,z in zip(r['Indicator'],vals(r,c)):l,=ax.plot(num(c),z,lw=2,label=lab);last(ax,num(c),z,l.get_color())
  ax.grid(alpha=.3);leg(ax);title(ax,f"{r['Economy'].iloc[0]}: Credit by borrower sector (percent of GDP)");source(f,r)
-N='In place unless later removed; No = no action since 1990. Source: IMF iMaPP Database (Alam et al., 2019).'
+N='In place unless removed; No = no action since 1990. Source: IMF iMaPP Database (Alam et al., 2019).'
 def mpp_table(cty):
  t=pick(MP,cty)
  if t.empty:return print(cty,'is not in the IMF iMaPP Database.')
